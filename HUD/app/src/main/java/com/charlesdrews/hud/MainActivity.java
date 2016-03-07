@@ -4,16 +4,23 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.charlesdrews.hud.HudCardData.CardData;
+import com.charlesdrews.hud.HudCardData.CardType;
+import com.charlesdrews.hud.HudCardData.TwitterCardData;
+import com.charlesdrews.hud.HudCardData.WeatherCardData;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
-
-    String mNYTimesURL = "http://api.nytimes.com/svc/news/v3/content/all/all/4.json?limit=20&api-key=9d6920a74c817405b74a87b98db7a4da%3A4%3A74605150";
-    String mSearchNYTimesUrl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+search+"&page=1&sort=newest&api-key=29975101513df1dfdf9895c3324ca6d2:6:74605150";
-
+    private ArrayList<CardData> mCardsData;
+    private RecyclerView.Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +29,19 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+
+        mCardsData = new ArrayList<>();
+
+        //TODO - remove this - it's for testing only
+        mCardsData.add(new WeatherCardData(CardType.Weather, 52, 37));
+        mCardsData.add(new TwitterCardData(CardType.Twitter, "Kyle", "Twitter is my favorite!"));
+
+        mAdapter = new RecyclerAdapter(mCardsData);
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -41,14 +53,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                //TODO - launch settings activity
+                return true;
+            /*
+            case R.id.search:
+                //TODO - setup and launch search
+                return true;
+                */
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
