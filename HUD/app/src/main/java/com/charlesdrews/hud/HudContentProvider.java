@@ -10,6 +10,9 @@ import android.net.Uri;
  * Created by charlie on 3/7/16.
  */
 public class HudContentProvider extends ContentProvider {
+    public static final String AUTHORITY = "com.charlesdrews.hud.HudContentProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY); //TODO - add table name from db helper
+
     /*
      * Always return true, indicating that the
      * provider loaded correctly.
