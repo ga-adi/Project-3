@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Late.ly</string>
+    <string name="frag1text">Frag 1</string>
+    <string name="frag2text">Frag 2</string>
+    <string name="frag3text">Frag 3</string>
+    <string name="frag4text">Frag 4</string>
+    <string name="frag5text">Frag 5</string>
 
 </resources>

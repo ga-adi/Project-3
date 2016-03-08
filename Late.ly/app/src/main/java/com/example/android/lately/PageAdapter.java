@@ -4,6 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.example.android.lately.Fragments.Fragment1;
+import com.example.android.lately.Fragments.Fragment2;
+import com.example.android.lately.Fragments.Fragment3;
+import com.example.android.lately.Fragments.Fragment4;
+import com.example.android.lately.Fragments.Fragment5;
+
 /**
  * Created by ShowMe on 3/7/16.
  */
