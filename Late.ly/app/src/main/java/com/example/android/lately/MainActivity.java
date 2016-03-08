@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
 
 
+
 //        sets the top bar text and color
         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
 
