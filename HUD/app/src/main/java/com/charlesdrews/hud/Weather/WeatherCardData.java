@@ -7,6 +7,7 @@ import com.charlesdrews.hud.CardType;
  * Created by charlie on 3/7/16.
  */
 public class WeatherCardData extends CardData {
+    //TODO - feel free to change this around - this was just for testing
     private int mHighTemp, mLowTemp;
 
     public WeatherCardData(CardType type, int highTemp, int lowTemp) {

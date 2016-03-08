@@ -53,14 +53,14 @@
         </service>
 
         <provider
-            android:name=".Twitter.TwitterContentProvider"
-            android:authorities="com.charlesdrews.hud.Twitter.TwitterContentProvider"
-            android:label="@string/twitter_provider_label"
+            android:name=".Facebook.FacebookContentProvider"
+            android:authorities="com.charlesdrews.hud.Facebook.FacebookContentProvider"
+            android:label="@string/facebook_provider_label"
             android:exported="false"
             android:syncable="true"/>
 
         <service
-            android:name=".Twitter.TwitterSyncService">
+            android:name=".Facebook.FacebookSyncService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>

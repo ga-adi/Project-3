@@ -7,7 +7,7 @@ package com.charlesdrews.hud;
 public enum CardType {
     Weather,
     News,
-    Twitter,
+    Facebook,
     Movies,
     Concerts
 }

@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.Twitter;
+package com.charlesdrews.hud.Facebook;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -11,15 +11,15 @@ import android.os.Bundle;
 /**
  * Created by charlie on 3/7/16.
  */
-public class TwitterSyncAdapter extends AbstractThreadedSyncAdapter {
+public class FacebookSyncAdapter extends AbstractThreadedSyncAdapter {
     ContentResolver mContentResolver;
 
-    public TwitterSyncAdapter(Context context, boolean autoInitialize) {
+    public FacebookSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContentResolver = context.getContentResolver();
     }
 
-    public TwitterSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public FacebookSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
         mContentResolver = context.getContentResolver();
     }

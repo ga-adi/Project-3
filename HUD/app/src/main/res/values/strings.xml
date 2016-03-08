@@ -4,6 +4,6 @@
 
     <string name="account_type">example.com</string>
     <string name="weather_provider_label">Weather Content Provider</string>
-    <string name="twitter_provider_label">Twitter Content Provider</string>
+    <string name="facebook_provider_label">Facebook Content Provider</string>
     <string name="news_provider_label">News Content Provider</string>
 </resources>
