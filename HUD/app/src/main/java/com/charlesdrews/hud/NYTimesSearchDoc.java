@@ -17,14 +17,14 @@ public class NYTimesSearchDoc {
     private List<Object> blog = new ArrayList<Object>();
     private String source;
     private List<Object> multimedia = new ArrayList<Object>();
-    private Headline headline;
+    private NYTimesSearchHeadline headline;
     private List<Object> keywords = new ArrayList<Object>();
     private String pubDate;
     private String documentType;
     private String newsDesk;
     private String sectionName;
     private Object subsectionName;
-    private NYTimesSearchByline byline;
+    private NYTimesSearchByLine byline;
     private String typeOfMaterial;
     private String Id;
     private String wordCount;
@@ -180,7 +180,7 @@ public class NYTimesSearchDoc {
      * @return
      * The headline
      */
-    public Headline getHeadline() {
+    public NYTimesSearchHeadline getHeadline() {
         return headline;
     }
 
@@ -189,7 +189,7 @@ public class NYTimesSearchDoc {
      * @param headline
      * The headline
      */
-    public void setHeadline(Headline headline) {
+    public void setHeadline(NYTimesSearchHeadline headline) {
         this.headline = headline;
     }
 
@@ -306,7 +306,7 @@ public class NYTimesSearchDoc {
      * @return
      * The byline
      */
-    public NYTimesSearchByline getByline() {
+    public NYTimesSearchByLine getByline() {
         return byline;
     }
 
@@ -315,7 +315,7 @@ public class NYTimesSearchDoc {
      * @param byline
      * The byline
      */
-    public void setByline(NYTimesSearchByline byline) {
+    public void setByline(NYTimesSearchByLine byline) {
         this.byline = byline;
     }
 
@@ -399,4 +399,8 @@ public class NYTimesSearchDoc {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public String toString() {
+        return snippet;
+    }
 }
