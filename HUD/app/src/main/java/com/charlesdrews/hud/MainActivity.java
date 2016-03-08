@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.charlesdrews.hud.News.NewsCardData;
+import com.charlesdrews.hud.News.NewsContentProvider;
 import com.charlesdrews.hud.Weather.WeatherCardData;
 import com.charlesdrews.hud.Weather.WeatherContentProvider;
 
@@ -37,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         // register content observers
         getContentResolver().registerContentObserver(
-                WeatherContentProvider.CONTENT_URI,
-                true,
-                new WeatherContentObserver(new Handler())
-        );
+                WeatherContentProvider.CONTENT_URI, true, new WeatherContentObserver(new Handler()));
+        getContentResolver().registerContentObserver(
+                NewsContentProvider.CONTENT_URI, true, new NewsContentObserver(new Handler()));
         //TODO - create and register remaining observers
 
         // set up recycler view & adapter
@@ -66,10 +67,15 @@ public class MainActivity extends AppCompatActivity {
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 
+        // weather - every 10 min
         ContentResolver.requestSync(mAccount, WeatherContentProvider.AUTHORITY, settingsBundle);
-
         ContentResolver.setSyncAutomatically(mAccount, WeatherContentProvider.AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, WeatherContentProvider.AUTHORITY, Bundle.EMPTY, 60);
+        ContentResolver.addPeriodicSync(mAccount, WeatherContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 10);
+
+        // news - every 20 min
+        ContentResolver.requestSync(mAccount, NewsContentProvider.AUTHORITY, settingsBundle);
+        ContentResolver.setSyncAutomatically(mAccount, NewsContentProvider.AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, NewsContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 20);
     }
 
     @Override
@@ -102,8 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            //super.onChange(selfChange, uri);
-            Log.d(MainActivity.class.getCanonicalName(), "Starting onChange...");
+            Log.d(MainActivity.class.getCanonicalName(), "Starting Weather onChange...");
 
             Cursor cursor = getContentResolver().query(WeatherContentProvider.CONTENT_URI, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -126,6 +131,43 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!weatherCardUpdated) {
                     mCardsData.add(weatherCardData);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+            cursor.close();
+        }
+    }
+
+    public class NewsContentObserver extends ContentObserver {
+
+        public NewsContentObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            Log.d(MainActivity.class.getCanonicalName(), "Starting News onChange...");
+
+            Cursor cursor = getContentResolver().query(NewsContentProvider.CONTENT_URI, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                NewsCardData newsCardData = new NewsCardData(
+                        CardType.News,
+                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
+                );
+
+                boolean newsCardUpdated = false;
+
+                for (int i = 0; i < mCardsData.size(); i++) {
+                    if (mCardsData.get(i) instanceof NewsCardData) {
+                        mCardsData.remove(i);
+                        mCardsData.add(i, newsCardData);
+                        newsCardUpdated = true;
+                        break;
+                    }
+                }
+
+                if (!newsCardUpdated) {
+                    mCardsData.add(newsCardData);
                 }
                 mAdapter.notifyDataSetChanged();
             }

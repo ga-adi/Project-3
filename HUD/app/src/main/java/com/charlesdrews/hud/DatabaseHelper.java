@@ -76,7 +76,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public long addWeather(ContentValues values) {
-
         Log.d(DatabaseHelper.class.getCanonicalName(), "Starting addWeather...");
 
         SQLiteDatabase db = getWritableDatabase();
@@ -87,12 +86,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getWeather() {
+        Log.d(DatabaseHelper.class.getCanonicalName(), "Getting weather...");
+
         SQLiteDatabase db = getReadableDatabase();
+        //TODO - consider adding an "insert time" field and order desc by that
         Cursor cursor = db.query(
                 WEATHER_TABLE,              // table
                 WEATHER_COLUMNS,            // columns
                 null, null, null, null,     // selection, selectionArgs, groupBy, having
                 WEATHER_COL_ID + " DESC"    // orderBy
+        );
+        return cursor;
+    }
+
+    public long addNews(ContentValues values) {
+        Log.d(DatabaseHelper.class.getCanonicalName(), "Starting addNews...");
+
+        SQLiteDatabase db = getWritableDatabase();
+        //TODO - check if values contains the correct keys
+        long rowId = db.insert(NEWS_TABLE, null, values);
+        db.close();
+        return rowId;
+    }
+
+    public Cursor getNews() {
+        Log.d(DatabaseHelper.class.getCanonicalName(), "Getting news...");
+
+        SQLiteDatabase db = getReadableDatabase();
+        //TODO - consider adding an "insert time" field and order desc by that
+        Cursor cursor = db.query(
+                NEWS_TABLE,             // table
+                NEWS_COLUMNS,           // columns
+                null, null, null, null, // selection, selectionArgs, groupBy, having
+                NEWS_COL_ID + " DESC"   // orderBy
         );
         return cursor;
     }
