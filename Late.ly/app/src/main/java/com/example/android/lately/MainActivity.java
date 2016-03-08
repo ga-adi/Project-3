@@ -6,12 +6,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar mMainToolbar;
+    Window mWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +24,19 @@ public class MainActivity extends AppCompatActivity {
         mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
 
+        mWindow = this.getWindow();
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
+
+
 //        sets the top bar text and color
-//        mMainToolbar.setBackgroundColor(Color.YELLOW);
+        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
+
 
 //        creates the tabbar
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-//        tabLayout.setBackgroundColor(Color.YELLOW);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
 
 //        creating the first tab imageview
         TabLayout.Tab tab1 = tabLayout.newTab();
@@ -121,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         final PageAdapter adapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.setOffscreenPageLimit(5);
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -133,26 +144,36 @@ public class MainActivity extends AppCompatActivity {
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
                         mMainToolbar.setTitle(R.string.frag1text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
+
                         break;
                     case 1:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
                         mMainToolbar.setTitle(R.string.frag2text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag2));
+
                         break;
                     case 2:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
                         mMainToolbar.setTitle(R.string.frag3text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag3));
+
                         break;
                     case 3:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
                         mMainToolbar.setTitle(R.string.frag4text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag4));
+
                         break;
                     case 4:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
                         mMainToolbar.setTitle(R.string.frag5text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag5));
+
                         break;
                     default:
                 }
@@ -169,4 +190,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+//    ActionBar.Tab tab1 = bar.newTab();
+//    TextView tv1 = createTab("Tab 1", R.drawable.firsttabdrawable);
+//    tab1.setCustomView(tv1);
+//    tab1.setTabListener(this);
+
+//    View view = (View) tv1.getParent();
+//    LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams)view.getLayoutParams();
+//    view.setPadding(0, 0, 0, 0);
+//    view.setLayoutParams(lp);
+
+//    private TextView createTab(String titleText, int tabBackgroundDrawableId)
+//    {
+//        TextView tv = new TextView(this);
+//        //set caption and caption appearance
+//        tv.setTextAppearance(this, R.style.MyDefaultTabTextAppearance);
+//        tv.setText(titleText);
+//        //set appearance of tab
+//        tv.setBackgroundResource(tabBackgroundDrawableId);
+//        tv.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+//        //Make sure all tabs have the same height
+//        tv.setMaxLines(2);
+//        tv.setMinLines(2);
+//
+//        return tv;
+//    }
+
+    private ImageView createTab(String titleText, int tabImage) {
+
+//        TabLayout.Tab tab1 = tabLayout.newTab();
+        ImageView imageViewTest = new ImageView(this);
+        imageViewTest.setImageResource(android.R.drawable.ic_btn_speak_now);
+        imageViewTest.setPadding(50, 50, 50, 50);
+        imageViewTest.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag1));
+return imageViewTest;
+
+    }
+//    tabLayout.addTab(tab1);
+//    tab1.setCustomView(imageViewTest);
+
+
 }

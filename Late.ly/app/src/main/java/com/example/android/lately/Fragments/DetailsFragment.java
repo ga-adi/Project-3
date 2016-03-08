@@ -5,24 +5,30 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.lately.R;
 
 
-public class Fragment5 extends Fragment {
+public class DetailsFragment extends Fragment {
 
-    boolean mPortrait;
+    TextView detailsTest;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        int portrait = getResources().getConfiguration().orientation;
-        if (portrait == 1) {
-            mPortrait = true;
-        } else {
-            mPortrait = false;
-        }
-        return inflater.inflate(R.layout.fragment_fragment5, container, false);
+        return inflater.inflate(R.layout.fragment_details, container, false);
+
+
     }
+
+    public void blah(){
+        detailsTest = (TextView)getView().findViewById(R.id.blah);
+        detailsTest.setText("Bahahahahahahah");
+
+
+
+    }
+
 }

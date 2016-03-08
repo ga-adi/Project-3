@@ -45,11 +45,12 @@
         <!--android:layout_height="match_parent"-->
         <!--android:layout_weight="0.5" />-->
 
-        <TextView
+        <fragment
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="test" />
+            android:id="@+id/detailFragment"
+            android:name="com.example.android.lately.Fragments.DetailsFragment"/>
 
 
     </LinearLayout>

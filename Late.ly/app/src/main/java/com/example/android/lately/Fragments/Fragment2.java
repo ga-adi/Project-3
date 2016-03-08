@@ -10,11 +10,19 @@ import com.example.android.lately.R;
 
 
 public class Fragment2 extends Fragment {
+
+    boolean mPortrait;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        int portrait = getResources().getConfiguration().orientation;
+        if (portrait == 1) {
+            mPortrait = true;
+        } else {
+            mPortrait = false;
+        }
         return inflater.inflate(R.layout.fragment_fragment2, container, false);
     }
-
 }
