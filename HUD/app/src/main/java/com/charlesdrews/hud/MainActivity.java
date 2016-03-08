@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.charlesdrews.hud.Facebook.FacebookCardData;
 import com.charlesdrews.hud.News.NewsCardData;
 import com.charlesdrews.hud.News.NewsContentProvider;
 import com.charlesdrews.hud.Weather.WeatherCardData;
@@ -53,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
         mCardsData = new ArrayList<>();
 
         //TODO - remove this - it's for testing only
-        //mCardsData.add(new WeatherCardData(CardType.Weather, 52, 37));
-        //mCardsData.add(new FacebookCardData(CardType.Facebook, "Kyle", "Facebook is better than Twitter!"));
-        //mCardsData.add(new NewsCardData(CardType.News, "This is an important headline"));
+        mCardsData.add(new WeatherCardData(CardType.Weather, 65, 37));
+        mCardsData.add(new FacebookCardData(CardType.Facebook, "Kyle", "Facebook is better than Twitter!"));
+        mCardsData.add(new NewsCardData(CardType.News, "This is an important headline"));
 
         //TODO - consider using a hashmap to keep track of which card is in which position in the adapter
 
