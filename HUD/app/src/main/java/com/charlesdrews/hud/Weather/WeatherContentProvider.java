@@ -56,7 +56,6 @@ public class WeatherContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-
         Log.d(WeatherContentProvider.class.getCanonicalName(), "Starting insert...");
 
         int uriType = sUriMatcher.match(uri);
