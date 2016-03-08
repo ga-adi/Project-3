@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.HudCardData;
+package com.charlesdrews.hud;
 
 /**
  * Base class for card data - extend this and add fields specific to each type of card

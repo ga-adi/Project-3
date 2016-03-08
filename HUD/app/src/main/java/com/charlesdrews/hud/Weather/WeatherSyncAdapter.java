@@ -1,4 +1,4 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.Weather;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -11,15 +11,15 @@ import android.os.Bundle;
 /**
  * Created by charlie on 3/7/16.
  */
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     ContentResolver mContentResolver;
 
-    public SyncAdapter(Context context, boolean autoInitialize) {
+    public WeatherSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContentResolver = context.getContentResolver();
     }
 
-    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public WeatherSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
         mContentResolver = context.getContentResolver();
     }
@@ -27,5 +27,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         //TODO - use Retrofit to make API calls & parse responses
+        //TODO - and use content provider to save data in database
     }
 }

@@ -1,4 +1,4 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.Weather;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,20 +7,20 @@ import android.os.IBinder;
 /**
  * Created by charlie on 3/7/16.
  */
-public class SyncService extends Service {
+public class WeatherSyncService extends Service {
     private static final Object sSyncAdapterLock = new Object();
-    private static SyncAdapter sSyncAdapter = null;
+    private static WeatherSyncAdapter sWeatherSyncAdapter = null;
 
     @Override
     public void onCreate() {
         synchronized (sSyncAdapterLock) {
-            if (sSyncAdapter == null)
-                sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
+            if (sWeatherSyncAdapter == null)
+                sWeatherSyncAdapter = new WeatherSyncAdapter(getApplicationContext(), true);
         }
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return sSyncAdapter.getSyncAdapterBinder();
+        return sWeatherSyncAdapter.getSyncAdapterBinder();
     }
 }

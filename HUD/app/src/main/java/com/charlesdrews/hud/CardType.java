@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.HudCardData;
+package com.charlesdrews.hud;
 
 /**
  * Card types to be shown by HUD

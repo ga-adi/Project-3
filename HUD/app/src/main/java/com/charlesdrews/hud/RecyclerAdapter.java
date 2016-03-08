@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.charlesdrews.hud.HudCardData.CardData;
-import com.charlesdrews.hud.HudCardData.CardType;
-import com.charlesdrews.hud.HudCardData.TwitterCardData;
-import com.charlesdrews.hud.HudCardData.WeatherCardData;
+import com.charlesdrews.hud.Twitter.TwitterCardData;
+import com.charlesdrews.hud.Weather.WeatherCardData;
 
 import java.util.ArrayList;
 import java.util.Arrays;

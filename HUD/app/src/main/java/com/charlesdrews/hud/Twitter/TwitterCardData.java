@@ -1,4 +1,7 @@
-package com.charlesdrews.hud.HudCardData;
+package com.charlesdrews.hud.Twitter;
+
+import com.charlesdrews.hud.CardData;
+import com.charlesdrews.hud.CardType;
 
 /**
  * Created by charlie on 3/7/16.
