@@ -40,18 +40,17 @@
             android:layout_weight="0.5" />
 
         <!--<fragment-->
-        <!--android:id="@+id/detailsFragmentLandscapeMode"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="0.5" />-->
+            <!--android:id="@+id/detailFragment"-->
+            <!--android:name="com.example.android.lately.Fragments.DetailsFragment"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="0.5" />-->
 
-        <fragment
+        <FrameLayout
+            android:id="@+id/detailsFragmentContainer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:id="@+id/detailFragment"
-            android:name="com.example.android.lately.Fragments.DetailsFragment"/>
-
+            android:layout_weight="0.5" />
 
     </LinearLayout>
 </RelativeLayout>

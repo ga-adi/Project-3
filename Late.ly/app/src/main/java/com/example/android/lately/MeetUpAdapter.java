@@ -23,6 +23,8 @@ public class MeetUpAdapter extends RecyclerView.Adapter<MeetUpAdapter.MeetUpHold
 
     @Override
     public MeetUpAdapter.MeetUpHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_card, parent, false);
         
         
@@ -32,11 +34,11 @@ public class MeetUpAdapter extends RecyclerView.Adapter<MeetUpAdapter.MeetUpHold
     @Override
     public void onBindViewHolder(MeetUpAdapter.MeetUpHolder holder, int position) {
         
-        MeetUpClass blah = meetUpClassList.get(position);
-        holder.vGroupName.setText(blah.getGroup());
-        holder.vTime.setText(blah.getTime());
-        holder.vEventName.setText(blah.getEvent());
-        holder.vNumberOfPeople.setText(blah.getNumberOfPeople());
+        MeetUpClass meetUp = meetUpClassList.get(position);
+        holder.vGroupName.setText(meetUp.getGroup());
+        holder.vTime.setText(meetUp.getTime());
+        holder.vEventName.setText(meetUp.getEvent());
+        holder.vNumberOfPeople.setText(meetUp.getNumberOfPeople());
     }
 
     @Override
@@ -63,5 +65,9 @@ public class MeetUpAdapter extends RecyclerView.Adapter<MeetUpAdapter.MeetUpHold
         }
     }
 
+    public int getItemViewType(int position) {
+
+        return super.getItemViewType(position);
+    }
 }
 

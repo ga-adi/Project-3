@@ -2,6 +2,9 @@ package com.example.android.lately;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,10 +14,13 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.android.lately.Fragments.DetailsFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     Window mWindow;
     Toolbar mMainToolbar;
+    boolean mPortrait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PageAdapter adapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.setOffscreenPageLimit(5);
@@ -168,5 +174,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        int portrait = getResources().getConfiguration().orientation;
+        if (portrait == 1) {
+            mPortrait = true;
+        } else {
+            mPortrait = false;
+        }
+
+        if (mPortrait) {
+        } else {
+            Fragment fragment = new DetailsFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.detailsFragmentContainer, fragment);
+            transaction.commit();
+        }
     }
 }
