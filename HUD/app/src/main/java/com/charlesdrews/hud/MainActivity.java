@@ -11,7 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.charlesdrews.hud.Twitter.TwitterCardData;
+import com.charlesdrews.hud.Facebook.FacebookCardData;
+import com.charlesdrews.hud.News.NewsCardData;
 import com.charlesdrews.hud.Weather.WeatherCardData;
 import com.charlesdrews.hud.Weather.WeatherContentProvider;
 
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO - remove this - it's for testing only
         mCardsData.add(new WeatherCardData(CardType.Weather, 52, 37));
-        mCardsData.add(new TwitterCardData(CardType.Twitter, "Kyle", "Twitter is my favorite!"));
+        mCardsData.add(new FacebookCardData(CardType.Facebook, "Kyle", "Facebook is better than Twitter!"));
+        mCardsData.add(new NewsCardData(CardType.News, "This is an important headline"));
 
         //TODO - consider using a hashmap to keep track of which card is in which position in the adapter
 

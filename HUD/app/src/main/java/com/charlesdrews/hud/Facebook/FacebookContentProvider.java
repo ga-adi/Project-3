@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.Twitter;
+package com.charlesdrews.hud.Facebook;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,8 +9,8 @@ import android.net.Uri;
  * Manage reads/writes to/from database
  * Created by charlie on 3/7/16.
  */
-public class TwitterContentProvider extends ContentProvider {
-    public static final String AUTHORITY = "com.charlesdrews.hud.Twitter.TwitterContentProvider";
+public class FacebookContentProvider extends ContentProvider {
+    public static final String AUTHORITY = "com.charlesdrews.hud.Facebook.FacebookContentProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY); //TODO - add table name from db helper
 
     /*
