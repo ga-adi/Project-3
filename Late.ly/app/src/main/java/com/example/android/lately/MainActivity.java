@@ -13,33 +13,26 @@ import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar mMainToolbar;
     Window mWindow;
+    Toolbar mMainToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mMainToolbar);
-
         mWindow = this.getWindow();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
 
-
-
-//        sets the top bar text and color
+        mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mMainToolbar);
         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
 
-
-//        creates the tabbar
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
 
-//        creating the first tab imageview
         TabLayout.Tab tab1 = tabLayout.newTab();
         ImageView imageViewTest = new ImageView(this);
         imageViewTest.setImageResource(android.R.drawable.ic_btn_speak_now);
@@ -60,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
 //        textTest.setBackgroundColor(Color.YELLOW);
 //        tab1.setCustomView(textTest);
 //        tabLayout.addTab(tab1);
-
-//        gets parent view and gets ride of padding in tab text
-
 
         TabLayout.Tab tab2 = tabLayout.newTab();
         ImageView imageViewTest2 = new ImageView(this);
@@ -118,15 +108,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        adds tabs to tablayout bar
 //        tabLayout.addTab(tabLayout.newTab().setText("Boop"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Grar"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Marl"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
-        //tab text color
-//        tabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
-
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PageAdapter adapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -139,42 +123,36 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-//                somehow here get the color from the tabs and fit it into setbackground color
                 switch (viewPager.getCurrentItem()) {
                     case 0:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
                         mMainToolbar.setTitle(R.string.frag1text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
                         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
-
                         break;
                     case 1:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
                         mMainToolbar.setTitle(R.string.frag2text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
                         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag2));
-
                         break;
                     case 2:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
                         mMainToolbar.setTitle(R.string.frag3text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
                         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag3));
-
                         break;
                     case 3:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
                         mMainToolbar.setTitle(R.string.frag4text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
                         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag4));
-
                         break;
                     case 4:
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
                         mMainToolbar.setTitle(R.string.frag5text);
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
                         mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag5));
-
                         break;
                     default:
                 }
@@ -191,47 +169,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-//    ActionBar.Tab tab1 = bar.newTab();
-//    TextView tv1 = createTab("Tab 1", R.drawable.firsttabdrawable);
-//    tab1.setCustomView(tv1);
-//    tab1.setTabListener(this);
-
-//    View view = (View) tv1.getParent();
-//    LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams)view.getLayoutParams();
-//    view.setPadding(0, 0, 0, 0);
-//    view.setLayoutParams(lp);
-
-//    private TextView createTab(String titleText, int tabBackgroundDrawableId)
-//    {
-//        TextView tv = new TextView(this);
-//        //set caption and caption appearance
-//        tv.setTextAppearance(this, R.style.MyDefaultTabTextAppearance);
-//        tv.setText(titleText);
-//        //set appearance of tab
-//        tv.setBackgroundResource(tabBackgroundDrawableId);
-//        tv.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-//        //Make sure all tabs have the same height
-//        tv.setMaxLines(2);
-//        tv.setMinLines(2);
-//
-//        return tv;
-//    }
-
-    private ImageView createTab(String titleText, int tabImage) {
-
-//        TabLayout.Tab tab1 = tabLayout.newTab();
-        ImageView imageViewTest = new ImageView(this);
-        imageViewTest.setImageResource(android.R.drawable.ic_btn_speak_now);
-        imageViewTest.setPadding(50, 50, 50, 50);
-        imageViewTest.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag1));
-return imageViewTest;
-
-    }
-//    tabLayout.addTab(tab1);
-//    tab1.setCustomView(imageViewTest);
-
-
 }
