@@ -1,4 +1,4 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.Weather;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,8 +9,8 @@ import android.net.Uri;
  * Manage reads/writes to/from database
  * Created by charlie on 3/7/16.
  */
-public class HudContentProvider extends ContentProvider {
-    public static final String AUTHORITY = "com.charlesdrews.hud.HudContentProvider";
+public class WeatherContentProvider extends ContentProvider {
+    public static final String AUTHORITY = "com.charlesdrews.hud.Weather.WeatherContentProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY); //TODO - add table name from db helper
 
     /*

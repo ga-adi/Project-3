@@ -36,20 +36,55 @@
         </service>
 
         <provider
-            android:name="com.charlesdrews.hud.HudContentProvider"
-            android:authorities="com.charlesdrews.hud.HudContentProvider"
-            android:label="my provider"
+            android:name=".Weather.WeatherContentProvider"
+            android:authorities="com.charlesdrews.hud.Weather.WeatherContentProvider"
+            android:label="@string/weather_provider_label"
             android:exported="false"
             android:syncable="true"/>
 
         <service
-            android:name="com.charlesdrews.hud.SyncService">
+            android:name=".Weather.WeatherSyncService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/weather_sync_adapter" />
         </service>
+
+        <provider
+            android:name=".Twitter.TwitterContentProvider"
+            android:authorities="com.charlesdrews.hud.Twitter.TwitterContentProvider"
+            android:label="@string/twitter_provider_label"
+            android:exported="false"
+            android:syncable="true"/>
+
+        <service
+            android:name=".Twitter.TwitterSyncService">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/twitter_sync_adapter" />
+        </service>
+
+        <provider
+            android:name=".News.NewsContentProvider"
+            android:authorities="com.charlesdrews.hud.News.NewsContentProvider"
+            android:label="@string/news_provider_label"
+            android:exported="false"
+            android:syncable="true"/>
+
+        <service
+            android:name=".News.NewsSyncService">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/news_sync_adapter" />
+        </service>
+
     </application>
 </manifest>

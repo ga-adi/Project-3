@@ -11,10 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.charlesdrews.hud.HudCardData.CardData;
-import com.charlesdrews.hud.HudCardData.CardType;
-import com.charlesdrews.hud.HudCardData.TwitterCardData;
-import com.charlesdrews.hud.HudCardData.WeatherCardData;
+import com.charlesdrews.hud.Twitter.TwitterCardData;
+import com.charlesdrews.hud.Weather.WeatherCardData;
+import com.charlesdrews.hud.Weather.WeatherContentProvider;
 
 import java.util.ArrayList;
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         getContentResolver().registerContentObserver(
-                HudContentProvider.CONTENT_URI,
+                WeatherContentProvider.CONTENT_URI,
                 true,
                 new CardContentObserver(new Handler())
         );

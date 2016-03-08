@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">HUD</string>
     <string name="action_settings">Settings</string>
+
+    <string name="account_type">example.com</string>
+    <string name="weather_provider_label">Weather Content Provider</string>
+    <string name="twitter_provider_label">Twitter Content Provider</string>
+    <string name="news_provider_label">News Content Provider</string>
 </resources>
