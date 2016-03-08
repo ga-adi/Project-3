@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.HudCardData;
+package com.charlesdrews.hud;
 
 /**
  * Card types to be shown by HUD
@@ -7,7 +7,7 @@ package com.charlesdrews.hud.HudCardData;
 public enum CardType {
     Weather,
     News,
-    Twitter,
+    Facebook,
     Movies,
     Concerts
 }

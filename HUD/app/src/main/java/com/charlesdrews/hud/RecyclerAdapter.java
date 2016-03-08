@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.charlesdrews.hud.HudCardData.CardData;
-import com.charlesdrews.hud.HudCardData.CardType;
-import com.charlesdrews.hud.HudCardData.TwitterCardData;
-import com.charlesdrews.hud.HudCardData.WeatherCardData;
+import com.charlesdrews.hud.Facebook.FacebookCardData;
+import com.charlesdrews.hud.News.NewsCardData;
+import com.charlesdrews.hud.Weather.WeatherCardData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,10 +38,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
                 return new WeatherCard(view, type);
 
-            case Twitter:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.twitter_card, parent, false);
-                return new TwitterCard(view, type);
+            case Facebook:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                return new FacebookCard(view, type);
 
+            case News:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
+                return new NewsCard(view, type);
             default:
                 return null;
         }
@@ -68,15 +70,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 weatherCard.mLowTemp.setText("Low temp: " + weatherData.getLowTemp());
                 return;
 
-            case Twitter:
-                TwitterCard twitterCard = (TwitterCard) holder;
-                TwitterCardData twitterData = (TwitterCardData) data;
+            case Facebook:
+                FacebookCard facebookCard = (FacebookCard) holder;
+                FacebookCardData facebookData = (FacebookCardData) data;
 
-                twitterCard.mAuthor.setText(twitterData.getAuthor());
-                twitterCard.mTweetText.setText(twitterData.getTweetText());
+                facebookCard.mAuthor.setText(facebookData.getAuthor());
+                facebookCard.mStatusUpdate.setText(facebookData.getStatusUpdate());
                 return;
 
             case News:
+                NewsCard newsCard = (NewsCard) holder;
+                NewsCardData newsCardData = (NewsCardData) data;
+
+                newsCard.mHeadline.setText(newsCardData.getHeadline());
                 return;
 
             default:
@@ -113,13 +119,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-    public class TwitterCard extends CardViewHolder {
-        TextView mAuthor, mTweetText;
+    public class FacebookCard extends CardViewHolder {
+        TextView mAuthor, mStatusUpdate;
 
-        public TwitterCard(View itemView, CardType cardType) {
+        public FacebookCard(View itemView, CardType cardType) {
             super(itemView, cardType);
             mAuthor = (TextView) itemView.findViewById(R.id.author);
-            mTweetText = (TextView) itemView.findViewById(R.id.tweet_text);
+            mStatusUpdate = (TextView) itemView.findViewById(R.id.status_update);
+        }
+    }
+
+    public class NewsCard extends CardViewHolder {
+        TextView mHeadline;
+
+        public NewsCard(View itemView, CardType cardType) {
+            super(itemView, cardType);
+            mHeadline = (TextView) itemView.findViewById(R.id.headline);
         }
     }
 }
