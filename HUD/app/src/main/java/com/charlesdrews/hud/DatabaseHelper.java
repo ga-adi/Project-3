@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "hud_db.db";
 
-    //TODO - replace with actual column names - these are just placehoders
+    //TODO - replace with actual column names - these are just placeholders
 
     public static final String WEATHER_TABLE = "weather";
     public static final String WEATHER_COL_ID = "_id";
@@ -50,15 +50,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper mInstance;
 
-    public static DatabaseHelper getInstance(Context context) {
+    public static synchronized DatabaseHelper getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new DatabaseHelper(context.getApplicationContext(), null);
+            mInstance = new DatabaseHelper(context, null);
         }
         return mInstance;
     }
 
     private DatabaseHelper(Context context, SQLiteDatabase.CursorFactory factory) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        super(context.getApplicationContext(), DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
     @Override
