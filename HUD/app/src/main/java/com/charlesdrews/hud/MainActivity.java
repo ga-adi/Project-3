@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
+        //TODO - figure out why this is syncing so frequently (definitely not just every 15 min)
         ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
     }
 
@@ -138,15 +139,13 @@ public class MainActivity extends AppCompatActivity {
         return newAccount;
     }
 
-    private class UpdateDataAsyncTask extends AsyncTask<CardType, Void, Cursor> {
+    private class UpdateDataAsyncTask extends AsyncTask<CardType, Void, Boolean> {
         private final String TAG = UpdateDataAsyncTask.class.getCanonicalName();
 
         private CardType mCardType;
 
         @Override
-        protected Cursor doInBackground(CardType... params) {
-            Log.d(UpdateDataAsyncTask.class.getCanonicalName(), "Starting async load of " + params[0].toString());
-
+        protected Boolean doInBackground(CardType... params) {
             if ((mCardType = params[0]) == null) {
                 cancel(true);
             }
@@ -154,31 +153,36 @@ public class MainActivity extends AppCompatActivity {
             switch (mCardType) {
                 case Facebook:
                     Log.d(TAG, "doInBackground: query facebook");
-                    return getContentResolver().query(CardContentProvider.FACEBOOK_URI, null, null, null, null);
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.FACEBOOK_URI, null, null, null, null));
+
                 case News:
                     Log.d(TAG, "doInBackground: query news");
-                    return getContentResolver().query(CardContentProvider.NEWS_URI, null, null, null, null);
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.NEWS_URI, null, null, null, null));
+
                 case Weather:
                     Log.d(TAG, "doInBackground: query weather");
-                    return getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null);
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.WEATHER_URI, null, null, null, null));
+
                 default:
                     return null;
             }
         }
 
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
+        private boolean updateCardDataArrayFromCursor(Cursor cursor) {
+            boolean dataAddedSuccessfully = false;
 
             if (cursor != null && cursor.moveToFirst()) {
-                // remove any pre-existing cards of same type
+                // remove any pre-existing card data objects of same type
                 for (int i = 0; i < mCardsData.size(); i++) {
                     if (mCardsData.get(i).getType() == mCardType) {
                         mCardsData.remove(i);
                     }
                 }
 
-                // insert new card
+                // insert new card data object
                 switch (mCardType) {
                     case Facebook:
                         FacebookCardData facebookCardData = new FacebookCardData(
@@ -187,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
                         );
                         mCardsData.add(0, facebookCardData);
+                        dataAddedSuccessfully = true;
                         break;
 
                     case News:
@@ -195,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
                         );
                         mCardsData.add(0, newsCardData);
+                        dataAddedSuccessfully = true;
                         break;
 
                     case Weather:
@@ -204,13 +210,24 @@ public class MainActivity extends AppCompatActivity {
                                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
                         );
                         mCardsData.add(0, weatherCardData);
+                        dataAddedSuccessfully = true;
                         break;
 
                     default:
+                        dataAddedSuccessfully = false;
                         break;
                 }
-                mAdapter.notifyDataSetChanged();
                 cursor.close();
+            }
+            return dataAddedSuccessfully;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            if (aBoolean) {
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
