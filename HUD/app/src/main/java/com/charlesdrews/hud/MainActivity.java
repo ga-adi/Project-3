@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,21 +18,31 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getCanonicalName();
-
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
+    public LoginButton mFacebookLoginButton;
+    public CallbackManager mCallbackManager;
+    private TextView mLoginText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // register content observer
+        //TODO facebook stuff
+        mLoginText = (TextView)findViewById(R.id.status_update);
+        //TODO - can this initialization be done in an async task?
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        // register content observers
         getContentResolver().registerContentObserver(
                 Uri.parse(CardContentProvider.BASE_URI_STRING), // base uri w/o API-specific path
                 true,                                           // notify for API-specific paths
@@ -88,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class CardContentObserver extends ContentObserver {
+        private final String TAG = CardContentObserver.class.getCanonicalName();
 
         public CardContentObserver(Handler handler) {
             super(handler);
@@ -98,21 +115,21 @@ public class MainActivity extends AppCompatActivity {
             int uriType = CardContentProvider.sUriMatcher.match(uri);
             
             switch (uriType) {
-                case CardContentProvider.FACEBOOK:
+                case CardContentProvider.FACEBOOK: {
                     Log.d(TAG, "onChange: facebook");
                     new UpdateDataAsyncTask().execute(CardType.Facebook);
                     break;
-
-                case CardContentProvider.NEWS:
+                }
+                case CardContentProvider.NEWS: {
                     Log.d(TAG, "onChange: news");
                     new UpdateDataAsyncTask().execute(CardType.News);
                     break;
-
-                case CardContentProvider.WEATHER:
+                }
+                case CardContentProvider.WEATHER: {
                     Log.d(TAG, "onChange: weather");
                     new UpdateDataAsyncTask().execute(CardType.Weather);
                     break;
-
+                }
                 default:
                     break;
             }
@@ -148,21 +165,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
             switch (mCardType) {
-                case Facebook:
+                case Facebook: {
                     Log.d(TAG, "doInBackground: query facebook");
                     return updateCardDataArrayFromCursor(getContentResolver().query(
                             CardContentProvider.FACEBOOK_URI, null, null, null, null));
-
-                case News:
+                }
+                case News: {
                     Log.d(TAG, "doInBackground: query news");
                     return updateCardDataArrayFromCursor(getContentResolver().query(
                             CardContentProvider.NEWS_URI, null, null, null, null));
-
-                case Weather:
+                }
+                case Weather: {
                     Log.d(TAG, "doInBackground: query weather");
                     return updateCardDataArrayFromCursor(getContentResolver().query(
                             CardContentProvider.WEATHER_URI, null, null, null, null));
-
+                }
                 default:
                     return null;
             }
@@ -181,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // insert new card data object
                 switch (mCardType) {
-                    case Facebook:
+                    case Facebook: {
                         FacebookCardData facebookCardData = new FacebookCardData(
                                 CardType.Facebook,
                                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
@@ -190,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
                         mCardsData.add(0, facebookCardData);
                         dataAddedSuccessfully = true;
                         break;
-
-                    case News:
+                    }
+                    case News: {
                         NewsCardData newsCardData = new NewsCardData(
                                 CardType.News,
                                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
@@ -199,8 +216,8 @@ public class MainActivity extends AppCompatActivity {
                         mCardsData.add(0, newsCardData);
                         dataAddedSuccessfully = true;
                         break;
-
-                    case Weather:
+                    }
+                    case Weather: {
                         WeatherCardData weatherCardData = new WeatherCardData(
                                 CardType.Weather,
                                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_HIGH)),
@@ -209,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                         mCardsData.add(0, weatherCardData);
                         dataAddedSuccessfully = true;
                         break;
-
+                    }
                     default:
                         dataAddedSuccessfully = false;
                         break;
@@ -227,5 +244,35 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    public void facebookLogin(){
+
+        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions("user_likes");
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
+
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //TODO - this crashes if you close the login window without logging in
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

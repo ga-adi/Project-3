@@ -35,18 +35,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         //TODO - inflate the correct layout for each possible CardType value
         switch (type) {
-            case Weather:
+            case Weather: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
                 return new WeatherCard(view, type);
-
-            case Facebook:
+            }
+            case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
                 return new FacebookCard(view, type);
-
-            case News:
+            }
+            case News: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
                 return new NewsCard(view, type);
-
+            }
             default:
                 return null;
         }
@@ -64,29 +64,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
-            case Weather:
+            case Weather: {
                 WeatherCard weatherCard = (WeatherCard) holder;
                 WeatherCardData weatherData = (WeatherCardData) data;
 
                 weatherCard.mHighTemp.setText("High temp: " + weatherData.getHighTemp());
                 weatherCard.mLowTemp.setText("Low temp: " + weatherData.getLowTemp());
                 break;
-
-            case Facebook:
+            }
+            case Facebook: {
                 FacebookCard facebookCard = (FacebookCard) holder;
                 FacebookCardData facebookData = (FacebookCardData) data;
 
                 facebookCard.mAuthor.setText(facebookData.getAuthor());
                 facebookCard.mStatusUpdate.setText(facebookData.getStatusUpdate());
                 break;
-
-            case News:
+            }
+            case News: {
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
                 newsCard.mHeadline.setText(newsCardData.getHeadline());
                 break;
-
+            }
             default:
                 break;
         }
