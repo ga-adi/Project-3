@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO - consider using a hashmap to keep track of which card is in which position in the adapter
 
         mAdapter = new RecyclerAdapter(mCardsData);
+        mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
         // set up syncing
