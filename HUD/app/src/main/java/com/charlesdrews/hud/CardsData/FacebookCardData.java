@@ -1,7 +1,4 @@
-package com.charlesdrews.hud.Facebook;
-
-import com.charlesdrews.hud.CardData;
-import com.charlesdrews.hud.CardType;
+package com.charlesdrews.hud.CardsData;
 
 /**
  * Created by charlie on 3/7/16.
