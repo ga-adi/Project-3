@@ -18,16 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.charlesdrews.hud.Facebook.FacebookContentProvider;
-
-import com.charlesdrews.hud.Facebook.FacebookCardData;
-import com.charlesdrews.hud.News.NewsCardData;
-import com.charlesdrews.hud.News.NewsContentProvider;
-import com.charlesdrews.hud.Weather.WeatherCardData;
-import com.charlesdrews.hud.Weather.WeatherContentProvider;
+import com.charlesdrews.hud.CardsData.CardData;
+import com.charlesdrews.hud.CardsData.CardType;
+import com.charlesdrews.hud.CardsData.FacebookCardData;
+import com.charlesdrews.hud.CardsData.NewsCardData;
+import com.charlesdrews.hud.CardsData.WeatherCardData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getCanonicalName();

@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.charlesdrews.hud.Facebook.FacebookCardData;
-import com.charlesdrews.hud.News.NewsCardData;
-import com.charlesdrews.hud.Weather.WeatherCardData;
+import com.charlesdrews.hud.CardsData.CardData;
+import com.charlesdrews.hud.CardsData.CardType;
+import com.charlesdrews.hud.CardsData.FacebookCardData;
+import com.charlesdrews.hud.CardsData.NewsCardData;
+import com.charlesdrews.hud.CardsData.WeatherCardData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +21,11 @@ import java.util.List;
  * Created by charlie on 3/7/16.
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
+    private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
-    private ArrayList<CardType> mCardTypes;
 
     public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
-        mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     }
 
     @Override
@@ -45,6 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             case News:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
                 return new NewsCard(view, type);
+
             default:
                 return null;
         }
@@ -68,7 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
                 weatherCard.mHighTemp.setText("High temp: " + weatherData.getHighTemp());
                 weatherCard.mLowTemp.setText("Low temp: " + weatherData.getLowTemp());
-                return;
+                break;
 
             case Facebook:
                 FacebookCard facebookCard = (FacebookCard) holder;
@@ -76,17 +78,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
                 facebookCard.mAuthor.setText(facebookData.getAuthor());
                 facebookCard.mStatusUpdate.setText(facebookData.getStatusUpdate());
-                return;
+                break;
 
             case News:
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
                 newsCard.mHeadline.setText(newsCardData.getHeadline());
-                return;
+                break;
 
             default:
-                return;
+                break;
         }
     }
 

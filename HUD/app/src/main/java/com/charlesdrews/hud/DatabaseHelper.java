@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.charlesdrews.hud.Weather.WeatherCardData;
-
 /**
  * Store results from API calls in a local database for offline availability
  * Created by charlie on 3/8/16.
