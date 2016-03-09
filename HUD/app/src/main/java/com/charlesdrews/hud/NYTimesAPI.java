@@ -1,5 +1,7 @@
 package com.charlesdrews.hud;
 
+import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,7 +26,7 @@ public interface NYTimesAPI {
     Call <NYTimesAPIResponse> getNYTimes();
 
     @GET("news/v3/content/all/all/4.json?limit=20&api-key=9d6920a74c817405b74a87b98db7a4da%3A4%3A74605150")
-    Call <NYTimesAPIResponse> getTopNYTimes();
+    Call <NYTimesAPIResult> getTopNYTimes();
 
     class Factory {
 

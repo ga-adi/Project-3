@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class NYTimesAPIResponse {
+public class NYTimesAPIResult {
 
     @SerializedName("status")
     @Expose

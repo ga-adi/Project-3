@@ -9,6 +9,18 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
+import com.charlesdrews.hud.NYTimesTop.Result;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -57,6 +69,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public ContentValues getNewsData() {
         // TODO - make the news API call, parse the response, and create
         // TODO   a new ContentValues object with values for each column in the database
+
+        //ListView listView;
+        NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
+            @Override
+            public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
+                List<Result> searchlist = response.body().getResults();
+                //listView = (ListView)findViewById(R.id.newsListView);
+               // ArrayAdapter<Result> adapter = new ArrayAdapter<Result>(SyncAdapter.this, android.R.layout.simple_list_item_1, searchlist);
+                //listView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<NYTimesAPIResult> call, Throwable t) {
+
+                Log.d("NEWSFAIL","did not recieve Times Top Stories API Result");
+            }
+        });
 
         // manual test values
         ContentValues values = new ContentValues();
