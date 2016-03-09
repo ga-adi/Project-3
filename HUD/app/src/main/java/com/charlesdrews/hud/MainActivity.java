@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.charlesdrews.hud.Facebook.FacebookContentProvider;
-import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.Facebook.FacebookCardData;
 import com.charlesdrews.hud.News.NewsCardData;
@@ -31,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getCanonicalName();
+
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
@@ -48,36 +49,28 @@ public class MainActivity extends AppCompatActivity {
         // register content observers
         /*
         getContentResolver().registerContentObserver(
-                WeatherContentProvider.CONTENT_URI, true, new WeatherContentObserver(new Handler()));
+                WeatherContentProvider.WEATHER_URI, true, new WeatherContentObserver(new Handler()));
         getContentResolver().registerContentObserver(
-                NewsContentProvider.CONTENT_URI, true, new NewsContentObserver(new Handler()));
-                */
+                NewsContentProvider.WEATHER_URI, true, new NewsContentObserver(new Handler()));
         getContentResolver().registerContentObserver(FacebookContentProvider.CONTENT_URI, true,
                 new CardContentObserver(new Handler(), CardType.Facebook));
         getContentResolver().registerContentObserver(NewsContentProvider.CONTENT_URI, true,
                 new CardContentObserver(new Handler(), CardType.News));
         getContentResolver().registerContentObserver(WeatherContentProvider.CONTENT_URI, true,
                 new CardContentObserver(new Handler(), CardType.Weather));
+                */
+        getContentResolver().registerContentObserver(
+                Uri.parse(CardContentProvider.BASE_URI_STRING),
+                true,
+                new CardContentObserver(new Handler())
+        );
         //TODO - create and register remaining observers
 
         // set up recycler view & adapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-
         mCardsData = new ArrayList<>();
-
-        //TODO - remove this - it's for testing only
-        WeatherCardData weatherCardData = new WeatherCardData(CardType.Weather, 65, 37);
-        mCardsData.add(weatherCardData);
-        mCardMap.put(CardType.Weather, mCardsData.indexOf(weatherCardData));
-
-        FacebookCardData facebookCardData = new FacebookCardData(CardType.Facebook, "Kyle", "Facebook is better than Twitter!");
-        mCardsData.add(facebookCardData);
-        mCardMap.put(CardType.Facebook, mCardsData.indexOf(facebookCardData));
-
-
         mAdapter = new RecyclerAdapter(mCardsData);
         recyclerView.setAdapter(mAdapter);
 
@@ -85,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+        ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
 
+        /*
         // weather - every 10 min
         ContentResolver.requestSync(mAccount, WeatherContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, WeatherContentProvider.AUTHORITY, true);
@@ -95,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         ContentResolver.requestSync(mAccount, NewsContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, NewsContentProvider.AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, NewsContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 20);
+        */
     }
 
     @Override
@@ -120,22 +118,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class CardContentObserver extends ContentObserver {
-        private CardType mObserverCardType;
 
-        public CardContentObserver(Handler handler, CardType type) {
+        public CardContentObserver(Handler handler) {
             super(handler);
-            mObserverCardType = type;
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            Log.d(MainActivity.class.getCanonicalName(), "Starting Weather onChange...");
-            UpdateDataAsyncTask task = new UpdateDataAsyncTask();
-            task.execute(CardType.Weather);
-        }
+            int uriType = CardContentProvider.sUriMatcher.match(uri);
+            
+            switch (uriType) {
+                case CardContentProvider.FACEBOOK:
+                    Log.d(TAG, "onChange: facebook");
+                    new UpdateDataAsyncTask().execute(CardType.Facebook);
+                    break;
 
-        public CardType getObserverCardType() {
-            return mObserverCardType;
+                case CardContentProvider.NEWS:
+                    Log.d(TAG, "onChange: news");
+                    new UpdateDataAsyncTask().execute(CardType.News);
+                    break;
+
+                case CardContentProvider.WEATHER:
+                    Log.d(TAG, "onChange: weather");
+                    new UpdateDataAsyncTask().execute(CardType.Weather);
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
@@ -198,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class UpdateDataAsyncTask extends AsyncTask<CardType, Void, Cursor> {
+        private final String TAG = UpdateDataAsyncTask.class.getCanonicalName();
+
         private CardType mCardType;
 
         @Override
@@ -210,11 +222,14 @@ public class MainActivity extends AppCompatActivity {
 
             switch (mCardType) {
                 case Facebook:
-                    return getContentResolver().query(FacebookContentProvider.CONTENT_URI, null, null, null, null);
+                    Log.d(TAG, "doInBackground: query facebook");
+                    return getContentResolver().query(CardContentProvider.FACEBOOK_URI, null, null, null, null);
                 case News:
-                    return getContentResolver().query(NewsContentProvider.CONTENT_URI, null, null, null, null);
+                    Log.d(TAG, "doInBackground: query news");
+                    return getContentResolver().query(CardContentProvider.NEWS_URI, null, null, null, null);
                 case Weather:
-                    return getContentResolver().query(WeatherContentProvider.CONTENT_URI, null, null, null, null);
+                    Log.d(TAG, "doInBackground: query weather");
+                    return getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null);
                 default:
                     return null;
             }
