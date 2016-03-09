@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
         mCardsData = new ArrayList<>();
         mAdapter = new RecyclerAdapter(mCardsData);
+        mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
         // set up syncing
