@@ -10,15 +10,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,11 +24,6 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.CardsData.CardData;
@@ -43,14 +34,7 @@ import com.charlesdrews.hud.CardsData.WeatherCardData;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<CardData> mCardsData;
@@ -60,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
     public CallbackManager mCallbackManager;
     private TextView mLoginText;
 
-    //"http://api.nytimes.com/svc/search/v2/articlesearch.json?q=new+york&page=1&sort=newest&api-key=29975101513df1dfdf9895c3324ca6d2:6:74605150";
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -83,21 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
         // set up recycler view & adapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-
         mCardsData = new ArrayList<>();
-
-        //TODO - remove this - it's for testing only
-        mCardsData.add(new WeatherCardData(CardType.Weather, 65, 37));
-        mCardsData.add(new FacebookCardData(CardType.Facebook, "Kyle", "Facebook is better than Twitter!"));
-        mCardsData.add(new NewsCardData(CardType.News, "This is an important headline"));
-
-        //TODO - consider using a hashmap to keep track of which card is in which position in the adapter
-
         mAdapter = new RecyclerAdapter(mCardsData);
-        mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
         // set up syncing
@@ -143,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             int uriType = CardContentProvider.sUriMatcher.match(uri);
-            
+
             switch (uriType) {
                 case CardContentProvider.FACEBOOK: {
                     Log.d(TAG, "onChange: facebook");
@@ -163,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
-            cursor.close();
         }
     }
 
@@ -224,9 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < mCardsData.size(); i++) {
                     if (mCardsData.get(i).getType() == mCardType) {
                         mCardsData.remove(i);
-                        mCardsData.add(i, newsCardData);
-                        newsCardUpdated = true;
-                        break;
                     }
                 }
 
@@ -277,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
             if (aBoolean) {
                 mAdapter.notifyDataSetChanged();
             }
-            cursor.close();
         }
     }
 
@@ -291,25 +256,6 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
                 mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
-
-        /*
-         * Add the account and account type, no password or user data
-         * If successful, return the Account object, otherwise report an error.
-         */
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-          /*
-           * If you don't set android:syncable="true" in
-           * in your <provider> element in the manifest,
-           * then call context.setIsSyncable(account, AUTHORITY, 1)
-           * here.
-           */
-        } else {
-            /*
-             * The account exists or some other error occurred. Log this, report it,
-             * or handle it internally.
-             */
-        }
-        return newAccount;
 
             }
 
