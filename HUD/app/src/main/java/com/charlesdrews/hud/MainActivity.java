@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private Account mAccount;
     public LoginButton mFacebookLoginButton;
     public CallbackManager mCallbackManager;
+    private TextView mLoginText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+//TODO facebook stuff
+        mLoginText = (TextView)findViewById(R.id.status_update);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         mAccount = createSyncAccount(this);
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             Log.d(MainActivity.class.getCanonicalName(), "Starting Weather onChange...");
+
 
             Cursor cursor = getContentResolver().query(WeatherContentProvider.CONTENT_URI, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -235,6 +240,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
+
             }
 
             @Override
