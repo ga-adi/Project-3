@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="613"
+            android:id="@+id/reddit_comment_number"
+            android:layout_centerVertical="true"
+            android:textColor="#bde53935"
+            android:textSize="22sp"
+            android:layout_marginLeft="12dp"
+            />
+        <TextView
+            android:id="@+id/reddit_comment_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reddit_comment_number"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="20dp"
+            android:text="Tony Robbins"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/reddit_comment_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reddit_comment_number"
+            android:layout_below="@id/reddit_comment_author"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="6dp"
+            android:text="Raise your standards! Implement Healthy Rituals! You have to switch your mindset to what can I give?"
+            android:textColor="#bc000000"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

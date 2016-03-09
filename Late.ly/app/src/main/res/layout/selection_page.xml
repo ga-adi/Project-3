@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#2d000000"
+    >
+<LinearLayout
+    android:id="@+id/selection_TopLinearLayout"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="8dp"
+    android:layout_marginBottom="24dp"
+    android:layout_marginTop="80dp">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            app:cardCornerRadius="33dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/colorPrimaryFrag1">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/weight"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POLITICS"
+            android:id="@+id/textView"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#bb000000"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
+        <android.support.v7.widget.CardView
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            app:cardCornerRadius="33dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/colorPrimaryFrag2">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/weight"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TECH"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:textColor="#bb000000"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            app:cardCornerRadius="33dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/colorPrimaryFrag3">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/weight"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CAREER"
+            android:id="@+id/textView"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#bb000000"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
+        <android.support.v7.widget.CardView
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            app:cardCornerRadius="33dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/colorPrimaryFrag4">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/weight"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FOOD"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:textColor="#bb000000"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            app:cardCornerRadius="33dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/colorPrimaryFrag5">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/weight"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DANCING"
+            android:id="@+id/textView"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#bb000000"
+            android:textSize="12sp" />
+    </RelativeLayout>
+</LinearLayout>
+    <LinearLayout
+        android:layout_below="@id/selection_TopLinearLayout"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="match_parent"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+            <android.support.v7.widget.CardView
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:cardCornerRadius="33dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryFrag2">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/weight"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ANIMALS"
+                android:id="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:textColor="#bb000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="match_parent"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:cardCornerRadius="33dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryFrag3">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/weight"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LANGUAGE"
+                android:id="@+id/textView"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="#bb000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="match_parent"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+            <android.support.v7.widget.CardView
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:cardCornerRadius="33dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryFrag4">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/weight"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NATURE"
+                android:id="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:textColor="#bb000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="match_parent"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:cardCornerRadius="33dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryFrag5">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/weight"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SPORTS"
+                android:id="@+id/textView"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="#bb000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_height="match_parent"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+            <android.support.v7.widget.CardView
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:cardCornerRadius="33dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/colorPrimaryFrag1">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/weight"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DATING"
+                android:id="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:textColor="#bb000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
