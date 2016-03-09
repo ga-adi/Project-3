@@ -39,11 +39,11 @@ public class Fragment1 extends Fragment {
             mPortrait = false;
         }
 
-        RecyclerViewTest();
+        RecyclerView();
         return rootView;
     }
 
-    public void RecyclerViewTest(){
+    public void RecyclerView(){
 
         //Dummy ArrayList
         mTestArray = new ArrayList<ParentCard>();
