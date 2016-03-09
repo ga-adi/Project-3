@@ -4,10 +4,6 @@
 
     <string name="account_type">example.com</string>
     <string name="account">default_account</string>
-
-    <string name="weather_provider_label">Weather Content Provider</string>
-    <string name="facebook_provider_label">Facebook Content Provider</string>
-    <string name="news_provider_label">News Content Provider</string>
-
+    <string name="content_provider_label">Content Provider</string>
     <string name="facebook_app_id">980688392019422</string>
 </resources>
