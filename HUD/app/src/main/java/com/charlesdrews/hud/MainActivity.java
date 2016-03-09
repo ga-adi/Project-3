@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.Facebook.FacebookCardData;
@@ -23,19 +30,28 @@ import com.charlesdrews.hud.News.NewsCardData;
 import com.charlesdrews.hud.News.NewsContentProvider;
 import com.charlesdrews.hud.Weather.WeatherCardData;
 import com.charlesdrews.hud.Weather.WeatherContentProvider;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
+    public LoginButton mFacebookLoginButton;
+    public CallbackManager mCallbackManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         mAccount = createSyncAccount(this);
 
@@ -78,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         ContentResolver.requestSync(mAccount, NewsContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, NewsContentProvider.AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, NewsContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 20);
+
+
     }
 
     @Override
@@ -206,5 +224,36 @@ public class MainActivity extends AppCompatActivity {
              */
         }
         return newAccount;
+    }
+
+    public void facebookLogin(){
+
+        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions("user_likes");
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
