@@ -24,6 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
 
+
     public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
     }
