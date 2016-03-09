@@ -57,7 +57,7 @@ public class Fragment1 extends Fragment {
         mTestArray.add(new EventCard("10:10","ADI", "7MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT));
 
         //no clue what this does
-        mTestRecyclerView.setHasFixedSize(true);
+        mTestRecyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mTestRecyclerView.setLayoutManager(llm);

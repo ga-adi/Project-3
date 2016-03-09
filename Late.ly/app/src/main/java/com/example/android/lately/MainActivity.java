@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 //        adds tabs to tablayout bar
 //        tabLayout.addTab(tabLayout.newTab().setText("Boop"));
 
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -182,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
             mPortrait = false;
         }
 
-        if (mPortrait) {
-        } else {
-            Fragment fragment = new DetailsFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.detailsFragmentContainer, fragment);
-            transaction.commit();
-        }
+//        if (mPortrait) {
+//        } else {
+//            Fragment fragment = new DetailsFragment();
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentTransaction transaction = fm.beginTransaction();
+//            transaction.replace(R.id.detailsFragmentContainer, fragment);
+//            transaction.commit();
+//        }
     }
 }

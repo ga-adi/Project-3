@@ -16,14 +16,17 @@ import java.util.List;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHolder> {
 
-    List<ParentCard> parentCardList;
+    List<ParentCard> mParentCardList;
     int mCurrentCardType;
-    public static final int TYPE_EVENT = 1;
-    public static final int TYPE_SMALL_ARTICLE = 2;
+    ParentCardHolder mHolder;
+    public static final int TYPE_WEATHER = 1;
+    public static final int TYPE_EVENT = 2;
+    public static final int TYPE_SMALL_ARTICLE = 3;
+    public static final int TYPE_LARGE_ARTICLE = 4;
 
     public CardAdapter(List<ParentCard> parentCardList) {
-        this.parentCardList = parentCardList;
-
+        this.mParentCardList = parentCardList;
+        mCurrentCardType = mParentCardList.get(0).getmCardType();
     }
 
 
@@ -51,26 +54,30 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
     public void onBindViewHolder(ParentCardHolder holder, int position) {
 
         //        check card type member variable
-        mCurrentCardType = parentCardList.get(position).getmCardType();
+        mCurrentCardType = mParentCardList.get(position).getmCardType();
 //        switch case again
 
+        mHolder = holder;
+
         switch (mCurrentCardType) {
+
+
             case TYPE_EVENT:
 
-                EventCard eventCard = (EventCard) parentCardList.get(position);
-                EventHolder currentHolder = (EventHolder) holder;
+                EventCard eventCard = (EventCard) mParentCardList.get(position);
+                EventHolder eventHolder = (EventHolder) mHolder;
 
 
-                currentHolder.vGroupName.setText(eventCard.getGroup());
-                currentHolder.vTime.setText(eventCard.getTime());
-                currentHolder.vEventName.setText(eventCard.getEvent());
-                currentHolder.vNumberOfPeople.setText(eventCard.getNumberOfPeople());
+                eventHolder.vGroupName.setText(eventCard.getGroup());
+                eventHolder.vTime.setText(eventCard.getTime());
+                eventHolder.vEventName.setText(eventCard.getEvent());
+                eventHolder.vNumberOfPeople.setText(eventCard.getNumberOfPeople());
                 break;
 
             case TYPE_SMALL_ARTICLE:
 
-                SmallArticleCard smallArticleCard = (SmallArticleCard) parentCardList.get(position);
-                SmallArticleHolder smallArticleHolder = (SmallArticleHolder) holder;
+                SmallArticleCard smallArticleCard = (SmallArticleCard) mParentCardList.get(position);
+                SmallArticleHolder smallArticleHolder = (SmallArticleHolder) mHolder;
 
                 smallArticleHolder.vTitle.setText(smallArticleCard.getmTitle());
                 smallArticleHolder.vSource.setText(smallArticleCard.getmSource());
@@ -78,15 +85,35 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 //TODO add image here
 //                smallArticleHolder.vArticleImage.setImageResource(Color.LTGRAY);
 //                smallArticleHolder.vCompanyLogo.setText(smallArticleCard.getmTitle());
+                break;
+
+            case TYPE_LARGE_ARTICLE:
+
+                LargeArticleCard largeArticleCard = (LargeArticleCard) mParentCardList.get(position);
+                LargeArticleHolder largeArticleHolder = (LargeArticleHolder) mHolder;
+
+                largeArticleHolder.vTitle.setText(largeArticleCard.getmTitle());
+                largeArticleHolder.vSource.setText(largeArticleCard.getmSource());
+                largeArticleHolder.vTime.setText(largeArticleCard.getmTime());
+                //TODO add image here
+//                smallArticleHolder.vArticleImage.setImageResource(Color.LTGRAY);
+//                smallArticleHolder.vCompanyLogo.setText(smallArticleCard.getmTitle());
+                break;
 
 
         }
+            mHolder = null;
     }
 
 
     @Override
     public int getItemCount() {
-        return parentCardList.size();
+        return mParentCardList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     //Parent Holder can be any card type holder.  Create a card type holder with parent extended.  If adding a new card type...
@@ -122,8 +149,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
         TextView vSource;
         TextView vTitle;
         TextView vTime;
-        ImageView vCompanyLogo;
-        ImageView vArticleImage;
+//        ImageView vCompanyLogo;
+//        ImageView vArticleImage;
 
         public SmallArticleHolder(View itemView) {
             super(itemView);
@@ -131,16 +158,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             vSource = (TextView) itemView.findViewById(R.id.small_article_source);
             vTitle = (TextView) itemView.findViewById(R.id.small_article_title);
             vTime = (TextView) itemView.findViewById(R.id.small_article_time);
-            vCompanyLogo = (ImageView) itemView.findViewById(R.id.small_article_icon);
-            vArticleImage = (ImageView) itemView.findViewById(R.id.small_article_image);
+//            vCompanyLogo = (ImageView) itemView.findViewById(R.id.small_article_icon);
+//            vArticleImage = (ImageView) itemView.findViewById(R.id.small_article_image);
 
         }
     }
 
-    public int getItemViewType(int position) {
+    public static class LargeArticleHolder extends ParentCardHolder {
 
+        TextView vSource;
+        TextView vTitle;
+        TextView vTime;
+        ImageView vCompanyLogo;
+        ImageView vArticleImage;
 
-        return super.getItemViewType(position);
+        public LargeArticleHolder(View itemView) {
+            super(itemView);
+
+            vSource = (TextView) itemView.findViewById(R.id.large_article_source);
+            vTitle = (TextView) itemView.findViewById(R.id.large_article_title);
+            vTime = (TextView) itemView.findViewById(R.id.large_article_time);
+            vCompanyLogo = (ImageView) itemView.findViewById(R.id.large_article_icon);
+            vArticleImage = (ImageView) itemView.findViewById(R.id.large_article_image);
+
+        }
     }
+
 }
 

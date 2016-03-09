@@ -17,9 +17,9 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View blah = inflater.inflate(R.layout.fragment_details, container, false);
-        mDetailsTest = (TextView) getActivity().findViewById(R.id.blah);
+        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        mDetailsTest = (TextView) getActivity().findViewById(R.id.detailsFragmentTextView);
         mDetailsTest.setText("Java works");
-        return blah;
+        return view;
     }
 }
