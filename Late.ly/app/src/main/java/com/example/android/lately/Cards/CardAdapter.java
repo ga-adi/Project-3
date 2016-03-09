@@ -26,7 +26,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
 
     public CardAdapter(List<ParentCard> parentCardList) {
         this.mParentCardList = parentCardList;
-        mCurrentCardType = mParentCardList.get(0).getmCardType();
+//        mCurrentCardType = mParentCardList.get(0).getmCardType();
     }
 
 
@@ -37,7 +37,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
 //        if an event card then
 
         View mView;
-        switch (mCurrentCardType) {
+        switch (viewType) {
             case TYPE_EVENT:
                 mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_card, parent, false);
                 return new EventHolder(mView);
@@ -54,7 +54,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
     public void onBindViewHolder(ParentCardHolder holder, int position) {
 
         //        check card type member variable
-        mCurrentCardType = mParentCardList.get(position).getmCardType();
+
 //        switch case again
 
         mHolder = holder;
@@ -113,7 +113,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        mCurrentCardType = mParentCardList.get(position).getmCardType();
+        return mCurrentCardType;
     }
 
     //Parent Holder can be any card type holder.  Create a card type holder with parent extended.  If adding a new card type...
