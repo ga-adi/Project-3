@@ -2,6 +2,7 @@ package com.charlesdrews.hud;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        handleIntent(getIntent());
+
         //TODO facebook stuff
         mLoginText = (TextView)findViewById(R.id.status_update);
         //TODO - can this initialization be done in an async task?
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
         mCardsData = new ArrayList<>();
         mAdapter = new RecyclerAdapter(mCardsData);
+        mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
         // set up syncing
@@ -84,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -100,6 +110,19 @@ public class MainActivity extends AppCompatActivity {
                 */
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(MainActivity.this, "Query: " + query, Toast.LENGTH_SHORT).show();
         }
     }
 
