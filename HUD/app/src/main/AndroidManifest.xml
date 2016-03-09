@@ -42,56 +42,21 @@
         </service>
 
         <provider
-            android:name=".Weather.WeatherContentProvider"
-            android:authorities="com.charlesdrews.hud.Weather.WeatherContentProvider"
-            android:label="@string/weather_provider_label"
+            android:name=".CardContentProvider"
+            android:authorities="com.charlesdrews.hud.CardContentProvider"
+            android:label="@string/content_provider_label"
             android:exported="false"
             android:syncable="true"/>
 
         <service
-            android:name=".Weather.WeatherSyncService">
+            android:name=".SyncService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/weather_sync_adapter" />
+                android:resource="@xml/sync_adapter" />
         </service>
-
-        <provider
-            android:name=".Facebook.FacebookContentProvider"
-            android:authorities="com.charlesdrews.hud.Facebook.FacebookContentProvider"
-            android:label="@string/facebook_provider_label"
-            android:exported="false"
-            android:syncable="true"/>
-
-        <service
-            android:name=".Facebook.FacebookSyncService">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/twitter_sync_adapter" />
-        </service>
-
-        <provider
-            android:name=".News.NewsContentProvider"
-            android:authorities="com.charlesdrews.hud.News.NewsContentProvider"
-            android:label="@string/news_provider_label"
-            android:exported="false"
-            android:syncable="true"/>
-
-        <service
-            android:name=".News.NewsSyncService">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/news_sync_adapter" />
-        </service>
-
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 

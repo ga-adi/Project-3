@@ -4,9 +4,11 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +22,12 @@ import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -27,11 +35,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.facebook.FacebookSdk;
 
-import com.charlesdrews.hud.Facebook.FacebookCardData;
-import com.charlesdrews.hud.News.NewsCardData;
-import com.charlesdrews.hud.News.NewsContentProvider;
-import com.charlesdrews.hud.Weather.WeatherCardData;
-import com.charlesdrews.hud.Weather.WeatherContentProvider;
+import com.charlesdrews.hud.CardsData.CardData;
+import com.charlesdrews.hud.CardsData.CardType;
+import com.charlesdrews.hud.CardsData.FacebookCardData;
+import com.charlesdrews.hud.CardsData.NewsCardData;
+import com.charlesdrews.hud.CardsData.WeatherCardData;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.w3c.dom.Text;
 
@@ -46,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
+    public LoginButton mFacebookLoginButton;
+    public CallbackManager mCallbackManager;
+    private TextView mLoginText;
 
     //"http://api.nytimes.com/svc/search/v2/articlesearch.json?q=new+york&page=1&sort=newest&api-key=29975101513df1dfdf9895c3324ca6d2:6:74605150";
 
@@ -56,23 +69,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mAccount = createSyncAccount(this);
+        //TODO facebook stuff
+        mLoginText = (TextView)findViewById(R.id.status_update);
+        //TODO - can this initialization be done in an async task?
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         // register content observers
         getContentResolver().registerContentObserver(
-                WeatherContentProvider.CONTENT_URI, true, new WeatherContentObserver(new Handler()));
-        getContentResolver().registerContentObserver(
-                NewsContentProvider.CONTENT_URI, true, new NewsContentObserver(new Handler()));
-        //TODO - create and register remaining observers
+                Uri.parse(CardContentProvider.BASE_URI_STRING), // base uri w/o API-specific path
+                true,                                           // notify for API-specific paths
+                new CardContentObserver(new Handler())
+        );
 
         // set up recycler view & adapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-
-
-
 
         mCardsData = new ArrayList<>();
 
@@ -87,19 +100,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         // set up syncing
+        mAccount = createSyncAccount(this);
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-
-        // weather - every 10 min
-        ContentResolver.requestSync(mAccount, WeatherContentProvider.AUTHORITY, settingsBundle);
-        ContentResolver.setSyncAutomatically(mAccount, WeatherContentProvider.AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, WeatherContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 10);
-
-        // news - every 20 min
-        ContentResolver.requestSync(mAccount, NewsContentProvider.AUTHORITY, settingsBundle);
-        ContentResolver.setSyncAutomatically(mAccount, NewsContentProvider.AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, NewsContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 20);
+        ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+        ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
+        //TODO - figure out why this is syncing so frequently (definitely not just every 15 min)
+        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
     }
 
     @Override
@@ -124,65 +132,96 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class WeatherContentObserver extends ContentObserver {
+    public class CardContentObserver extends ContentObserver {
+        private final String TAG = CardContentObserver.class.getCanonicalName();
 
-        public WeatherContentObserver(Handler handler) {
+        public CardContentObserver(Handler handler) {
             super(handler);
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            Log.d(MainActivity.class.getCanonicalName(), "Starting Weather onChange...");
-
-            Cursor cursor = getContentResolver().query(WeatherContentProvider.CONTENT_URI, null, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                WeatherCardData weatherCardData = new WeatherCardData(
-                        CardType.Weather,
-                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_HIGH)),
-                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
-                );
-
-                boolean weatherCardUpdated = false;
-
-                for (int i = 0; i < mCardsData.size(); i++) {
-                    if (mCardsData.get(i) instanceof WeatherCardData) {
-                        mCardsData.remove(i);
-                        mCardsData.add(i, weatherCardData);
-                        weatherCardUpdated = true;
-                        break;
-                    }
+            int uriType = CardContentProvider.sUriMatcher.match(uri);
+            
+            switch (uriType) {
+                case CardContentProvider.FACEBOOK: {
+                    Log.d(TAG, "onChange: facebook");
+                    new UpdateDataAsyncTask().execute(CardType.Facebook);
+                    break;
                 }
-
-                if (!weatherCardUpdated) {
-                    mCardsData.add(weatherCardData);
+                case CardContentProvider.NEWS: {
+                    Log.d(TAG, "onChange: news");
+                    new UpdateDataAsyncTask().execute(CardType.News);
+                    break;
                 }
-                mAdapter.notifyDataSetChanged();
+                case CardContentProvider.WEATHER: {
+                    Log.d(TAG, "onChange: weather");
+                    new UpdateDataAsyncTask().execute(CardType.Weather);
+                    break;
+                }
+                default:
+                    break;
             }
             cursor.close();
         }
     }
 
-    public class NewsContentObserver extends ContentObserver {
+    public static Account createSyncAccount(Context context) {
+        Account newAccount = new Account(
+                context.getString(R.string.account),
+                context.getString(R.string.account_type)
+        );
 
-        public NewsContentObserver(Handler handler) {
-            super(handler);
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            Log.d(MainActivity.class.getCanonicalName(), "Account added successfully");
+        } else {
+            Log.d(MainActivity.class.getCanonicalName(), "Account NOT added successfully");
         }
+        return newAccount;
+    }
+
+    private class UpdateDataAsyncTask extends AsyncTask<CardType, Void, Boolean> {
+        private final String TAG = UpdateDataAsyncTask.class.getCanonicalName();
+
+        private CardType mCardType;
 
         @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            Log.d(MainActivity.class.getCanonicalName(), "Starting News onChange...");
+        protected Boolean doInBackground(CardType... params) {
+            if ((mCardType = params[0]) == null) {
+                cancel(true);
+            }
 
-            Cursor cursor = getContentResolver().query(NewsContentProvider.CONTENT_URI, null, null, null, null);
+            switch (mCardType) {
+                case Facebook: {
+                    Log.d(TAG, "doInBackground: query facebook");
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.FACEBOOK_URI, null, null, null, null));
+                }
+                case News: {
+                    Log.d(TAG, "doInBackground: query news");
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.NEWS_URI, null, null, null, null));
+                }
+                case Weather: {
+                    Log.d(TAG, "doInBackground: query weather");
+                    return updateCardDataArrayFromCursor(getContentResolver().query(
+                            CardContentProvider.WEATHER_URI, null, null, null, null));
+                }
+                default:
+                    return null;
+            }
+        }
+
+        private boolean updateCardDataArrayFromCursor(Cursor cursor) {
+            boolean dataAddedSuccessfully = false;
+
             if (cursor != null && cursor.moveToFirst()) {
-                NewsCardData newsCardData = new NewsCardData(
-                        CardType.News,
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
-                );
-
-                boolean newsCardUpdated = false;
-
+                // remove any pre-existing card data objects of same type
                 for (int i = 0; i < mCardsData.size(); i++) {
-                    if (mCardsData.get(i) instanceof NewsCardData) {
+                    if (mCardsData.get(i).getType() == mCardType) {
                         mCardsData.remove(i);
                         mCardsData.add(i, newsCardData);
                         newsCardUpdated = true;
@@ -190,25 +229,67 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if (!newsCardUpdated) {
-                    mCardsData.add(newsCardData);
+                // insert new card data object
+                switch (mCardType) {
+                    case Facebook: {
+                        FacebookCardData facebookCardData = new FacebookCardData(
+                                CardType.Facebook,
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
+                        );
+                        mCardsData.add(0, facebookCardData);
+                        dataAddedSuccessfully = true;
+                        break;
+                    }
+                    case News: {
+                        NewsCardData newsCardData = new NewsCardData(
+                                CardType.News,
+                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
+                        );
+                        mCardsData.add(0, newsCardData);
+                        dataAddedSuccessfully = true;
+                        break;
+                    }
+                    case Weather: {
+                        WeatherCardData weatherCardData = new WeatherCardData(
+                                CardType.Weather,
+                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_HIGH)),
+                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
+                        );
+                        mCardsData.add(0, weatherCardData);
+                        dataAddedSuccessfully = true;
+                        break;
+                    }
+                    default:
+                        dataAddedSuccessfully = false;
+                        break;
                 }
+                cursor.close();
+            }
+            return dataAddedSuccessfully;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            if (aBoolean) {
                 mAdapter.notifyDataSetChanged();
             }
             cursor.close();
         }
     }
 
-    public static Account createSyncAccount(Context context) {
-        // Create the account type and default account
-        Account newAccount = new Account(
-                context.getString(R.string.account),
-                context.getString(R.string.account_type)
-        );
+    public void facebookLogin(){
 
-        // Get an instance of the Android account manager
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions("user_likes");
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
 
         /*
          * Add the account and account type, no password or user data
@@ -229,5 +310,22 @@ public class MainActivity extends AppCompatActivity {
         }
         return newAccount;
 
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //TODO - this crashes if you close the login window without logging in
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

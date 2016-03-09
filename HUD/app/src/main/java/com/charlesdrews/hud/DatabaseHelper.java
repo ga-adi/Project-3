@@ -7,18 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.charlesdrews.hud.Weather.WeatherCardData;
-
 /**
  * Store results from API calls in a local database for offline availability
  * Created by charlie on 3/8/16.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private static final String TAG = DatabaseHelper.class.getCanonicalName();
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "hud_db.db";
 
-    //TODO - replace with actual column names - these are just placehoders
+    //TODO - replace with actual column names - these are just placeholders
 
     public static final String WEATHER_TABLE = "weather";
     public static final String WEATHER_COL_ID = "_id";
@@ -50,15 +49,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper mInstance;
 
-    public static DatabaseHelper getInstance(Context context) {
+    public static synchronized DatabaseHelper getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new DatabaseHelper(context.getApplicationContext(), null);
+            mInstance = new DatabaseHelper(context, null);
         }
         return mInstance;
     }
 
     private DatabaseHelper(Context context, SQLiteDatabase.CursorFactory factory) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        super(context.getApplicationContext(), DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
     @Override
@@ -76,17 +75,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public long addWeather(ContentValues values) {
-        Log.d(DatabaseHelper.class.getCanonicalName(), "Starting addWeather...");
+        Log.d(TAG, "addWeather: starting");
 
         SQLiteDatabase db = getWritableDatabase();
         //TODO - check if values contains the correct keys
         long rowId = db.insert(WEATHER_TABLE, null, values);
-        db.close();
+        //db.close();
         return rowId;
     }
 
     public Cursor getWeather() {
-        Log.d(DatabaseHelper.class.getCanonicalName(), "Getting weather...");
+        Log.d(TAG, "getWeather: starting");
 
         SQLiteDatabase db = getReadableDatabase();
         //TODO - consider adding an "insert time" field and order desc by that
@@ -96,21 +95,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null, null,     // selection, selectionArgs, groupBy, having
                 WEATHER_COL_ID + " DESC"    // orderBy
         );
+        //db.close();
         return cursor;
     }
 
     public long addNews(ContentValues values) {
-        Log.d(DatabaseHelper.class.getCanonicalName(), "Starting addNews...");
+        Log.d(TAG, "addNews: starting");
 
         SQLiteDatabase db = getWritableDatabase();
         //TODO - check if values contains the correct keys
         long rowId = db.insert(NEWS_TABLE, null, values);
-        db.close();
+        //db.close();
         return rowId;
     }
 
     public Cursor getNews() {
-        Log.d(DatabaseHelper.class.getCanonicalName(), "Getting news...");
+        Log.d(TAG, "getNews: starting");
 
         SQLiteDatabase db = getReadableDatabase();
         //TODO - consider adding an "insert time" field and order desc by that
@@ -120,6 +120,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null, null, // selection, selectionArgs, groupBy, having
                 NEWS_COL_ID + " DESC"   // orderBy
         );
+        //db.close();
+        return cursor;
+    }
+
+    public long addFacebook(ContentValues values) {
+        Log.d(TAG, "addFacebook: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        //TODO - check if values contains the correct keys
+        long rowId = db.insert(FACEBOOK_TABLE, null, values);
+        //db.close();
+        return rowId;
+    }
+
+    public Cursor getFacebook() {
+        Log.d(TAG, "getFacebook: starting");
+
+        SQLiteDatabase db = getReadableDatabase();
+        //TODO - consider adding an "insert time" field and order desc by that
+        Cursor cursor = db.query(
+                FACEBOOK_TABLE,             // table
+                FACEBOOK_COLUMNS,           // columns
+                null, null, null, null,     // selection, selectionArgs, groupBy, having
+                FACEBOOK_COL_ID + " DESC"    // orderBy
+        );
+        //db.close();
         return cursor;
     }
 }
