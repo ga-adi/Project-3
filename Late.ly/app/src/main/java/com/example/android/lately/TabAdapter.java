@@ -13,11 +13,11 @@ import com.example.android.lately.Fragments.Fragment5;
 /**
  * Created by ShowMe on 3/7/16.
  */
-public class PageAdapter extends FragmentStatePagerAdapter {
+public class TabAdapter extends FragmentStatePagerAdapter {
 
     int mTabNumber;
 
-    public PageAdapter(FragmentManager fm, int tabNumber) {
+    public TabAdapter(FragmentManager fm, int tabNumber) {
         super(fm);
         this.mTabNumber = tabNumber;
     }

@@ -12,23 +12,14 @@ import com.example.android.lately.R;
 
 public class DetailsFragment extends Fragment {
 
-    TextView detailsTest;
+    TextView mDetailsTest;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_details, container, false);
-
-
+        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        mDetailsTest = (TextView) getActivity().findViewById(R.id.detailsFragmentTextView);
+        mDetailsTest.setText("Java works");
+        return view;
     }
-
-    public void blah(){
-        detailsTest = (TextView)getView().findViewById(R.id.blah);
-        detailsTest.setText("Bahahahahahahah");
-
-
-
-    }
-
 }
