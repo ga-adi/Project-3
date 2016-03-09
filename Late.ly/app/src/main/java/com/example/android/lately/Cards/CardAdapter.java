@@ -1,5 +1,7 @@
 package com.example.android.lately.Cards;
 
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,19 +67,25 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             case TYPE_EVENT:
 
                 EventCard eventCard = (EventCard) mParentCardList.get(position);
-                EventHolder eventHolder = (EventHolder) mHolder;
-
+                final EventHolder eventHolder = (EventHolder) mHolder;
 
                 eventHolder.vGroupName.setText(eventCard.getGroup());
                 eventHolder.vTime.setText(eventCard.getTime());
                 eventHolder.vEventName.setText(eventCard.getEvent());
                 eventHolder.vNumberOfPeople.setText(eventCard.getNumberOfPeople());
+                eventHolder.vCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        eventHolder.vGroupName.setText("This works");
+                        eventHolder.vCardView.setCardBackgroundColor(Color.GRAY);
+                    }
+                });
                 break;
 
             case TYPE_SMALL_ARTICLE:
 
                 SmallArticleCard smallArticleCard = (SmallArticleCard) mParentCardList.get(position);
-                SmallArticleHolder smallArticleHolder = (SmallArticleHolder) mHolder;
+                final SmallArticleHolder smallArticleHolder = (SmallArticleHolder) mHolder;
 
                 smallArticleHolder.vTitle.setText(smallArticleCard.getmTitle());
                 smallArticleHolder.vSource.setText(smallArticleCard.getmSource());
@@ -85,6 +93,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 //TODO add image here
 //                smallArticleHolder.vArticleImage.setImageResource(Color.LTGRAY);
 //                smallArticleHolder.vCompanyLogo.setText(smallArticleCard.getmTitle());
+                smallArticleHolder.vCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        smallArticleHolder.vTitle.setText("AwwwesssssoooooomE!!!");
+                    }
+                });
+
                 break;
 
             case TYPE_LARGE_ARTICLE:
@@ -102,7 +117,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
 
 
         }
-            mHolder = null;
+        mHolder = null;
     }
 
 
@@ -132,6 +147,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
         TextView vTime;
         TextView vEventName;
         TextView vNumberOfPeople;
+        CardView vCardView;
 
 
         public EventHolder(View itemView) {
@@ -141,7 +157,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             vTime = (TextView) itemView.findViewById(R.id.eventcard_time);
             vEventName = (TextView) itemView.findViewById(R.id.eventcard_eventname);
             vNumberOfPeople = (TextView) itemView.findViewById(R.id.eventcard_attendants);
-
+            vCardView = (CardView) itemView.findViewById(R.id.eventcard_cardview);
         }
     }
 
@@ -152,6 +168,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
         TextView vTime;
 //        ImageView vCompanyLogo;
 //        ImageView vArticleImage;
+        CardView vCardView;
 
         public SmallArticleHolder(View itemView) {
             super(itemView);
@@ -161,6 +178,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             vTime = (TextView) itemView.findViewById(R.id.small_article_time);
 //            vCompanyLogo = (ImageView) itemView.findViewById(R.id.small_article_icon);
 //            vArticleImage = (ImageView) itemView.findViewById(R.id.small_article_image);
+            vCardView = (CardView) itemView.findViewById(R.id.small_article_cardview);
 
         }
     }
