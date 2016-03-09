@@ -1,4 +1,4 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.NYTimesSearch;
 
 import java.util.ArrayList;
 import java.util.HashMap;

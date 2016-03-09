@@ -1,15 +1,12 @@
 package com.charlesdrews.hud;
 
+import com.charlesdrews.hud.NYTimesSearch.NYTimesAPIResponse;
 import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by williamtygret on 3/8/16.

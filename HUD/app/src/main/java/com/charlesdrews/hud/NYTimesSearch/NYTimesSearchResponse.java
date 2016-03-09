@@ -1,10 +1,9 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.NYTimesSearch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Generated;
 
 /**
  * Created by williamtygret on 3/7/16.
