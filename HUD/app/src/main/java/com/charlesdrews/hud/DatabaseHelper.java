@@ -16,7 +16,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getCanonicalName();
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "hud_db.db";
 
     //TODO - replace with actual column names - these are just placeholders
@@ -78,6 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + NEWS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FACEBOOK_TABLE);
+        onCreate(db);
     }
 
     public long addWeather(ContentValues values) {
