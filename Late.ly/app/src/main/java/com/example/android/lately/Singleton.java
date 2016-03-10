@@ -27,4 +27,8 @@ public class Singleton {
         return parentCardArrayList.get(position);
     }
 
+    public void addToArrayList(ParentCard parentCard){
+        parentCardArrayList.add(parentCard);
+    }
+
 }
