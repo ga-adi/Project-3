@@ -17,6 +17,7 @@
 
     <RelativeLayout
         android:padding="5dp"
+        android:id="@+id/cardLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,8 +33,10 @@
             android:textStyle="bold"
             android:layout_marginLeft="6dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_centerHorizontal="true"
             android:textColor="#f9f1c8"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -32,6 +33,8 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
+    private Context mContext;
+    private int lastPosition = -1;
 
     //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
     public RecyclerAdapter(List<CardData> cardsData) {
@@ -79,6 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
+
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         CardData data = mCardsData.get(position);
@@ -117,7 +121,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             default:
                 break;
         }
+//        setAnimation(holder.itemView, position);
     }
+
+//    private void setAnimation(View viewToAnimate, int position)
+//    {
+//        // If the bound view wasn't previously displayed on screen, it's animated
+//        if (position > lastPosition)
+//        {
+//            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+//            viewToAnimate.startAnimation(animation);
+//            lastPosition = position;
+//        }
+//    }
 
     @Override
     public int getItemCount() {

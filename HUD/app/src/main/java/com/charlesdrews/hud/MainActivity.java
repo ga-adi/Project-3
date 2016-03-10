@@ -2,6 +2,8 @@ package com.charlesdrews.hud;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -22,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public LoginButton mFacebookLoginButton;
     public CallbackManager mCallbackManager;
     private TextView mLoginText;
+    Context mContext;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        mAdapter = new RecyclerAdapter(this, mCardsData);
+        mAdapter = new RecyclerAdapter(mCardsData);
         mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
@@ -252,8 +254,6 @@ public class MainActivity extends AppCompatActivity {
 
             switch (cardType) {
                 case Facebook:
-                    Animation flipcard = AnimationUtils.loadAnimation(MainActivity.this, R.anim.populaterecyclerview);
-                    //RecyclerAdapter.FacebookCard.startAnimation(flipcard);
                     mAdapter.notifyItemChanged(FACEBOOK_POSITION);
                     break;
                 case News:
