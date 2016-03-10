@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.example.android.lately.R;
 
 
-public class Fragment3 extends Fragment {
+public class FragmentSports extends Fragment {
 
     boolean mPortrait;
 

@@ -5,10 +5,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.android.lately.Fragments.Fragment1;
-import com.example.android.lately.Fragments.Fragment2;
-import com.example.android.lately.Fragments.Fragment3;
-import com.example.android.lately.Fragments.Fragment4;
-import com.example.android.lately.Fragments.Fragment5;
+import com.example.android.lately.Fragments.FragmentAnimals;
+import com.example.android.lately.Fragments.FragmentCareer;
+import com.example.android.lately.Fragments.FragmentDancing;
+import com.example.android.lately.Fragments.FragmentDating;
+import com.example.android.lately.Fragments.FragmentFood;
+import com.example.android.lately.Fragments.FragmentLanguage;
+import com.example.android.lately.Fragments.FragmentNature;
+import com.example.android.lately.Fragments.FragmentPolitics;
+import com.example.android.lately.Fragments.FragmentSports;
+import com.example.android.lately.Fragments.FragmentTech;
 
 /**
  * Created by ShowMe on 3/7/16.
@@ -29,17 +35,35 @@ public class TabAdapter extends FragmentStatePagerAdapter {
                 Fragment1 tab1 = new Fragment1();
                 return tab1;
             case 1:
-                Fragment2 tab2 = new Fragment2();
+                FragmentAnimals tab2 = new FragmentAnimals();
                 return tab2;
             case 2:
-                Fragment3 tab3 = new Fragment3();
+                FragmentCareer tab3 = new FragmentCareer();
                 return tab3;
             case 3:
-                Fragment4 tab4 = new Fragment4();
+                FragmentDancing tab4 = new FragmentDancing();
                 return tab4;
             case 4:
-                Fragment5 tab5 = new Fragment5();
+                FragmentDating tab5 = new FragmentDating();
                 return tab5;
+            case 5:
+                FragmentFood tab6 = new FragmentFood();
+                return tab6;
+            case 6:
+                FragmentLanguage tab7 = new FragmentLanguage();
+                return tab7;
+            case 7:
+                FragmentNature tab8 = new FragmentNature();
+                return tab8;
+            case 8:
+                FragmentPolitics tab9 = new FragmentPolitics();
+                return tab9;
+            case 9:
+                FragmentSports tab10 = new FragmentSports();
+                return tab10;
+            case 10:
+                FragmentTech tab11 = new FragmentTech();
+                return tab11;
             default:
                 return null;
         }

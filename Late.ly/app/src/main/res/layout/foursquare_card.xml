@@ -16,7 +16,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:id="@+id/foursquarecard_image"
-            android:src="@color/colorPrimaryFrag1"
+            android:src="@color/colorPrimary"
             android:layout_marginLeft="12dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp" />

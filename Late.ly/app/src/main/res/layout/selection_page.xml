@@ -27,7 +27,7 @@
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryFrag1">
+            app:cardBackgroundColor="@color/colorPrimary">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -61,7 +61,7 @@
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryFrag2">
+            app:cardBackgroundColor="@color/colorPrimary">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -93,7 +93,7 @@
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryFrag3">
+            app:cardBackgroundColor="@color/colorPrimary">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -127,7 +127,7 @@
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryFrag4">
+            app:cardBackgroundColor="@color/colorPrimary">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -159,7 +159,7 @@
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorPrimaryFrag5">
+            app:cardBackgroundColor="@color/colorPrimary">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -201,7 +201,7 @@
                 android:layout_height="66dp"
                 app:cardCornerRadius="33dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryFrag2">
+                app:cardBackgroundColor="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -233,7 +233,7 @@
                 android:layout_height="66dp"
                 app:cardCornerRadius="33dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryFrag3">
+                app:cardBackgroundColor="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -267,7 +267,7 @@
                 android:layout_height="66dp"
                 app:cardCornerRadius="33dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryFrag4">
+                app:cardBackgroundColor="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -299,7 +299,7 @@
                 android:layout_height="66dp"
                 app:cardCornerRadius="33dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryFrag5">
+                app:cardBackgroundColor="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -333,7 +333,7 @@
                 android:layout_height="66dp"
                 app:cardCornerRadius="33dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/colorPrimaryFrag1">
+                app:cardBackgroundColor="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

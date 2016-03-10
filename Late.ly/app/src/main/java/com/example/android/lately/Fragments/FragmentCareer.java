@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.example.android.lately.R;
 
 
-public class Fragment4 extends Fragment {
+public class FragmentCareer extends Fragment {
 
     boolean mPortrait;
 
@@ -23,6 +23,6 @@ public class Fragment4 extends Fragment {
         } else {
             mPortrait = false;
         }
-        return inflater.inflate(R.layout.fragment_fragment4, container, false);
+        return inflater.inflate(R.layout.fragment_fragment3, container, false);
     }
 }

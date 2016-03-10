@@ -18,20 +18,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+<<<<<<< HEAD
 import android.widget.ProgressBar;
+=======
+>>>>>>> thirdBranch
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Foursquare.FoursquareVenues;
 import com.example.android.lately.Fragments.DetailsFragment;
+<<<<<<< HEAD
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.Data;
 
@@ -39,6 +42,8 @@ import android.widget.Toast;
 
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.WeatherCard;
+=======
+>>>>>>> thirdBranch
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -75,11 +80,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Window mWindow;
     Toolbar mMainToolbar;
     boolean mPortrait;
+<<<<<<< HEAD
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
     Singleton mSingletonArrayOfParentCards;
 
     ProgressBar progressbar;
+=======
+    TabLayout mTabLayout;
+//    public static String stuff;
+
+    int mSports;
+>>>>>>> thirdBranch
 
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
     private static String mRedditUrl = "https://www.reddit.com/r/";
@@ -96,7 +108,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         mSingletonArrayOfParentCards = Singleton.getInstance();
+=======
+        mSports = 1;
+>>>>>>> thirdBranch
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -108,87 +124,124 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mWindow = this.getWindow();
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
+        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarker));
 
         mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
-        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
+        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        TabLayout.Tab tab1 = tabLayout.newTab();
-        ImageView imageViewTest = new ImageView(this);
-        imageViewTest.setImageResource(android.R.drawable.ic_btn_speak_now);
-        imageViewTest.setPadding(50, 50, 50, 50);
-        imageViewTest.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag1));
-        tab1.setCustomView(imageViewTest);
-        tabLayout.addTab(tab1);
+        ArrayList<String> selection = new ArrayList<>();
+        selection.add("Animals");
+        selection.add("Tech");
+        selection.add("Bwah");
+        selection.add("Dating");
+        selection.add("Dating");
+        selection.add("Food");
+        selection.add("Nature");
 
-        View view = (View) imageViewTest.getParent();
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
-        view.setPadding(0, 0, 0, 0);
-        view.setLayoutParams(lp);
+        createTabs(selection);
 
-        //textView
-//        final TextView textTest = new TextView(this);
-//        textTest.setText("MAKE IT SO");
-//        textTest.setPadding(50, 50, 50, 50);
-//        textTest.setBackgroundColor(Color.YELLOW);
-//        tab1.setCustomView(textTest);
+
+//        TabLayout.Tab tab1 = tabLayout.newTab();
+//        ImageView imageViewTest = new ImageView(this);
+//        imageViewTest.setImageResource(android.R.drawable.ic_btn_speak_now);
+//        imageViewTest.setPadding(50, 50, 50, 50);
+//        imageViewTest.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag1));
+//        tab1.setCustomView(imageViewTest);
 //        tabLayout.addTab(tab1);
+//        View view = (View) imageViewTest.getParent();
+//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        view.setPadding(0, 0, 0, 0);
+//        view.setLayoutParams(lp);
+//
+//        //textView
+////        final TextView textTest = new TextView(this);
+////        textTest.setText("MAKE IT SO");
+////        textTest.setPadding(50, 50, 50, 50);
+////        textTest.setBackgroundColor(Color.YELLOW);
+////        tab1.setCustomView(textTest);
+////        tabLayout.addTab(tab1);
+//
+//        TabLayout.Tab tab2 = tabLayout.newTab();
+//        ImageView imageViewTest2 = new ImageView(this);
+//        imageViewTest2.setImageResource(android.R.drawable.ic_menu_call);
+//        imageViewTest2.setPadding(50, 50, 50, 50);
+//        imageViewTest2.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag2));
+//        tab2.setCustomView(imageViewTest2);
+//        tabLayout.addTab(tab2);
+//
+//        View view2 = (View) imageViewTest2.getParent();
+//        LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        view2.setPadding(0, 0, 0, 0);
+//        view2.setLayoutParams(lp2);
+//
+//        TabLayout.Tab tab3 = tabLayout.newTab();
+//        ImageView imageViewTest3 = new ImageView(this);
+//        imageViewTest3.setImageResource(android.R.drawable.ic_dialog_map);
+//        imageViewTest3.setPadding(50, 50, 50, 50);
+//        imageViewTest3.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag3));
+//        tab3.setCustomView(imageViewTest3);
+//        tabLayout.addTab(tab3);
+//
+//        View view3 = (View) imageViewTest3.getParent();
+//        LinearLayout.LayoutParams lp3 = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        view3.setPadding(0, 0, 0, 0);
+//        view3.setLayoutParams(lp3);
+//
+//        TabLayout.Tab tab4 = tabLayout.newTab();
+//        ImageView imageViewTest4 = new ImageView(this);
+//        imageViewTest4.setImageResource(android.R.drawable.ic_lock_lock);
+//        imageViewTest4.setPadding(50, 50, 50, 50);
+//        imageViewTest4.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag4));
+//        tab4.setCustomView(imageViewTest4);
+//        tabLayout.addTab(tab4);
+//
+//        View view4 = (View) imageViewTest4.getParent();
+//        LinearLayout.LayoutParams lp4 = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        view4.setPadding(0, 0, 0, 0);
+//        view4.setLayoutParams(lp4);
+//
+//        TabLayout.Tab tab5 = tabLayout.newTab();
+//        ImageView imageViewTest5 = new ImageView(this);
+//        imageViewTest5.setImageResource(android.R.drawable.ic_media_play);
+//        imageViewTest5.setPadding(50, 50, 50, 50);
+//        imageViewTest5.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag5));
+//        tab5.setCustomView(imageViewTest5);
+//        tabLayout.addTab(tab5);
+//
+//        View view5 = (View) imageViewTest5.getParent();
+//        LinearLayout.LayoutParams lp5 = (LinearLayout.LayoutParams) view.getLayoutParams();
+//        view5.setPadding(0, 0, 0, 0);
+//        view5.setLayoutParams(lp5);
 
-        TabLayout.Tab tab2 = tabLayout.newTab();
-        ImageView imageViewTest2 = new ImageView(this);
-        imageViewTest2.setImageResource(android.R.drawable.ic_menu_call);
-        imageViewTest2.setPadding(50, 50, 50, 50);
-        imageViewTest2.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag2));
-        tab2.setCustomView(imageViewTest2);
-        tabLayout.addTab(tab2);
 
-        View view2 = (View) imageViewTest2.getParent();
-        LinearLayout.LayoutParams lp2 = (LinearLayout.LayoutParams) view.getLayoutParams();
-        view2.setPadding(0, 0, 0, 0);
-        view2.setLayoutParams(lp2);
 
-        TabLayout.Tab tab3 = tabLayout.newTab();
-        ImageView imageViewTest3 = new ImageView(this);
-        imageViewTest3.setImageResource(android.R.drawable.ic_dialog_map);
-        imageViewTest3.setPadding(50, 50, 50, 50);
-        imageViewTest3.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag3));
-        tab3.setCustomView(imageViewTest3);
-        tabLayout.addTab(tab3);
 
-        View view3 = (View) imageViewTest3.getParent();
-        LinearLayout.LayoutParams lp3 = (LinearLayout.LayoutParams) view.getLayoutParams();
-        view3.setPadding(0, 0, 0, 0);
-        view3.setLayoutParams(lp3);
 
-        TabLayout.Tab tab4 = tabLayout.newTab();
-        ImageView imageViewTest4 = new ImageView(this);
-        imageViewTest4.setImageResource(android.R.drawable.ic_lock_lock);
-        imageViewTest4.setPadding(50, 50, 50, 50);
-        imageViewTest4.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag4));
-        tab4.setCustomView(imageViewTest4);
-        tabLayout.addTab(tab4);
 
-        View view4 = (View) imageViewTest4.getParent();
-        LinearLayout.LayoutParams lp4 = (LinearLayout.LayoutParams) view.getLayoutParams();
-        view4.setPadding(0, 0, 0, 0);
-        view4.setLayoutParams(lp4);
 
-        TabLayout.Tab tab5 = tabLayout.newTab();
-        ImageView imageViewTest5 = new ImageView(this);
-        imageViewTest5.setImageResource(android.R.drawable.ic_media_play);
-        imageViewTest5.setPadding(50, 50, 50, 50);
-        imageViewTest5.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFrag5));
-        tab5.setCustomView(imageViewTest5);
-        tabLayout.addTab(tab5);
 
-        View view5 = (View) imageViewTest5.getParent();
-        LinearLayout.LayoutParams lp5 = (LinearLayout.LayoutParams) view.getLayoutParams();
-        view5.setPadding(0, 0, 0, 0);
-        view5.setLayoutParams(lp5);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //        adds tabs to tablayout bar
 //        tabLayout.addTab(tabLayout.newTab().setText("Boop"));
@@ -207,36 +260,74 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
+
+// if ("Sports".equals(tab.getTag());
                 switch (viewPager.getCurrentItem()) {
                     case 0:
-                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
-                        mMainToolbar.setTitle(R.string.frag1text);
-                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag1));
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag1));
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarker));
                         break;
                     case 1:
-                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
-                        mMainToolbar.setTitle(R.string.frag2text);
-                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag2));
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag2));
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkAnimals));
+                        mMainToolbar.setTitle(R.string.frag1text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkAnimals));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerAnimals));
                         break;
                     case 2:
-                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
-                        mMainToolbar.setTitle(R.string.frag3text);
-                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag3));
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag3));
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkCareer));
+                        mMainToolbar.setTitle(R.string.frag2text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkCareer));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerCareer));
                         break;
                     case 3:
-                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
-                        mMainToolbar.setTitle(R.string.frag4text);
-                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag4));
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag4));
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkDancing));
+                        mMainToolbar.setTitle(R.string.frag3text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkDancing));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerDancing));
                         break;
                     case 4:
-                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkDating));
+                        mMainToolbar.setTitle(R.string.frag4text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkDating));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerDating));
+                        break;
+                    case 5:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFood));
                         mMainToolbar.setTitle(R.string.frag5text);
-                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFrag5));
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFrag5));
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkFood));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerFood));
+                        break;
+                    case 6:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkLanguage));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkLanguage));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerLanguage));
+                        break;
+                    case 7:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkNature));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkNature));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerNature));
+                        break;
+                    case 8:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkPolitics));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkPolitics));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerPolitics));
+                        break;
+                    case 9:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkSports));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkSports));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerSports));
+                        break;
+                    case 10:
+                        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTech));
+                        mMainToolbar.setTitle(R.string.frag5text);
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTech));
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDarkerTech));
                         break;
                     default:
                 }
@@ -268,11 +359,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             transaction.replace(R.id.detailsFragmentContainer, fragment);
             transaction.commit();
         }
+<<<<<<< HEAD
 
 
     }
 
 
+=======
+    }
+
+>>>>>>> thirdBranch
     public void getForecastApi() {
         String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 7);
         String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 8);
@@ -315,6 +411,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                     nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i + 1).getSummary();
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMax());
+<<<<<<< HEAD
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
 
                     WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
@@ -322,6 +419,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             CardAdapter.TYPE_WEATHER, 0);
 
                     mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
+=======
+                    nextFiveDaysLowTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
+
+                    //TODO : Creating a constructor and stuff String variables above
+>>>>>>> thirdBranch
                 }
             }
 
@@ -348,7 +450,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 List<RedditArticle> result = response.body().getData().getChildren();
                 String articleAuthor, articleUrl, articleSubreddit, articleContent, articleTitle, articleTime;
+<<<<<<< HEAD
                 int articleScore, articleNumOfComment, idNumber;
+=======
+                int articleScore, articleNumOfComment;
+>>>>>>> thirdBranch
                 for (int i = 0; i < result.size(); i++) {
                     articleAuthor = result.get(i).getData().getAuthor();
                     articleSubreddit = result.get(i).getData().getSubreddit();
@@ -357,7 +463,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleUrl = result.get(i).getData().getUrl();
                     articleNumOfComment = result.get(i).getData().getNumComments();
                     articleScore = result.get(i).getData().getScore();
+<<<<<<< HEAD
                     SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
+=======
+                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha z, EEE");
+>>>>>>> thirdBranch
                     Date currentDate = new Date((long) (result.get(i).getData().getCreated() * 1000L));
                     articleTime = format.format(currentDate);
                     articleSubreddit = result.get(i).getData().getSubreddit();
@@ -532,12 +642,161 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
+<<<<<<< HEAD
     public interface FoursquareRequest{
         @GET("v2/venues/search")
         public Call<FoursquareVenues> getVenues (@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
 
         @GET("v2/venues/{venueId}/photos")
         public Call<FoursquareVenues> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
+=======
+    public void createTabs(ArrayList selection) {
+        //// TODO: 3/10/16 change "contains" to TAB_BLAH
+        if (selection.contains("Animals")) {
+            TabLayout.Tab tabAnimals = mTabLayout.newTab();
+            ImageView imageViewAnimals = new ImageView(this);
+            imageViewAnimals.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabAnimals.setTag("Animals");
+            imageViewAnimals.setPadding(50, 50, 50, 50);
+            imageViewAnimals.setBackgroundColor(getResources().getColor(R.color.colorPrimaryAnimals));
+            tabAnimals.setCustomView(imageViewAnimals);
+            mTabLayout.addTab(tabAnimals);
+            View viewAnimals = (View) imageViewAnimals.getParent();
+            LinearLayout.LayoutParams lpAnimals = (LinearLayout.LayoutParams) viewAnimals.getLayoutParams();
+            viewAnimals.setPadding(0, 0, 0, 0);
+            viewAnimals.setLayoutParams(lpAnimals);
+        }
+        if (selection.contains("Career")) {
+
+            TabLayout.Tab tabCareer = mTabLayout.newTab();
+            ImageView imageViewCareer = new ImageView(this);
+            imageViewCareer.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabCareer.setTag("Career");
+            imageViewCareer.setPadding(50, 50, 50, 50);
+            imageViewCareer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryCareer));
+            tabCareer.setCustomView(imageViewCareer);
+            mTabLayout.addTab(tabCareer);
+            View viewCareer = (View) imageViewCareer.getParent();
+            LinearLayout.LayoutParams lpCareer = (LinearLayout.LayoutParams) viewCareer.getLayoutParams();
+            viewCareer.setPadding(0, 0, 0, 0);
+            viewCareer.setLayoutParams(lpCareer);
+        }
+        if (selection.contains("Dancing")) {
+            TabLayout.Tab tabDancing = mTabLayout.newTab();
+            ImageView imageViewDancing = new ImageView(this);
+            imageViewDancing.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabDancing.setTag("Dancing");
+            imageViewDancing.setPadding(50, 50, 50, 50);
+            imageViewDancing.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDancing));
+            tabDancing.setCustomView(imageViewDancing);
+            mTabLayout.addTab(tabDancing);
+            View viewDancing = (View) imageViewDancing.getParent();
+            LinearLayout.LayoutParams lpDancing = (LinearLayout.LayoutParams) viewDancing.getLayoutParams();
+            viewDancing.setPadding(0, 0, 0, 0);
+            viewDancing.setLayoutParams(lpDancing);
+        }
+        if (selection.contains("Dating")) {
+            TabLayout.Tab tabDating = mTabLayout.newTab();
+            ImageView imageViewDating = new ImageView(this);
+            imageViewDating.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabDating.setTag("Dating");
+            imageViewDating.setPadding(50, 50, 50, 50);
+            imageViewDating.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDating));
+            tabDating.setCustomView(imageViewDating);
+            mTabLayout.addTab(tabDating);
+            View viewDating = (View) imageViewDating.getParent();
+            LinearLayout.LayoutParams lpDating = (LinearLayout.LayoutParams) viewDating.getLayoutParams();
+            viewDating.setPadding(0, 0, 0, 0);
+            viewDating.setLayoutParams(lpDating);
+        }
+        if (selection.contains("Food")) {
+            TabLayout.Tab tabFood = mTabLayout.newTab();
+            ImageView imageViewFood = new ImageView(this);
+            imageViewFood.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabFood.setTag("Food");
+            imageViewFood.setPadding(50, 50, 50, 50);
+            imageViewFood.setBackgroundColor(getResources().getColor(R.color.colorPrimaryFood));
+            tabFood.setCustomView(imageViewFood);
+            mTabLayout.addTab(tabFood);
+            View viewFood = (View) imageViewFood.getParent();
+            LinearLayout.LayoutParams lpFood = (LinearLayout.LayoutParams) viewFood.getLayoutParams();
+            viewFood.setPadding(0, 0, 0, 0);
+            viewFood.setLayoutParams(lpFood);
+        }
+        if (selection.contains("Language")) {
+            TabLayout.Tab tabLanguage = mTabLayout.newTab();
+            ImageView imageViewLanguage = new ImageView(this);
+            imageViewLanguage.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabLanguage.setTag("Language");
+            imageViewLanguage.setPadding(50, 50, 50, 50);
+            imageViewLanguage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLanguage));
+            tabLanguage.setCustomView(imageViewLanguage);
+            mTabLayout.addTab(tabLanguage);
+            View viewLanguage = (View) imageViewLanguage.getParent();
+            LinearLayout.LayoutParams lpLanguage = (LinearLayout.LayoutParams) viewLanguage.getLayoutParams();
+            viewLanguage.setPadding(0, 0, 0, 0);
+            viewLanguage.setLayoutParams(lpLanguage);
+        }
+        if (selection.contains("Nature")) {
+            TabLayout.Tab tabNature = mTabLayout.newTab();
+            ImageView imageViewNature = new ImageView(this);
+            imageViewNature.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabNature.setTag("Nature");
+            imageViewNature.setPadding(50, 50, 50, 50);
+            imageViewNature.setBackgroundColor(getResources().getColor(R.color.colorPrimaryNature));
+            tabNature.setCustomView(imageViewNature);
+            mTabLayout.addTab(tabNature);
+            View viewNature = (View) imageViewNature.getParent();
+            LinearLayout.LayoutParams lpNature = (LinearLayout.LayoutParams) viewNature.getLayoutParams();
+            viewNature.setPadding(0, 0, 0, 0);
+            viewNature.setLayoutParams(lpNature);
+        }
+        if (selection.contains("Politics")) {
+            TabLayout.Tab tabPolitics = mTabLayout.newTab();
+            ImageView imageViewPolitics = new ImageView(this);
+            imageViewPolitics.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabPolitics.setTag("Politics");
+            imageViewPolitics.setPadding(50, 50, 50, 50);
+            imageViewPolitics.setBackgroundColor(getResources().getColor(R.color.colorPrimaryPolitics));
+            tabPolitics.setCustomView(imageViewPolitics);
+            mTabLayout.addTab(tabPolitics);
+            View viewPolitics = (View) imageViewPolitics.getParent();
+            LinearLayout.LayoutParams lpPolitics = (LinearLayout.LayoutParams) viewPolitics.getLayoutParams();
+            viewPolitics.setPadding(0, 0, 0, 0);
+            viewPolitics.setLayoutParams(lpPolitics);
+        }
+        if (selection.contains("Sports")) {
+            TabLayout.Tab tabSports = mTabLayout.newTab();
+            ImageView imageViewSports = new ImageView(this);
+            imageViewSports.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabSports.setTag(mSports);
+            imageViewSports.setPadding(50, 50, 50, 50);
+            imageViewSports.setBackgroundColor(getResources().getColor(R.color.colorPrimarySports));
+            tabSports.setCustomView(imageViewSports);
+            mTabLayout.addTab(tabSports);
+            View viewSports = (View) imageViewSports.getParent();
+            LinearLayout.LayoutParams lpSports = (LinearLayout.LayoutParams) viewSports.getLayoutParams();
+            viewSports.setPadding(0, 0, 0, 0);
+            viewSports.setLayoutParams(lpSports);
+        }
+        if (selection.contains("Tech")) {
+            TabLayout.Tab tabTech = mTabLayout.newTab();
+            ImageView imageViewTech = new ImageView(this);
+            imageViewTech.setImageResource(android.R.drawable.ic_btn_speak_now);
+            tabTech.setTag("Tech");
+            imageViewTech.setPadding(50, 50, 50, 50);
+            imageViewTech.setBackgroundColor(getResources().getColor(R.color.colorPrimaryTech));
+            tabTech.setCustomView(imageViewTech);
+            mTabLayout.addTab(tabTech);
+            View viewTech = (View) imageViewTech.getParent();
+            LinearLayout.LayoutParams lpTech = (LinearLayout.LayoutParams) viewTech.getLayoutParams();
+            viewTech.setPadding(0, 0, 0, 0);
+            viewTech.setLayoutParams(lpTech);
+        }
+
+
+
+>>>>>>> thirdBranch
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -551,6 +810,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        return super.onOptionsItemSelected(item);
 //    }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> thirdBranch
 }
