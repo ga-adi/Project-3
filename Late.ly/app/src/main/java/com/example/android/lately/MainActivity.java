@@ -18,30 +18,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
-import com.example.android.lately.Reddit.RedditArticle.Data;
-=======
-import android.widget.Toast;
-
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.WeatherCard;
-import com.example.android.lately.Forecast.Weather;
-import com.example.android.lately.Fragments.DetailsFragment;
->>>>>>> perrys_branch
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
