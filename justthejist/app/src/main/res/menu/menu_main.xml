@@ -1,0 +1,39 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".Activities.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item
+        android:id="@+id/addSettings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_update_breakingNews"
+        android:orderInCategory="100"
+        android:title="attempt update image"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_animate_scroll_vertical"
+        android:orderInCategory="100"
+        android:title="test_animate_scrollVertical"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_animate_scroll_horizontal"
+        android:orderInCategory="100"
+        android:title="test_animate_scrollHorizontal"
+        app:showAsAction="never"/>
+
+</menu>
