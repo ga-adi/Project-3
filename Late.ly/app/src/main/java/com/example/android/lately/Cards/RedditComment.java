@@ -8,12 +8,21 @@ public class RedditComment {
     String mContent;
     String mTime;
     int mScore;
+    int mLevel;
 
     public RedditComment(String mAuthor, String mContent, int mScore, String mTime) {
         this.mAuthor = mAuthor;
         this.mContent = mContent;
         this.mScore = mScore;
         this.mTime = mTime;
+    }
+
+    public int getmLevel() {
+        return mLevel;
+    }
+
+    public void setmLevel(int mLevel) {
+        this.mLevel = mLevel;
     }
 
     public String getmAuthor() {
