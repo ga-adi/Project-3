@@ -1,6 +1,9 @@
 package com.charlesdrews.hud;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -136,7 +140,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 remindersCard.mAddReminderButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(holder.mContext, "Add reminder", Toast.LENGTH_SHORT).show();
+                        launchAddReminderDialog(holder.mContext);
                     }
                 });
                 break;
@@ -207,5 +211,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             mRemindersRecyclerView = (RecyclerView) itemView.findViewById(R.id.remindersRecyclerView);
             mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
         }
+    }
+
+    public void launchAddReminderDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Add Reminder");
+        EditText input = new EditText(context);
+        input.setHint("Enter reminder content");
+        builder.setView(input);
+        builder.setNegativeButton("Cancel", null);
+        builder.setNeutralButton("Add Alarm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "Add alarm", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "yup", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
     }
 }
