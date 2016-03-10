@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int WEATHER_POSITION = 0;
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
+    public static final int REMINDERS_POSITION = 3;
 
     public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
     public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
@@ -239,6 +241,11 @@ public class MainActivity extends AppCompatActivity {
                     cursor = getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null);
                     break;
                 }
+                case Reminders: {
+                    Log.d(TAG, "doInBackground: query reminders");
+                    cursor = getContentResolver().query(CardContentProvider.REMINDERS_URI, null, null, null, null);
+                    break;
+                }
                 default:
                     cursor = null;
                     break;
@@ -261,6 +268,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Weather:
                     mAdapter.notifyItemChanged(WEATHER_POSITION);
+                    break;
+                case Reminders:
+                    mAdapter.notifyItemChanged(REMINDERS_POSITION);
                     break;
                 default:
                     break;
@@ -292,6 +302,11 @@ public class MainActivity extends AppCompatActivity {
                             cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
                     );
                     mCardsData.set(WEATHER_POSITION, weatherCardData);
+                    break;
+                }
+                case Reminders: {
+                    RemindersCardData remCardData = new RemindersCardData(CardType.Reminders, cursor);
+                    mCardsData.set(REMINDERS_POSITION, remCardData);
                     break;
                 }
                 default:
@@ -342,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
             mCardsData.add(new CardData(CardType.Weather));     // index 0
             mCardsData.add(new CardData(CardType.News));        // index 1
             mCardsData.add(new CardData(CardType.Facebook));    // index 2
+            mCardsData.add(new RemindersCardData(CardType.Reminders, null)); // index 3
         }
 
         @Override
@@ -361,6 +377,11 @@ public class MainActivity extends AppCompatActivity {
             updateCardDataArrayFromCursor(
                     CardType.Weather,
                     getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null)
+            );
+
+            updateCardDataArrayFromCursor(
+                    CardType.Reminders,
+                    getContentResolver().query(CardContentProvider.REMINDERS_URI, null, null, null, null)
             );
 
             return null;

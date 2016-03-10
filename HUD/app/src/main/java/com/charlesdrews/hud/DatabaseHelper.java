@@ -16,7 +16,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getCanonicalName();
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "hud_db.db";
 
     //TODO - replace with actual column names - these are just placeholders
@@ -53,6 +53,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + FACEBOOK_COL_AUTHOR + " TEXT,"
             + FACEBOOK_COL_STATUS_UPDATE + " TEXT)";
 
+    public static final String REMINDERS_TABLE = "reminders";
+    public static final String REMINDERS_COL_ID = "_id";
+    public static final String REMINDERS_COL_WHEN = "reminder_date_time";
+    public static final String REMINDERS_COL_TEXT = "reminder_text";
+    public static final String[] REMINDERS_COLUMNS = new String[]{REMINDERS_COL_ID, REMINDERS_COL_WHEN, REMINDERS_COL_TEXT};
+    public static final String REMINDERS_CREATE = "CREATE TABLE " + REMINDERS_TABLE + " ("
+            + REMINDERS_COL_ID + " INTEGER PRIMARY KEY, "
+            + REMINDERS_COL_WHEN + " INTEGER, "
+            + REMINDERS_COL_TEXT + " TEXT)";
+
     private static DatabaseHelper mInstance;
 
     public static synchronized DatabaseHelper getInstance(Context context) {
@@ -71,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(WEATHER_CREATE);
         db.execSQL(NEWS_CREATE);
         db.execSQL(FACEBOOK_CREATE);
+        db.execSQL(REMINDERS_CREATE);
     }
 
     @Override
@@ -78,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + NEWS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FACEBOOK_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + REMINDERS_TABLE);
         onCreate(db);
     }
 
@@ -126,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //db.close();
             return rowId;
         } else {
-            return -1l;
+            return -1L;
         }
     }
 
@@ -174,5 +186,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
         //db.close();
         return cursor;
+    }
+    
+    public long addReminder(ContentValues values) {
+        Log.d(TAG, "addReminder: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        // need reminder text, but due time is optional
+        if (values.containsKey(REMINDERS_COL_TEXT)) {
+            long rowId = db.insert(REMINDERS_TABLE, null, values);
+            //db.close();
+            return rowId;
+        } else {
+            return -1L;
+        }
+    }
+
+    public Cursor getReminders() {
+        Log.d(TAG, "getReminders: starting");
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(
+                REMINDERS_TABLE,        // table
+                REMINDERS_COLUMNS,      // columns
+                null, null, null, null, // selection, selectionArgs, groupBy, having
+                REMINDERS_COL_WHEN
+        );
+        //db.close();
+        return cursor;
+    }
+
+    public int updateReminder(int id, ContentValues values) {
+        Log.d(TAG, "updateReminder: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int rowsAffected = db.update(
+                REMINDERS_TABLE,
+                values,
+                REMINDERS_COL_ID + " = ?",
+                new String[]{String.valueOf(id)}
+        );
+        //db.close();
+        return rowsAffected;
+    }
+
+    public int deleteAllReminders() {
+        Log.d(TAG, "deleteAllReminders: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int rowsAffected = db.delete(REMINDERS_TABLE, "1", null);
+        //db.close();
+        return rowsAffected;
+    }
+
+    public int deleteReminderById(int id) {
+        Log.d(TAG, "deleteReminderById: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int rowsAffected = db.delete(
+                REMINDERS_TABLE,
+                REMINDERS_COL_ID + " = ?",
+                new String[]{ String.valueOf(id) }
+        );
+        //db.close();
+        return rowsAffected;
     }
 }

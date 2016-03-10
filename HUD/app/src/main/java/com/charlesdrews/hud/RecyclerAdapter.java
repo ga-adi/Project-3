@@ -1,25 +1,30 @@
 package com.charlesdrews.hud;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
+import com.charlesdrews.hud.CardsData.RemindersCardData;
+import com.charlesdrews.hud.CardsData.RemindersRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
 
 import java.util.ArrayList;
@@ -33,8 +38,6 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
-    private Context mContext;
-    private int lastPosition = -1;
 
     //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
     public RecyclerAdapter(List<CardData> cardsData) {
@@ -66,6 +69,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
                 return new NewsCard(view, parent.getContext(), type);
             }
+            case Reminders: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminders_card, parent, false);
+                return new RemindersCard(view, parent.getContext(), type);
+            }
             default:
                 return new CardViewHolder(view, parent.getContext(), null);
         }
@@ -82,9 +89,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-
     @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
+    public void onBindViewHolder(final CardViewHolder holder, int position) {
         CardData data = mCardsData.get(position);
 
         if (holder == null || data == null) { return; }
@@ -92,6 +98,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
             case Weather: {
+                if ( !(data instanceof WeatherCardData) ) { return; }
                 WeatherCard weatherCard = (WeatherCard) holder;
                 WeatherCardData weatherData = (WeatherCardData) data;
 
@@ -100,6 +107,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 break;
             }
             case Facebook: {
+                if ( !(data instanceof FacebookCardData) ) { return; }
                 FacebookCard facebookCard = (FacebookCard) holder;
                 FacebookCardData facebookData = (FacebookCardData) data;
 
@@ -108,6 +116,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 break;
             }
             case News: {
+                if ( !(data instanceof NewsCardData) ) { return; }
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
@@ -118,22 +127,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 newsCard.mNewsRecyclerView.setAdapter(adapter);
                 break;
             }
+            case Reminders: {
+                if ( !(data instanceof RemindersCardData) ) { return; }
+                RemindersCard remindersCard = (RemindersCard) holder;
+                RemindersCardData remindersCardData = (RemindersCardData) data;
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                remindersCard.mRemindersRecyclerView.setLayoutManager(layoutManager);
+
+                RemindersRecyclerAdapter adapter = new RemindersRecyclerAdapter(remindersCardData.getReminders());
+                remindersCard.mRemindersRecyclerView.setAdapter(adapter);
+
+                remindersCard.mAddReminderButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchAddReminderDialog(holder.mContext);
+                    }
+                });
+                break;
+            }
             default:
                 break;
         }
-//        setAnimation(holder.itemView, position);
     }
-
-//    private void setAnimation(View viewToAnimate, int position)
-//    {
-//        // If the bound view wasn't previously displayed on screen, it's animated
-//        if (position > lastPosition)
-//        {
-//            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
-//            viewToAnimate.startAnimation(animation);
-//            lastPosition = position;
-//        }
-//    }
 
     @Override
     public int getItemCount() {
@@ -186,4 +202,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
+    public class RemindersCard extends CardViewHolder {
+        RecyclerView mRemindersRecyclerView;
+        FloatingActionButton mAddReminderButton;
+        //TODO - add a text view saying when it was last updated???
+
+        public RemindersCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
+            mRemindersRecyclerView = (RecyclerView) itemView.findViewById(R.id.remindersRecyclerView);
+            mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
+        }
+    }
+
+    public void launchAddReminderDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Add Reminder");
+        EditText input = new EditText(context);
+        input.setHint("Enter reminder content");
+        builder.setView(input);
+        builder.setNegativeButton("Cancel", null);
+        builder.setNeutralButton("Add Alarm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "Add alarm", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "yup", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
+    }
 }
