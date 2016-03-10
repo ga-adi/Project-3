@@ -1,5 +1,9 @@
 package com.example.android.lately.Cards;
 
+import org.w3c.dom.Comment;
+
+import java.util.ArrayList;
+
 /**
  * Created by ShowMe on 3/8/16.
  */

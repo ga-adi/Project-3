@@ -28,12 +28,16 @@ import android.widget.Toast;
 
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
+import com.example.android.lately.Reddit.RedditArticle.Data;
+import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
+import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean mPortrait;
 
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
+    private static String mRedditUrl = "https://www.reddit.com/r/";
 
 
     @Override
@@ -285,6 +290,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
+    public void getRedditApi(String subreddit){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mRedditUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RedditRequest redditRequest = retrofit.create(RedditRequest.class);
+        Call<RedditResult> result = redditRequest.getRedditFeed(subreddit);
+        result.enqueue(new Callback<RedditResult>() {
+            @Override
+            public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
+                List<RedditArticle> result = response.body().getData().getChildren();
+                String articleAuthor,articleUrl,articleSubreddit,articleContent, articleTitle, articleTime;
+                int articleScore, articleNumOfComment;
+                for(int i=0; i<result.size(); i++){
+                    articleAuthor = result.get(i).getData().getAuthor();
+                    articleSubreddit = result.get(i).getData().getSubreddit();
+                    articleTitle = result.get(i).getData().getTitle();
+                    articleContent = result.get(i).getData().getSelftext();
+                    articleUrl = result.get(i).getData().getUrl();
+                    articleNumOfComment = result.get(i).getData().getNumComments();
+                    articleScore = result.get(i).getData().getScore();
+                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha z, EEE");
+                    Date currentDate = new Date((long)(result.get(i).getData().getCreated() * 1000L));
+                    articleTime = format.format(currentDate);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RedditResult> call, Throwable t) {
+
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -330,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (networkInfo != null && networkInfo.isConnected()) {
             if (mLastLocation != null) {
                 getForecastApi();
-//                    getRedditApi();
+                getRedditApi("Fitness"); //This parameter is a place holder. We'll change it into the user topic
 //                    getFoursquareApi();
 //                    getMeetupApi();
             } else {
@@ -354,6 +396,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public interface WeatherRequest{
         @GET("{latlon}/")
         Call<Weather> getWeather(@Path("latlon") String latlon);
+    }
+
+    public interface RedditRequest{
+        @GET("{subreddit}/.json")
+        Call<RedditResult> getRedditFeed(@Path("subreddit") String subreddit);
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
