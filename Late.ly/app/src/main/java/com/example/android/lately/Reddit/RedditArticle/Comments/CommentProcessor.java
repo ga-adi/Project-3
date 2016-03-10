@@ -30,7 +30,7 @@ public class CommentProcessor {
 
     // Load various details about the comment
     private RedditComment loadComment(JSONObject data, int level){
-        RedditComment comment=new RedditComment(null,null,-1,null);
+        RedditComment comment=new RedditComment(null,null,-1,null,-1,-1,-1);
         try{
             comment.setmContent(data.getString("body"));
             comment.setmAuthor(data.getString("author"));
