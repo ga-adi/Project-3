@@ -13,8 +13,8 @@ public class LargeArticleCard extends ParentCard {
     String mTime;
 
 
-    public LargeArticleCard(String mSource, String mTitle, String mTime, int mCardType) {
-        super(mCardType);
+    public LargeArticleCard(String mSource, String mTitle, String mTime, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.mSource = mSource;
         this.mTitle = mTitle;
         this.mTime = mTime;
@@ -43,4 +43,6 @@ public class LargeArticleCard extends ParentCard {
     public void setmTime(String mTime) {
         this.mTime = mTime;
     }
+
+
 }

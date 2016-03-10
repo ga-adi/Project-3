@@ -17,8 +17,8 @@ public class RedditCard extends ParentCard{
     String mSubreddit;
     String mUrl;
 
-    public RedditCard(String mAuthor, ArrayList<RedditComment> mComments, String mContent, int mNumOfComment, int mScore, String mSubreddit, String mTime, String mTitle, String mUrl, int cardType) {
-        super(cardType);
+    public RedditCard(String mAuthor, ArrayList<RedditComment> mComments, String mContent, int mNumOfComment, int mScore, String mSubreddit, String mTime, String mTitle, String mUrl, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.mAuthor = mAuthor;
         this.mComments = mComments;
         this.mContent = mContent;

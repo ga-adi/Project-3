@@ -14,11 +14,9 @@ public class WeatherCard extends ParentCard {
     String[] mNextFiveDaysSummary;
     String[] mNextFiveDaysHighTemp ;
     String[] mNextFiveDaysLowTemp;
-    int mTabType;
-    int mId;
 
-    public WeatherCard(String mCurrentTemp, String mCurrentSummary, String mCurrentLocation, String mFormattedCurrentDate, String[] mNextFiveDaysDates, String[] mNextFiveDaysSummary, String[] mNextFiveDaysHighTemp, String[] mNextFiveDaysLowTemp, int mTabType, int mCardType, int id) {
-        super(mCardType);
+    public WeatherCard(String mCurrentTemp, String mCurrentSummary, String mCurrentLocation, String mFormattedCurrentDate, String[] mNextFiveDaysDates, String[] mNextFiveDaysSummary, String[] mNextFiveDaysHighTemp, String[] mNextFiveDaysLowTemp, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.mCurrentTemp = mCurrentTemp;
         this.mCurrentSummary = mCurrentSummary;
         this.mCurrentLocation = mCurrentLocation;
@@ -27,8 +25,6 @@ public class WeatherCard extends ParentCard {
         this.mNextFiveDaysSummary = mNextFiveDaysSummary;
         this.mNextFiveDaysHighTemp = mNextFiveDaysHighTemp;
         this.mNextFiveDaysLowTemp = mNextFiveDaysLowTemp;
-        this.mTabType = mTabType;
-        this.mId = id;
     }
 
     public String getmCurrentTemp() {
@@ -95,19 +91,4 @@ public class WeatherCard extends ParentCard {
         this.mNextFiveDaysLowTemp = mNextFiveDaysLowTemp;
     }
 
-    public int getmTabType() {
-        return mTabType;
-    }
-
-    public void setmTabType(int mTabType) {
-        this.mTabType = mTabType;
-    }
-
-    public int getmId() {
-        return mId;
-    }
-
-    public void setmId(int mId) {
-        this.mId = mId;
-    }
 }

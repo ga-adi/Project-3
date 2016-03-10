@@ -9,8 +9,8 @@ public class RedditComment extends ParentCard{
     String mTime;
     int mScore;
 
-    public RedditComment(String mAuthor, String mContent, int mScore, String mTime, int cardType) {
-        super(cardType);
+    public RedditComment(String mAuthor, String mContent, int mScore, String mTime, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.mAuthor = mAuthor;
         this.mContent = mContent;
         this.mScore = mScore;

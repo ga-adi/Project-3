@@ -282,9 +282,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i+1).getTemperatureMin());
 
                     WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
-                            formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_HOMEPAGE,
+                            formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
                             CardAdapter.TYPE_WEATHER, 0);
-                    
+
                     //TODO: Add WeatherCard to Singleton
                 }
             }
