@@ -109,14 +109,41 @@ public class CardContentProvider extends ContentProvider {
 
         Log.d(TAG, "insert: notify content resolver");
 
-        getContext().getContentResolver().notifyChange(uri, null);
-        return Uri.withAppendedPath(WEATHER_URI, String.valueOf(id));
+        //getContext().getContentResolver().notifyChange(uri, null); // notify from sync adapter instead
+        return Uri.withAppendedPath(uri, String.valueOf(id));
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        //TODO
-        return 0;
+        int uriType = sUriMatcher.match(uri);
+        int rowsAffected = 0;
+
+        switch (uriType) {
+            case FACEBOOK:
+                Log.d(TAG, "insert: facebook");
+                //TODO - need a db helper method for deleting facebook data
+                break;
+
+            case NEWS:
+                Log.d(TAG, "insert: news");
+                rowsAffected = mDbHelper.deleteAllNews();
+                break;
+
+            case WEATHER:
+                Log.d(TAG, "insert: weather");
+                //TODO - need a db helper method for deleting weather data
+                break;
+
+            default:
+                throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
+        }
+
+        //TODO - check if rowsAffected == -1 which indicates db error
+
+        Log.d(TAG, "delete: notify content resolver");
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsAffected;
     }
 
     public int update(

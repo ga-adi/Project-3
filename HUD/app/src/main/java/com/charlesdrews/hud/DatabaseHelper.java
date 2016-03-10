@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Store results from API calls in a local database for offline availability
  * Created by charlie on 3/8/16.
@@ -14,7 +16,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getCanonicalName();
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "hud_db.db";
 
     //TODO - replace with actual column names - these are just placeholders
@@ -32,10 +34,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String NEWS_TABLE = "news";
     public static final String NEWS_COL_ID = "_id";
     public static final String NEWS_COL_HEADLINE = "headline";
-    public static final String[] NEWS_COLUMNS = new String[]{NEWS_COL_ID, NEWS_COL_HEADLINE};
+    public static final String NEWS_COL_THUMBNAIL_URL = "thumbnail_url";
+    public static final String NEWS_COL_LINK_URL = "link_url";
+    public static final String[] NEWS_COLUMNS = new String[]{NEWS_COL_ID, NEWS_COL_HEADLINE, NEWS_COL_THUMBNAIL_URL, NEWS_COL_LINK_URL};
     public static final String NEWS_CREATE = "CREATE TABLE " + NEWS_TABLE + " ("
             + NEWS_COL_ID + " INTEGER PRIMARY KEY, "
-            + NEWS_COL_HEADLINE + " TEXT)";
+            + NEWS_COL_HEADLINE + " TEXT, "
+            + NEWS_COL_THUMBNAIL_URL + " TEXT, "
+            + NEWS_COL_LINK_URL + " TEXT)";
 
     public static final String FACEBOOK_TABLE = "facebook";
     public static final String FACEBOOK_COL_ID = "_id";
@@ -99,14 +105,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public int deleteAllNews() {
+        Log.d(TAG, "deleteAllNews: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int rowsAffected = db.delete(NEWS_TABLE, "1", null);
+        //db.close();
+        return rowsAffected;
+    }
+
     public long addNews(ContentValues values) {
         Log.d(TAG, "addNews: starting");
 
         SQLiteDatabase db = getWritableDatabase();
-        //TODO - check if values contains the correct keys
-        long rowId = db.insert(NEWS_TABLE, null, values);
-        //db.close();
-        return rowId;
+
+        // need headline & link url, but can live without thumbnail url
+        if (values.containsKey(NEWS_COL_HEADLINE) && values.containsKey(NEWS_COL_LINK_URL)) {
+            long rowId = db.insert(NEWS_TABLE, null, values);
+            //db.close();
+            return rowId;
+        } else {
+            return -1l;
+        }
     }
 
     public Cursor getNews() {
