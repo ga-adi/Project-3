@@ -10,12 +10,19 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:padding="5dp"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageviewCard2"
+            android:background="@drawable/rothkocard1"/>
+
         <TextView
             android:id="@+id/headline"
+            
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
