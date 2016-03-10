@@ -9,28 +9,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageviewCard2"
+        android:background="@drawable/rothkocard1"/>
 
+    <RelativeLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/imageviewCard2"
-            android:background="@drawable/rothkocard1"/>
-
         <TextView
-            android:id="@+id/headline"
-            
+            android:id="@+id/newsCardTitle"
+            android:text="@string/news_card_title"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/newsListView"
-            android:layout_below="@id/headline"/>
+            android:id="@+id/newsRecyclerView"
+            android:layout_below="@id/newsCardTitle"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

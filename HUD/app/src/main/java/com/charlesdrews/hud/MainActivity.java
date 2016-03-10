@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        mAdapter = new RecyclerAdapter(mCardsData);
+        mAdapter = new RecyclerAdapter(this, mCardsData);
         mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
@@ -244,10 +244,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     case News: {
-                        NewsCardData newsCardData = new NewsCardData(
-                                CardType.News,
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.NEWS_COL_HEADLINE))
-                        );
+                        NewsCardData newsCardData = new NewsCardData(CardType.News, cursor);
                         mCardsData.set(NEWS_POSITION, newsCardData);
                         break;
                     }

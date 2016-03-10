@@ -1,15 +1,21 @@
 package com.charlesdrews.hud;
 
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
+import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
 
 import java.util.ArrayList;
@@ -23,9 +29,11 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
+    private Context mContext;
 
-
-    public RecyclerAdapter(List<CardData> cardsData) {
+    //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
+    public RecyclerAdapter(Context context, List<CardData> cardsData) {
+        mContext = context;
         mCardsData = cardsData;
     }
 
@@ -85,7 +93,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
-                newsCard.mHeadline.setText(newsCardData.getHeadline());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+                newsCard.mNewsRecyclerView.setLayoutManager(layoutManager);
+
+                NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
+                newsCard.mNewsRecyclerView.setAdapter(adapter);
                 break;
             }
             default:
@@ -133,11 +145,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     }
 
     public class NewsCard extends CardViewHolder {
-        TextView mHeadline;
+        RecyclerView mNewsRecyclerView;
+        //TODO - add a text view saying when it was last updated???
 
         public NewsCard(View itemView, CardType cardType) {
             super(itemView, cardType);
-            mHeadline = (TextView) itemView.findViewById(R.id.headline);
+            mNewsRecyclerView = (RecyclerView) itemView.findViewById(R.id.newsRecyclerView);
         }
     }
 }

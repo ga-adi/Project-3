@@ -8,4 +8,6 @@
     <string name="account">default_account</string>
     <string name="content_provider_label">Content Provider</string>
     <string name="facebook_app_id">980688392019422</string>
+
+    <string name="news_card_title">Latest headlines from the New York Times</string>
 </resources>
