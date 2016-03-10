@@ -8,6 +8,7 @@ public class RedditComment extends ParentCard{
     String mContent;
     String mTime;
     int mScore;
+    int mLevel;
 
     public RedditComment(String mAuthor, String mContent, int mScore, String mTime, int cardType) {
         super(cardType);
@@ -15,6 +16,14 @@ public class RedditComment extends ParentCard{
         this.mContent = mContent;
         this.mScore = mScore;
         this.mTime = mTime;
+    }
+
+    public int getmLevel() {
+        return mLevel;
+    }
+
+    public void setmLevel(int mLevel) {
+        this.mLevel = mLevel;
     }
 
     public String getmAuthor() {

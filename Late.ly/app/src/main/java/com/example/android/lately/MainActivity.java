@@ -6,12 +6,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +25,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
+import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.Data;
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
@@ -35,7 +40,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.w3c.dom.Comment;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -55,6 +69,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Window mWindow;
     Toolbar mMainToolbar;
     boolean mPortrait;
+    ArrayList<RedditComment> mComments;
+    CommentAsyncTask commentAsyncTask;
+
+    ProgressBar progressbar;
 
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
     private static String mRedditUrl = "https://www.reddit.com/r/";
@@ -235,6 +253,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             transaction.replace(R.id.detailsFragmentContainer, fragment);
             transaction.commit();
         }
+
+
         }
 
 
@@ -296,14 +316,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        final ArrayList<String> urlList = new ArrayList<>();
+
         RedditRequest redditRequest = retrofit.create(RedditRequest.class);
         Call<RedditResult> result = redditRequest.getRedditFeed(subreddit);
         result.enqueue(new Callback<RedditResult>() {
             @Override
             public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
+
                 List<RedditArticle> result = response.body().getData().getChildren();
                 String articleAuthor,articleUrl,articleSubreddit,articleContent, articleTitle, articleTime;
-                int articleScore, articleNumOfComment;
+                int articleScore, articleNumOfComment, idNumber;
                 for(int i=0; i<result.size(); i++){
                     articleAuthor = result.get(i).getData().getAuthor();
                     articleSubreddit = result.get(i).getData().getSubreddit();
@@ -312,20 +335,69 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleUrl = result.get(i).getData().getUrl();
                     articleNumOfComment = result.get(i).getData().getNumComments();
                     articleScore = result.get(i).getData().getScore();
-                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha z, EEE");
+                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
                     Date currentDate = new Date((long)(result.get(i).getData().getCreated() * 1000L));
                     articleTime = format.format(currentDate);
+                    articleSubreddit = result.get(i).getData().getSubreddit();
+                    idNumber = i+1;
 
+
+                    //This background method clears the mComments ArrayList(member variable) and stuffs new comment lists.
+                    //So you don't need to instantiate a new comment ArrayList here.
+                    //Just stuff mComment as a parameter of the reddit article constructor after this async task execute method.
+
+                    //Build a new reddit article object here.
                 }
-
             }
 
             @Override
             public void onFailure(Call<RedditResult> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
+    }
 
+    public class CommentAsyncTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            String data = "";
+            try{
+                URL url = new URL(params[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                InputStream inStream = connection.getInputStream();
+                data = getInputData(inStream);
+                CommentProcessor commentProcessor = new CommentProcessor(data);
+                mComments = new ArrayList<>();
+                mComments = commentProcessor.fetchComments();
+            }catch (Throwable e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("REDDITARTICLE",mComments.get(1).getmAuthor() +"  "+ mComments.get(1).getmContent());
+        }
+    }
+
+
+    private String getInputData(InputStream inStream) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+        String data = null;
+        while ((data = reader.readLine()) != null) {
+            builder.append(data);
+        }
+        reader.close();
+        return builder.toString();
     }
 
     @Override
