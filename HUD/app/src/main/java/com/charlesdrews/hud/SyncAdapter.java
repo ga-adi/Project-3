@@ -13,7 +13,6 @@ import android.util.Log;
 import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
 import com.charlesdrews.hud.NYTimesTop.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,6 +41,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        //TODO - check if error thrown when device offline
+
         Log.d(TAG, "onPerformSync: starting");
 
         Log.d(TAG, "onPerformSync: insert facebook");

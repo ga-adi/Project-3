@@ -37,8 +37,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
+
+        if (viewType == -1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
+            return new CardViewHolder(view, parent.getContext(), null);
+        }
+
         CardType type = mCardTypes.get(viewType);
-        View view;
 
         //TODO - inflate the correct layout for each possible CardType value
         switch (type) {
@@ -55,19 +61,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 return new NewsCard(view, parent.getContext(), type);
             }
             default:
-                return null;
+                return new CardViewHolder(view, parent.getContext(), null);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        CardType type = mCardsData.get(position).getType();
-        return mCardTypes.indexOf(type);
+        CardData cardData = mCardsData.get(position);
+        if (cardData == null) {
+            return -1;
+        } else {
+            CardType type = mCardsData.get(position).getType();
+            return mCardTypes.indexOf(type);
+        }
     }
 
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         CardData data = mCardsData.get(position);
+
+        if (holder == null || data == null) { return; }
 
         //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
@@ -123,7 +136,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-    //TODO - extend ViewHolder for each possible CardType value
+    //TODO - extend CardViewHolder for each possible CardType value
     public class WeatherCard extends CardViewHolder {
         TextView mHighTemp, mLowTemp;
 
