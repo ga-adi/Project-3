@@ -736,6 +736,64 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     }
+
+    public String redditSwitcher(int TAB){
+        switch (TAB){
+            case CardAdapter.TAB_MAINPAGE:
+                return "AskReddit";
+            case CardAdapter.TAB_POLITICS:
+                return "politics";
+            case CardAdapter.TAB_TECH:
+                return "technology";
+            case CardAdapter.TAB_CAREER:
+                return "financialindependance";
+            case CardAdapter.TAB_FOOD:
+                return "food";
+            case CardAdapter.TAB_DANCING:
+                return "Dance";
+            case CardAdapter.TAB_ANIMALS:
+                return "Animals";
+            case CardAdapter.TAB_LANGUAGE:
+                return "europe";
+            case CardAdapter.TAB_NATURE:
+                return "nature";
+            case CardAdapter.TAB_SPORTS:
+                return "sports";
+            case CardAdapter.TAB_DATING:
+                return "Tinder";
+            default:
+                return "AskReddit";
+        }
+    }
+
+    public String meetupSwitcher(int TAB){
+        switch (TAB){
+            case CardAdapter.TAB_MAINPAGE:
+                return "4";
+            case CardAdapter.TAB_POLITICS:
+                return "13";
+            case CardAdapter.TAB_TECH:
+                return "34";
+            case CardAdapter.TAB_CAREER:
+                return "2";
+            case CardAdapter.TAB_FOOD:
+                return "10";
+            case CardAdapter.TAB_DANCING:
+                return "5";
+            case CardAdapter.TAB_ANIMALS:
+                return "26";
+            case CardAdapter.TAB_LANGUAGE:
+                return "16";
+            case CardAdapter.TAB_NATURE:
+                return "23";
+            case CardAdapter.TAB_SPORTS:
+                return "32";
+            case CardAdapter.TAB_DATING:
+                return "30";
+            default:
+                return "4";
+        }
+    }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        // Handle action bar item clicks here. The action bar will
