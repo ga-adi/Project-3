@@ -22,7 +22,11 @@
 
         <TextView
             android:id="@+id/headline"
-            
+            android:layout_marginLeft="6dp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:textColor="#f9f1c8"
+            android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
