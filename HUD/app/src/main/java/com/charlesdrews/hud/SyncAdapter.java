@@ -9,9 +9,6 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
 import com.charlesdrews.hud.NYTimesTop.Result;
@@ -24,6 +21,7 @@ import retrofit2.Response;
 
 
 /**
+ * Make API calls, parse responses, and store data via the content provider
  * Created by charlie on 3/9/16.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
@@ -43,16 +41,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        //TODO - check if error thrown when device offline
+
         Log.d(TAG, "onPerformSync: starting");
 
         Log.d(TAG, "onPerformSync: insert facebook");
         mContentResolver.insert(CardContentProvider.FACEBOOK_URI, getFacebookData());
+        mContentResolver.notifyChange(CardContentProvider.FACEBOOK_URI, null);
 
         Log.d(TAG, "onPerformSync: insert news");
-        mContentResolver.insert(CardContentProvider.NEWS_URI, getNewsData());
+        //mContentResolver.insert(CardContentProvider.NEWS_URI, getNewsData());
+        getNewsData();
+
 
         Log.d(TAG, "onPerformSync: insert weather");
         mContentResolver.insert(CardContentProvider.WEATHER_URI, getWeatherData());
+        mContentResolver.notifyChange(CardContentProvider.WEATHER_URI, null);
     }
 
     public ContentValues getFacebookData() {
@@ -66,32 +70,41 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return values;
     }
 
-    public ContentValues getNewsData() {
-        // TODO - make the news API call, parse the response, and create
-        // TODO   a new ContentValues object with values for each column in the database
+    public void getNewsData() {
+        NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
 
+            @Override
+            public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
+                List<Result> results = response.body().getResults();
 
-//        NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
-//            @Override
-//            public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
-//                List<Result> searchlist  = response.body().getResults();
-//                //ListView listView = (ListView) listView.findViewById(R.id.newsListView);
-//               // ArrayAdapter<Result> adapter = new ArrayAdapter<Result>(SyncAdapter.this, android.R.layout.simple_list_item_1, searchlist);
-//                //listView.setAdapter(adapter);
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NYTimesAPIResult> call, Throwable t) {
-//
-//                Log.d("NEWSFAIL","did not recieve Times Top Stories API Result");
-//            }
-//        });
+                if (results != null && results.size() > 0) {
+                    // first, clear out the saved news data
+                    mContentResolver.delete(CardContentProvider.NEWS_URI, null, null);
 
-        // manual test values
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.NEWS_COL_HEADLINE, "butthole");
-        return values;
+                    // then add new values from results
+                    for (Result result : results) {
+                        ContentValues values = new ContentValues();
+                        values.put(DatabaseHelper.NEWS_COL_HEADLINE, result.getTitle());
+                        values.put(DatabaseHelper.NEWS_COL_LINK_URL, result.getUrl());
+                        if (result.getThumbnailStandard().length() > 1) {
+                            values.put(DatabaseHelper.NEWS_COL_THUMBNAIL_URL, result.getThumbnailStandard());
+                        }
+
+                        mContentResolver.insert(CardContentProvider.NEWS_URI, values);
+                    }
+
+                    // notify the ContentObserver in MainActivity
+                    mContentResolver.notifyChange(CardContentProvider.NEWS_URI, null);
+                } else {
+                    Log.d(TAG, "onFailure: error using the NYT Top Stories API");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NYTimesAPIResult> call, Throwable t) {
+                Log.d(TAG, "onFailure: error using the NYT Top Stories API");
+            }
+        });
     }
 
     public ContentValues getWeatherData() {
