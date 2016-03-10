@@ -12,6 +12,12 @@ import android.util.Log;
 
 import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
 import com.charlesdrews.hud.NYTimesTop.Result;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -62,6 +68,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public ContentValues getFacebookData() {
         // TODO - make the Facebook API call, parse the response, and create
         // TODO   a new ContentValues object with values for each column in the database
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/{post-id}",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        JSONObject facebookObject = response.getJSONObject();
+                        Log.d("Facebook object", facebookObject.toString());
+                    }
+                }
+        ).executeAsync();
+
 
         // manual test values
         ContentValues values = new ContentValues();

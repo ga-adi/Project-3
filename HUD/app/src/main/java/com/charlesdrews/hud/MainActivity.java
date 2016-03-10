@@ -269,34 +269,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void facebookLogin(){
-
-        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions("user_likes");
-        mCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
-
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO - this crashes if you close the login window without logging in
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -351,6 +326,5 @@ public class MainActivity extends AppCompatActivity {
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
             ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
         }
-        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -180,12 +180,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
     public void facebookLogin(View view){
         mFacebookLoginButton = (LoginButton)view.findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions("user_likes");
+        mFacebookLoginButton.setReadPermissions("user_posts");
         mCallbackManager = CallbackManager.Factory.create();
         mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
 //                        Toast.makeText(MainActivity.class, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                //TODO Set text to results
                        mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
 
             }
