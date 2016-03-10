@@ -64,7 +64,8 @@ public class CardContentProvider extends ContentProvider {
             
             case NEWS:
                 Log.d(TAG, "query: news");
-                cursor = mDbHelper.getNews();
+                //TODO - adjust limit in argument to getNews() if needed
+                cursor = mDbHelper.getNews(10);
                 break;
             
             case WEATHER:

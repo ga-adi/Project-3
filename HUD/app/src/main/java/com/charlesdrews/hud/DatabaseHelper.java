@@ -130,16 +130,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getNews() {
+    public Cursor getNews(Integer limit) {
         Log.d(TAG, "getNews: starting");
 
         SQLiteDatabase db = getReadableDatabase();
-        //TODO - consider adding an "insert time" field and order desc by that
+
+        String limitString = null;
+        if (limit != null && limit > 0) {
+            limitString = String.valueOf(limit);
+        }
+
         Cursor cursor = db.query(
                 NEWS_TABLE,             // table
                 NEWS_COLUMNS,           // columns
                 null, null, null, null, // selection, selectionArgs, groupBy, having
-                NEWS_COL_ID + " DESC"   // orderBy
+                NEWS_COL_ID + " DESC",  // orderBy
+                limitString             // limit
         );
         //db.close();
         return cursor;

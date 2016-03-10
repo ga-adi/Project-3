@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
+ * Bind news item data to the news recycler view in the news card
  * Created by charlie on 3/10/16.
  */
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
@@ -37,8 +38,14 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         final NewsCardData.NewsItemData item = mData.get(position);
 
         holder.mHeadline.setText(item.getHeadline());
-        Picasso.with(holder.mContext).load(item.getThumbnailUrl()).into(holder.mThumbnail);
-        //TODO - make item clickable w/ link url
+
+        String thumbnailUrlString = item.getThumbnailUrl();
+        if (thumbnailUrlString != null && !thumbnailUrlString.isEmpty()) {
+            Picasso.with(holder.mContext).load(item.getThumbnailUrl()).into(holder.mThumbnail);
+        } else {
+            holder.mThumbnail.setImageResource(R.drawable.nyt_t_logo);
+        }
+
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

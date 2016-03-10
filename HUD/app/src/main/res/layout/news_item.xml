@@ -7,7 +7,6 @@
 
     <ImageView
         android:id="@+id/newsItemThumbnail"
-        android:background="@android:color/darker_gray"
         android:layout_width="48dp"
         android:layout_height="48dp" />
 
