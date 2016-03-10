@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
-    public LoginButton mFacebookLoginButton;
-    public CallbackManager mCallbackManager;
     private TextView mLoginText;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO facebook stuff
         mLoginText = (TextView)findViewById(R.id.status_update);
         //TODO - can this initialization be done in an async task?
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -79,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
         //TODO - figure out why this is syncing so frequently (definitely not just every 15 min)
         ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
+
     }
 
     @Override
@@ -246,33 +244,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void facebookLogin(){
-
-        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions("user_likes");
-        mCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
-
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO - this crashes if you close the login window without logging in
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
