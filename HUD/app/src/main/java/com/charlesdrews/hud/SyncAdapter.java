@@ -71,7 +71,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/{post-id}",
+                //TODO {post-id}
+                "/{1370430319_10206094192418409}",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
