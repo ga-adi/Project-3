@@ -46,11 +46,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         switch (type) {
             case Weather: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
-                facebookLogin(view);
                 return new WeatherCard(view, type);
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                facebookLogin(view);
                 return new FacebookCard(view, type);
             }
             case News: {
