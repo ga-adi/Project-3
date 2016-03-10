@@ -83,7 +83,7 @@ public class NYTimesAPIResult {
      * @return
      * The results
      */
-    public List<com.charlesdrews.hud.NYTimesTop.Result> getResults() {
+    public List<Result> getResults() {
         return results;
     }
 
