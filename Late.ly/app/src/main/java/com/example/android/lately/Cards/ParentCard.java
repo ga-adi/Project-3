@@ -5,11 +5,31 @@ package com.example.android.lately.Cards;
  */
 public class ParentCard {
     int mCardType;
+    int mId;
+    int mTabType;
 
-    public ParentCard(int mCardType) {
+    public ParentCard(int mCardType, int mTabType, int mId) {
         this.mCardType = mCardType;
+        this.mId = mId;
+        this.mTabType = mTabType;
+
     }
 
+    public int getmTabType() {
+        return mTabType;
+    }
+
+    public void setmTabType(int mTabType) {
+        this.mTabType = mTabType;
+    }
+
+    public int getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
+    }
 
     public int getmCardType() {
         return mCardType;

@@ -22,6 +22,7 @@
         android:paddingLeft="2dp"
         android:paddingRight="2dp">
         <android.support.v7.widget.CardView
+            android:id="@+id/selectionpage_card1"
             android:layout_width="match_parent"
             android:layout_height="66dp"
             app:cardCornerRadius="33dp"
@@ -41,8 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="POLITICS"
-            android:id="@+id/textView"
+            android:text="@string/topic1"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="#bb000000"
@@ -76,8 +76,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TECH"
-            android:id="@+id/textView"
+            android:text="@string/topic2"
             android:layout_centerHorizontal="true"
             android:textColor="#bb000000"
             android:textSize="12sp" />
@@ -109,8 +108,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CAREER"
-            android:id="@+id/textView"
+            android:text="@string/topic3"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="#bb000000"
@@ -144,8 +142,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FOOD"
-            android:id="@+id/textView"
+            android:text="@string/topic4"
             android:layout_centerHorizontal="true"
             android:textColor="#bb000000"
             android:textSize="12sp" />
@@ -177,8 +174,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DANCING"
-            android:id="@+id/textView"
+            android:text="@string/topic5"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="#bb000000"
@@ -220,8 +216,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ANIMALS"
-                android:id="@+id/textView"
+                android:text="@string/topic6"
                 android:layout_centerHorizontal="true"
                 android:textColor="#bb000000"
                 android:textSize="12sp" />
@@ -253,8 +248,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LANGUAGE"
-                android:id="@+id/textView"
+                android:text="@string/topic7"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:textColor="#bb000000"
@@ -288,8 +282,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NATURE"
-                android:id="@+id/textView"
+                android:text="@string/topic8"
                 android:layout_centerHorizontal="true"
                 android:textColor="#bb000000"
                 android:textSize="12sp" />
@@ -321,8 +314,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SPORTS"
-                android:id="@+id/textView"
+                android:text="@string/topic9"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:textColor="#bb000000"
@@ -356,11 +348,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DATING"
-                android:id="@+id/textView"
+                android:text="@string/topic10"
                 android:layout_centerHorizontal="true"
                 android:textColor="#bb000000"
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
+
 </RelativeLayout>

@@ -18,13 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+<<<<<<< HEAD
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +34,14 @@ import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.Data;
+=======
+import android.widget.Toast;
+
+import com.example.android.lately.Cards.CardAdapter;
+import com.example.android.lately.Cards.WeatherCard;
+import com.example.android.lately.Forecast.Weather;
+import com.example.android.lately.Fragments.DetailsFragment;
+>>>>>>> perrys_branch
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -299,8 +307,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     //nextFiveDaysDates[i] = formattedDate.substring(formattedDate.length()-3,formattedDate.length());
 
                     nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i+1).getSummary();
-                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i+1).getTemperatureMax());
+                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMax());
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i+1).getTemperatureMin());
+
+                    WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
+                            formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
+                            CardAdapter.TYPE_WEATHER, 0);
+
+                    //TODO: Add WeatherCard to Singleton
                 }
             }
             @Override
