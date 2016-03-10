@@ -71,22 +71,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // TODO   a new ContentValues object with values for each column in the database
 
 
-        NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
-            @Override
-            public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
-                List<Result> searchlist  = response.body().getResults();
-                //ListView listView = (ListView) listView.findViewById(R.id.newsListView);
-               // ArrayAdapter<Result> adapter = new ArrayAdapter<Result>(SyncAdapter.this, android.R.layout.simple_list_item_1, searchlist);
-                //listView.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onFailure(Call<NYTimesAPIResult> call, Throwable t) {
-
-                Log.d("NEWSFAIL","did not recieve Times Top Stories API Result");
-            }
-        });
+//        NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
+//            @Override
+//            public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
+//                List<Result> searchlist  = response.body().getResults();
+//                //ListView listView = (ListView) listView.findViewById(R.id.newsListView);
+//               // ArrayAdapter<Result> adapter = new ArrayAdapter<Result>(SyncAdapter.this, android.R.layout.simple_list_item_1, searchlist);
+//                //listView.setAdapter(adapter);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NYTimesAPIResult> call, Throwable t) {
+//
+//                Log.d("NEWSFAIL","did not recieve Times Top Stories API Result");
+//            }
+//        });
 
         // manual test values
         ContentValues values = new ContentValues();
