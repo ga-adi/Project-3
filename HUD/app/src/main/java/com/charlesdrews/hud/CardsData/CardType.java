@@ -8,6 +8,5 @@ public enum CardType {
     Weather,
     News,
     Facebook,
-    Movies,
-    Concerts
+    Reminders
 }
