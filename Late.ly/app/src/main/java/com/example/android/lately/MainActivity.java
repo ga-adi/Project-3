@@ -13,44 +13,31 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
-import android.widget.ProgressBar;
-=======
->>>>>>> thirdBranch
-import android.widget.Toast;
-
-import com.example.android.lately.Cards.RedditComment;
-import com.example.android.lately.Forecast.Weather;
-import com.example.android.lately.Foursquare.FoursquareVenues;
-import com.example.android.lately.Fragments.DetailsFragment;
-<<<<<<< HEAD
-import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
-import com.example.android.lately.Reddit.RedditArticle.Data;
-
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.CardAdapter;
+import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Cards.WeatherCard;
-=======
->>>>>>> thirdBranch
+import com.example.android.lately.Forecast.Weather;
+import com.example.android.lately.Foursquare.FoursquareVenues;
+import com.example.android.lately.Fragments.DetailsFragment;
+import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-
-import org.w3c.dom.Comment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,27 +67,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Window mWindow;
     Toolbar mMainToolbar;
     boolean mPortrait;
-<<<<<<< HEAD
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
     Singleton mSingletonArrayOfParentCards;
-
-    ProgressBar progressbar;
-=======
     TabLayout mTabLayout;
 //    public static String stuff;
 
     int mSports;
->>>>>>> thirdBranch
-
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
     private static String mRedditUrl = "https://www.reddit.com/r/";
-    public static  String mFoursquareUrl = "https://api.foursquare.com/v2/venues/search?client_id=JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312&client_secret=PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35&v=20130815&ll=";
+    public static String mFoursquareUrl = "https://api.foursquare.com/v2/venues/search?client_id=JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312&client_secret=PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35&v=20130815&ll=";
     public static final String mFoursquareEndpoint = "https://api.foursquare.com/";
     public static final String FOURSQUARE_CLIENT_ID = "JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312";
     public static final String FOURSQUARE_CLIENT_SECRET = "PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35";
     public static final String FOURSQUARE_VERSION_NUMBER = "20130815";
-
 
 
     @Override
@@ -108,11 +88,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
         mSingletonArrayOfParentCards = Singleton.getInstance();
-=======
+
         mSports = 1;
->>>>>>> thirdBranch
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -217,30 +195,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        LinearLayout.LayoutParams lp5 = (LinearLayout.LayoutParams) view.getLayoutParams();
 //        view5.setPadding(0, 0, 0, 0);
 //        view5.setLayoutParams(lp5);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //        adds tabs to tablayout bar
@@ -359,16 +313,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             transaction.replace(R.id.detailsFragmentContainer, fragment);
             transaction.commit();
         }
-<<<<<<< HEAD
-
-
     }
 
-
-=======
-    }
-
->>>>>>> thirdBranch
     public void getForecastApi() {
         String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 7);
         String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 8);
@@ -411,21 +357,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                     nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i + 1).getSummary();
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMax());
-<<<<<<< HEAD
-                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
-
-                    WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
-                            formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
-                            CardAdapter.TYPE_WEATHER, 0);
-
-                    mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
-=======
                     nextFiveDaysLowTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
-
-                    //TODO : Creating a constructor and stuff String variables above
->>>>>>> thirdBranch
                 }
+                WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
+                        formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
+                        CardAdapter.TYPE_WEATHER, 0);
+
+                mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
+
+                //TODO : Creating a constructor and stuff String variables above
             }
+
 
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
@@ -450,11 +392,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 List<RedditArticle> result = response.body().getData().getChildren();
                 String articleAuthor, articleUrl, articleSubreddit, articleContent, articleTitle, articleTime;
-<<<<<<< HEAD
                 int articleScore, articleNumOfComment, idNumber;
-=======
-                int articleScore, articleNumOfComment;
->>>>>>> thirdBranch
+
                 for (int i = 0; i < result.size(); i++) {
                     articleAuthor = result.get(i).getData().getAuthor();
                     articleSubreddit = result.get(i).getData().getSubreddit();
@@ -463,11 +402,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleUrl = result.get(i).getData().getUrl();
                     articleNumOfComment = result.get(i).getData().getNumComments();
                     articleScore = result.get(i).getData().getScore();
-<<<<<<< HEAD
                     SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
-=======
-                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha z, EEE");
->>>>>>> thirdBranch
                     Date currentDate = new Date((long) (result.get(i).getData().getCreated() * 1000L));
                     articleTime = format.format(currentDate);
                     articleSubreddit = result.get(i).getData().getSubreddit();
@@ -478,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     //Just stuff mComment as a parameter of the reddit article constructor after this async task execute method.
 
                     //Build a new reddit article object here.
-                    idNumber = i+1;
+                    idNumber = i + 1;
                 }
             }
 
@@ -520,35 +455,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    public void getFoursquareApi(String latlon){
-                        Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(mFoursquareEndpoint)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+    public void getFoursquareApi(String latlon) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mFoursquareEndpoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-                FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
-                Call<FoursquareVenues> result = foursquareRequest.getVenues(FOURSQUARE_CLIENT_ID,FOURSQUARE_CLIENT_SECRET,FOURSQUARE_VERSION_NUMBER,latlon);
-                result.enqueue(new Callback<FoursquareVenues>() {
-                    @Override
-                    public void onResponse(Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
-                        for(int i=0; i<response.body().getResponse().getVenues().size(); i++) {
-                            String venueName = response.body().getResponse().getVenues().get(i).getName();
-                            String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
-                            String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
-                            String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
-                            String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
-                            String venueAddress = stateAddress + ", "+cityAddress+", "+stateAddress+", "+zipcodeAddress;
+        FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
+        Call<FoursquareVenues> result = foursquareRequest.getVenues(FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER, latlon);
+        result.enqueue(new Callback<FoursquareVenues>() {
+            @Override
+            public void onResponse(Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
+                for (int i = 0; i < response.body().getResponse().getVenues().size(); i++) {
+                    String venueName = response.body().getResponse().getVenues().get(i).getName();
+                    String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
+                    String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
+                    String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
+                    String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
+                    String venueAddress = stateAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
 
-                        }
-                    }
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<FoursquareVenues> call, Throwable t) {
+            @Override
+            public void onFailure(Call<FoursquareVenues> call, Throwable t) {
 
-                    }
-                });
+            }
+        });
     }
-
 
 
     private String getInputData(InputStream inStream) throws IOException {
@@ -607,7 +541,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if (mLastLocation != null) {
                 String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
-                String latlon = latitude+","+longitude;
+                String latlon = latitude + "," + longitude;
 
                 getForecastApi();
                 getRedditApi("Fitness"); //This parameter is a place holder. We'll change it into the user topic
@@ -642,14 +576,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-<<<<<<< HEAD
-    public interface FoursquareRequest{
+    public interface FoursquareRequest {
         @GET("v2/venues/search")
-        public Call<FoursquareVenues> getVenues (@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
+        public Call<FoursquareVenues> getVenues(@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
 
         @GET("v2/venues/{venueId}/photos")
         public Call<FoursquareVenues> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
-=======
+
+    }
+
     public void createTabs(ArrayList selection) {
         //// TODO: 3/10/16 change "contains" to TAB_BLAH
         if (selection.contains("Animals")) {
@@ -795,8 +730,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
-
->>>>>>> thirdBranch
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -810,9 +743,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        return super.onOptionsItemSelected(item);
 //    }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> thirdBranch
 }
