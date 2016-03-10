@@ -29,11 +29,9 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
-    private Context mContext;
 
     //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
-    public RecyclerAdapter(Context context, List<CardData> cardsData) {
-        mContext = context;
+    public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
     }
 
@@ -46,15 +44,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         switch (type) {
             case Weather: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
-                return new WeatherCard(view, type);
+                return new WeatherCard(view, parent.getContext(), type);
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
-                return new FacebookCard(view, type);
+                return new FacebookCard(view, parent.getContext(), type);
             }
             case News: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
-                return new NewsCard(view, type);
+                return new NewsCard(view, parent.getContext(), type);
             }
             default:
                 return null;
@@ -93,7 +91,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
                 newsCard.mNewsRecyclerView.setLayoutManager(layoutManager);
 
                 NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
@@ -111,10 +109,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     }
 
     public class CardViewHolder extends RecyclerView.ViewHolder {
-        private CardType mCardType;
+        Context mContext;
+        CardType mCardType;
 
-        public CardViewHolder(View itemView, CardType cardType) {
+        public CardViewHolder(View itemView, Context context, CardType cardType) {
             super(itemView);
+            mContext = context;
             mCardType = cardType;
         }
 
@@ -127,8 +127,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public class WeatherCard extends CardViewHolder {
         TextView mHighTemp, mLowTemp;
 
-        public WeatherCard(View itemView, CardType cardType) {
-            super(itemView, cardType);
+        public WeatherCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
             mHighTemp = (TextView) itemView.findViewById(R.id.high_temp);
             mLowTemp = (TextView) itemView.findViewById(R.id.low_temp);
         }
@@ -137,8 +137,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public class FacebookCard extends CardViewHolder {
         TextView mAuthor, mStatusUpdate;
 
-        public FacebookCard(View itemView, CardType cardType) {
-            super(itemView, cardType);
+        public FacebookCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
             mAuthor = (TextView) itemView.findViewById(R.id.author);
             mStatusUpdate = (TextView) itemView.findViewById(R.id.status_update);
         }
@@ -148,8 +148,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         RecyclerView mNewsRecyclerView;
         //TODO - add a text view saying when it was last updated???
 
-        public NewsCard(View itemView, CardType cardType) {
-            super(itemView, cardType);
+        public NewsCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
             mNewsRecyclerView = (RecyclerView) itemView.findViewById(R.id.newsRecyclerView);
         }
     }

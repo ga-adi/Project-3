@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        mAdapter = new RecyclerAdapter(this, mCardsData);
+        mAdapter = new RecyclerAdapter(mCardsData);
         mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
 
