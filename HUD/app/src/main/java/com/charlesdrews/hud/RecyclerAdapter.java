@@ -1,6 +1,7 @@
 package com.charlesdrews.hud;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +11,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
+import com.charlesdrews.hud.CardsData.RemindersCardData;
+import com.charlesdrews.hud.CardsData.RemindersRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
 
 import java.util.ArrayList;
@@ -60,6 +64,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
                 return new NewsCard(view, parent.getContext(), type);
             }
+            case Reminders: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminders_card, parent, false);
+                return new RemindersCard(view, parent.getContext(), type);
+            }
             default:
                 return new CardViewHolder(view, parent.getContext(), null);
         }
@@ -77,7 +85,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
+    public void onBindViewHolder(final CardViewHolder holder, int position) {
         CardData data = mCardsData.get(position);
 
         if (holder == null || data == null) { return; }
@@ -85,6 +93,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
             case Weather: {
+                if ( !(data instanceof WeatherCardData) ) { return; }
                 WeatherCard weatherCard = (WeatherCard) holder;
                 WeatherCardData weatherData = (WeatherCardData) data;
 
@@ -93,6 +102,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 break;
             }
             case Facebook: {
+                if ( !(data instanceof FacebookCardData) ) { return; }
                 FacebookCard facebookCard = (FacebookCard) holder;
                 FacebookCardData facebookData = (FacebookCardData) data;
 
@@ -101,6 +111,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 break;
             }
             case News: {
+                if ( !(data instanceof NewsCardData) ) { return; }
                 NewsCard newsCard = (NewsCard) holder;
                 NewsCardData newsCardData = (NewsCardData) data;
 
@@ -109,6 +120,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
                 NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
                 newsCard.mNewsRecyclerView.setAdapter(adapter);
+                break;
+            }
+            case Reminders: {
+                if ( !(data instanceof RemindersCardData) ) { return; }
+                RemindersCard remindersCard = (RemindersCard) holder;
+                RemindersCardData remindersCardData = (RemindersCardData) data;
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                remindersCard.mRemindersRecyclerView.setLayoutManager(layoutManager);
+
+                RemindersRecyclerAdapter adapter = new RemindersRecyclerAdapter(remindersCardData.getReminders());
+                remindersCard.mRemindersRecyclerView.setAdapter(adapter);
+
+                remindersCard.mAddReminderButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(holder.mContext, "Add reminder", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
             }
             default:
@@ -164,6 +194,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         public NewsCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
             mNewsRecyclerView = (RecyclerView) itemView.findViewById(R.id.newsRecyclerView);
+        }
+    }
+
+    public class RemindersCard extends CardViewHolder {
+        RecyclerView mRemindersRecyclerView;
+        FloatingActionButton mAddReminderButton;
+        //TODO - add a text view saying when it was last updated???
+
+        public RemindersCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
+            mRemindersRecyclerView = (RecyclerView) itemView.findViewById(R.id.remindersRecyclerView);
+            mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
         }
     }
 }
