@@ -3,13 +3,14 @@ package com.example.android.lately.Cards;
 /**
  * Created by Wasabi on 3/9/2016.
  */
-public class RedditComment {
+public class RedditComment extends ParentCard{
     String mAuthor;
     String mContent;
     String mTime;
     int mScore;
 
-    public RedditComment(String mAuthor, String mContent, int mScore, String mTime) {
+    public RedditComment(String mAuthor, String mContent, int mScore, String mTime, int cardType) {
+        super(cardType);
         this.mAuthor = mAuthor;
         this.mContent = mContent;
         this.mScore = mScore;
