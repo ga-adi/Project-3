@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -214,22 +215,58 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     }
 
     public void launchAddReminderDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
         builder.setTitle("Add Reminder");
-        EditText input = new EditText(context);
+
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText input = new EditText(context);
         input.setHint("Enter reminder content");
-        builder.setView(input);
+        linearLayout.addView(input);
+
+        final TextView alarmDateTime = new TextView(context);
+        alarmDateTime.setVisibility(View.GONE);
+        linearLayout.addView(alarmDateTime);
+
+        builder.setView(linearLayout);
+
         builder.setNegativeButton("Cancel", null);
-        builder.setNeutralButton("Add Alarm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "Add alarm", Toast.LENGTH_SHORT).show();
-            }
-        });
+        builder.setPositiveButton("OK", null);
+        builder.setNeutralButton("Add Alarm", null);
+
+        AlertDialog addReminderDialog = builder.create();
+        addReminderDialog.show();
+
+        addReminderDialog.getButton(AlertDialog.BUTTON_POSITIVE, )
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "yup", Toast.LENGTH_SHORT).show();
+                if (input.getText().toString().isEmpty()) {
+                    input.setError("Please enter a reminder");
+                    input.requestFocus();
+                } else {
+                    Toast.makeText(context, "yup", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNeutralButton("Add Alarm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+                builder2.setTitle("Another dialog");
+                builder2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alarmDateTime.setText("hello");
+                        alarmDateTime.setVisibility(View.VISIBLE);
+                        //dialog.dismiss();
+                        builder.show();
+                    }
+                });
+                builder2.show();
             }
         });
         builder.show();
