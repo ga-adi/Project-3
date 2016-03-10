@@ -70,14 +70,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // TODO - make the news API call, parse the response, and create
         // TODO   a new ContentValues object with values for each column in the database
 
-        //ListView listView;
+
         NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
             @Override
             public void onResponse(Call<NYTimesAPIResult> call, Response<NYTimesAPIResult> response) {
-                List<Result> searchlist = response.body().getResults();
-                //listView = (ListView)findViewById(R.id.newsListView);
+                List<Result> searchlist  = response.body().getResults();
+                //ListView listView = (ListView) listView.findViewById(R.id.newsListView);
                // ArrayAdapter<Result> adapter = new ArrayAdapter<Result>(SyncAdapter.this, android.R.layout.simple_list_item_1, searchlist);
                 //listView.setAdapter(adapter);
+
             }
 
             @Override
@@ -89,7 +90,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         // manual test values
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.NEWS_COL_HEADLINE, "Aliens attacking; seek shelter");
+        values.put(DatabaseHelper.NEWS_COL_HEADLINE, "butthole");
         return values;
     }
 

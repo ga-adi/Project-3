@@ -32,48 +32,48 @@ public class Result {
     @SerializedName("thumbnail_standard")
     @Expose
     private String thumbnailStandard;
-    @SerializedName("item_type")
-    @Expose
-    private String itemType;
-    @SerializedName("source")
-    @Expose
-    private String source;
-    @SerializedName("updated_date")
-    @Expose
-    private String updatedDate;
-    @SerializedName("created_date")
-    @Expose
-    private String createdDate;
-    @SerializedName("published_date")
-    @Expose
-    private String publishedDate;
-    @SerializedName("material_type_facet")
-    @Expose
-    private String materialTypeFacet;
-    @SerializedName("kicker")
-    @Expose
-    private String kicker;
-    @SerializedName("subheadline")
-    @Expose
-    private String subheadline;
-    @SerializedName("des_facet")
-    @Expose
-    private List<String> desFacet = new ArrayList<String>();
-    @SerializedName("org_facet")
-    @Expose
-    private String orgFacet;
-    @SerializedName("per_facet")
-    @Expose
-    private List<String> perFacet = new ArrayList<String>();
-    @SerializedName("geo_facet")
-    @Expose
-    private String geoFacet;
-    @SerializedName("related_urls")
-    @Expose
-    private Object relatedUrls;
-    @SerializedName("multimedia")
-    @Expose
-    private List<Multimedium> multimedia = new ArrayList<Multimedium>();
+//    @SerializedName("item_type")
+//    @Expose
+//    private String itemType;
+//    @SerializedName("source")
+//    @Expose
+//    private String source;
+//    @SerializedName("updated_date")
+//    @Expose
+//    private String updatedDate;
+//    @SerializedName("created_date")
+//    @Expose
+//    private String createdDate;
+//    @SerializedName("published_date")
+//    @Expose
+//    private String publishedDate;
+//    @SerializedName("material_type_facet")
+//    @Expose
+//    private String materialTypeFacet;
+//    @SerializedName("kicker")
+//    @Expose
+//    private String kicker;
+//    @SerializedName("subheadline")
+//    @Expose
+//    private String subheadline;
+//    @SerializedName("des_facet")
+//    @Expose
+//    private List<String> desFacet = new ArrayList<String>();
+//    @SerializedName("org_facet")
+//    @Expose
+//    private String orgFacet;
+//    @SerializedName("per_facet")
+//    @Expose
+//    private List<String> perFacet = new ArrayList<String>();
+//    @SerializedName("geo_facet")
+//    @Expose
+//    private String geoFacet;
+//    @SerializedName("related_urls")
+//    @Expose
+//    private Object relatedUrls;
+//    @SerializedName("multimedia")
+//    @Expose
+//    private List<Multimedium> multimedia = new ArrayList<Multimedium>();
 
     /**
      *
@@ -201,256 +201,261 @@ public class Result {
         this.thumbnailStandard = thumbnailStandard;
     }
 
-    /**
-     *
-     * @return
-     * The itemType
-     */
-    public String getItemType() {
-        return itemType;
-    }
+//    /**
+//     *
+//     * @return
+//     * The itemType
+//     */
+//    public String getItemType() {
+//        return itemType;
+//    }
+//
+//    /**
+//     *
+//     * @param itemType
+//     * The item_type
+//     */
+//    public void setItemType(String itemType) {
+//        this.itemType = itemType;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The source
+//     */
+//    public String getSource() {
+//        return source;
+//    }
+//
+//    /**
+//     *
+//     * @param source
+//     * The source
+//     */
+//    public void setSource(String source) {
+//        this.source = source;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The updatedDate
+//     */
+//    public String getUpdatedDate() {
+//        return updatedDate;
+//    }
+//
+//    /**
+//     *
+//     * @param updatedDate
+//     * The updated_date
+//     */
+//    public void setUpdatedDate(String updatedDate) {
+//        this.updatedDate = updatedDate;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The createdDate
+//     */
+//    public String getCreatedDate() {
+//        return createdDate;
+//    }
+//
+//    /**
+//     *
+//     * @param createdDate
+//     * The created_date
+//     */
+//    public void setCreatedDate(String createdDate) {
+//        this.createdDate = createdDate;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The publishedDate
+//     */
+//    public String getPublishedDate() {
+//        return publishedDate;
+//    }
+//
+//    /**
+//     *
+//     * @param publishedDate
+//     * The published_date
+//     */
+//    public void setPublishedDate(String publishedDate) {
+//        this.publishedDate = publishedDate;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The materialTypeFacet
+//     */
+//    public String getMaterialTypeFacet() {
+//        return materialTypeFacet;
+//    }
+//
+//    /**
+//     *
+//     * @param materialTypeFacet
+//     * The material_type_facet
+//     */
+//    public void setMaterialTypeFacet(String materialTypeFacet) {
+//        this.materialTypeFacet = materialTypeFacet;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The kicker
+//     */
+//    public String getKicker() {
+//        return kicker;
+//    }
+//
+//    /**
+//     *
+//     * @param kicker
+//     * The kicker
+//     */
+//    public void setKicker(String kicker) {
+//        this.kicker = kicker;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The subheadline
+//     */
+//    public String getSubheadline() {
+//        return subheadline;
+//    }
+//
+//    /**
+//     *
+//     * @param subheadline
+//     * The subheadline
+//     */
+//    public void setSubheadline(String subheadline) {
+//        this.subheadline = subheadline;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The desFacet
+//     */
+//    public List<String> getDesFacet() {
+//        return desFacet;
+//    }
+//
+//    /**
+//     *
+//     * @param desFacet
+//     * The des_facet
+//     */
+//    public void setDesFacet(List<String> desFacet) {
+//        this.desFacet = desFacet;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The orgFacet
+//     */
+//    public String getOrgFacet() {
+//        return orgFacet;
+//    }
+//
+//    /**
+//     *
+//     * @param orgFacet
+//     * The org_facet
+//     */
+//    public void setOrgFacet(String orgFacet) {
+//        this.orgFacet = orgFacet;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The perFacet
+//     */
+//    public List<String> getPerFacet() {
+//        return perFacet;
+//    }
+//
+//    /**
+//     *
+//     * @param perFacet
+//     * The per_facet
+//     */
+//    public void setPerFacet(List<String> perFacet) {
+//        this.perFacet = perFacet;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The geoFacet
+//     */
+//    public String getGeoFacet() {
+//        return geoFacet;
+//    }
+//
+//    /**
+//     *
+//     * @param geoFacet
+//     * The geo_facet
+//     */
+//    public void setGeoFacet(String geoFacet) {
+//        this.geoFacet = geoFacet;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The relatedUrls
+//     */
+//    public Object getRelatedUrls() {
+//        return relatedUrls;
+//    }
+//
+//    /**
+//     *
+//     * @param relatedUrls
+//     * The related_urls
+//     */
+//    public void setRelatedUrls(Object relatedUrls) {
+//        this.relatedUrls = relatedUrls;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     * The multimedia
+//     */
+//    public List<Multimedium> getMultimedia() {
+//        return multimedia;
+//    }
+//
+//    /**
+//     *
+//     * @param multimedia
+//     * The multimedia
+//     */
+//    public void setMultimedia(List<Multimedium> multimedia) {
+//        this.multimedia = multimedia;
+//    }
 
-    /**
-     *
-     * @param itemType
-     * The item_type
-     */
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    /**
-     *
-     * @return
-     * The source
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     *
-     * @param source
-     * The source
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     *
-     * @return
-     * The updatedDate
-     */
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
-    /**
-     *
-     * @param updatedDate
-     * The updated_date
-     */
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    /**
-     *
-     * @return
-     * The createdDate
-     */
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     *
-     * @param createdDate
-     * The created_date
-     */
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     *
-     * @return
-     * The publishedDate
-     */
-    public String getPublishedDate() {
-        return publishedDate;
-    }
-
-    /**
-     *
-     * @param publishedDate
-     * The published_date
-     */
-    public void setPublishedDate(String publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    /**
-     *
-     * @return
-     * The materialTypeFacet
-     */
-    public String getMaterialTypeFacet() {
-        return materialTypeFacet;
-    }
-
-    /**
-     *
-     * @param materialTypeFacet
-     * The material_type_facet
-     */
-    public void setMaterialTypeFacet(String materialTypeFacet) {
-        this.materialTypeFacet = materialTypeFacet;
-    }
-
-    /**
-     *
-     * @return
-     * The kicker
-     */
-    public String getKicker() {
-        return kicker;
-    }
-
-    /**
-     *
-     * @param kicker
-     * The kicker
-     */
-    public void setKicker(String kicker) {
-        this.kicker = kicker;
-    }
-
-    /**
-     *
-     * @return
-     * The subheadline
-     */
-    public String getSubheadline() {
-        return subheadline;
-    }
-
-    /**
-     *
-     * @param subheadline
-     * The subheadline
-     */
-    public void setSubheadline(String subheadline) {
-        this.subheadline = subheadline;
-    }
-
-    /**
-     *
-     * @return
-     * The desFacet
-     */
-    public List<String> getDesFacet() {
-        return desFacet;
-    }
-
-    /**
-     *
-     * @param desFacet
-     * The des_facet
-     */
-    public void setDesFacet(List<String> desFacet) {
-        this.desFacet = desFacet;
-    }
-
-    /**
-     *
-     * @return
-     * The orgFacet
-     */
-    public String getOrgFacet() {
-        return orgFacet;
-    }
-
-    /**
-     *
-     * @param orgFacet
-     * The org_facet
-     */
-    public void setOrgFacet(String orgFacet) {
-        this.orgFacet = orgFacet;
-    }
-
-    /**
-     *
-     * @return
-     * The perFacet
-     */
-    public List<String> getPerFacet() {
-        return perFacet;
-    }
-
-    /**
-     *
-     * @param perFacet
-     * The per_facet
-     */
-    public void setPerFacet(List<String> perFacet) {
-        this.perFacet = perFacet;
-    }
-
-    /**
-     *
-     * @return
-     * The geoFacet
-     */
-    public String getGeoFacet() {
-        return geoFacet;
-    }
-
-    /**
-     *
-     * @param geoFacet
-     * The geo_facet
-     */
-    public void setGeoFacet(String geoFacet) {
-        this.geoFacet = geoFacet;
-    }
-
-    /**
-     *
-     * @return
-     * The relatedUrls
-     */
-    public Object getRelatedUrls() {
-        return relatedUrls;
-    }
-
-    /**
-     *
-     * @param relatedUrls
-     * The related_urls
-     */
-    public void setRelatedUrls(Object relatedUrls) {
-        this.relatedUrls = relatedUrls;
-    }
-
-    /**
-     *
-     * @return
-     * The multimedia
-     */
-    public List<Multimedium> getMultimedia() {
-        return multimedia;
-    }
-
-    /**
-     *
-     * @param multimedia
-     * The multimedia
-     */
-    public void setMultimedia(List<Multimedium> multimedia) {
-        this.multimedia = multimedia;
+    @Override
+    public String toString() {
+        return url;
     }
 
 }

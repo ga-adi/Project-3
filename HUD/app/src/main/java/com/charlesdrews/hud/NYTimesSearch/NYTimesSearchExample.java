@@ -1,32 +1,27 @@
-package com.charlesdrews.hud;
+package com.charlesdrews.hud.NYTimesSearch;
 
+import java.util.Map;
+import java.util.HashMap;
 import javax.annotation.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import retrofit2.Response;
 
 /**
- * Created by williamtygret on 3/8/16.
+ * Created by williamtygret on 3/7/16.
  */
-public class NYTimesAPIResponse {
+public class NYTimesSearchExample {
 
-    @SerializedName("response")
-    @Expose
-    private NYTimesSearchResponse response;
-    @SerializedName("status")
-    @Expose
+    private Response response;
     private String status;
-    @SerializedName("copyright")
-    @Expose
     private String copyright;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      *
      * @return
      * The response
      */
-    public NYTimesSearchResponse getResponse() {
+    public Response getResponse() {
         return response;
     }
 
@@ -35,7 +30,7 @@ public class NYTimesAPIResponse {
      * @param response
      * The response
      */
-    public void setResponse(NYTimesSearchResponse response) {
+    public void setResponse(Response response) {
         this.response = response;
     }
 
@@ -75,5 +70,13 @@ public class NYTimesAPIResponse {
         this.copyright = copyright;
     }
 
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 
 }
+
