@@ -340,13 +340,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleTime = format.format(currentDate);
                     articleSubreddit = result.get(i).getData().getSubreddit();
                     idNumber = i+1;
-
-
-                    //This background method clears the mComments ArrayList(member variable) and stuffs new comment lists.
-                    //So you don't need to instantiate a new comment ArrayList here.
-                    //Just stuff mComment as a parameter of the reddit article constructor after this async task execute method.
-
-                    //Build a new reddit article object here.
                 }
             }
 
