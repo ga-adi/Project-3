@@ -23,6 +23,6 @@ public class FragmentSports extends Fragment {
         } else {
             mPortrait = false;
         }
-        return inflater.inflate(R.layout.fragment_fragment3, container, false);
+        return inflater.inflate(R.layout.fragment_fragment2, container, false);
     }
 }
