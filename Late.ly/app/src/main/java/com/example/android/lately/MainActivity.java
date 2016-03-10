@@ -18,30 +18,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Forecast.Weather;
+import com.example.android.lately.Foursquare.FoursquareVenues;
 import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
-import com.example.android.lately.Reddit.RedditArticle.Data;
-=======
-import android.widget.Toast;
-
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.WeatherCard;
-import com.example.android.lately.Forecast.Weather;
-import com.example.android.lately.Fragments.DetailsFragment;
->>>>>>> perrys_branch
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -69,6 +62,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
@@ -84,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
     private static String mRedditUrl = "https://www.reddit.com/r/";
+    public static  String mFoursquareUrl = "https://api.foursquare.com/v2/venues/search?client_id=JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312&client_secret=PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35&v=20130815&ll=";
+    public static final String mFoursquareEndpoint = "https://api.foursquare.com/";
+    public static final String FOURSQUARE_CLIENT_ID = "JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312";
+    public static final String FOURSQUARE_CLIENT_SECRET = "PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35";
+    public static final String FOURSQUARE_VERSION_NUMBER = "20130815";
+
 
 
     @Override
@@ -354,13 +354,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleTime = format.format(currentDate);
                     articleSubreddit = result.get(i).getData().getSubreddit();
                     idNumber = i+1;
-
-
-                    //This background method clears the mComments ArrayList(member variable) and stuffs new comment lists.
-                    //So you don't need to instantiate a new comment ArrayList here.
-                    //Just stuff mComment as a parameter of the reddit article constructor after this async task execute method.
-
-                    //Build a new reddit article object here.
                 }
             }
 
@@ -401,6 +394,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.d("REDDITARTICLE",mComments.get(1).getmAuthor() +"  "+ mComments.get(1).getmContent());
         }
     }
+
+    public void getFoursquareApi(String latlon){
+                        Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(mFoursquareEndpoint)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
+                Call<FoursquareVenues> result = foursquareRequest.getVenues(FOURSQUARE_CLIENT_ID,FOURSQUARE_CLIENT_SECRET,FOURSQUARE_VERSION_NUMBER,latlon);
+                result.enqueue(new Callback<FoursquareVenues>() {
+                    @Override
+                    public void onResponse(Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
+                        for(int i=0; i<response.body().getResponse().getVenues().size(); i++) {
+                            String venueName = response.body().getResponse().getVenues().get(i).getName();
+                            String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
+                            String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
+                            String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
+                            String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
+                            String venueAddress = stateAddress + ", "+cityAddress+", "+stateAddress+", "+zipcodeAddress;
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FoursquareVenues> call, Throwable t) {
+
+                    }
+                });
+    }
+
 
 
     private String getInputData(InputStream inStream) throws IOException {
@@ -457,9 +480,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             if (mLastLocation != null) {
+                String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
+                String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
+                String latlon = latitude+","+longitude;
+
                 getForecastApi();
                 getRedditApi("Fitness"); //This parameter is a place holder. We'll change it into the user topic
-//                    getFoursquareApi();
+                getFoursquareApi(latlon);
 //                    getMeetupApi();
             } else {
                 Toast.makeText(MainActivity.this, "Turn on GPS and try again", Toast.LENGTH_SHORT).show();
@@ -487,6 +514,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public interface RedditRequest{
         @GET("{subreddit}/.json")
         Call<RedditResult> getRedditFeed(@Path("subreddit") String subreddit);
+    }
+
+
+    public interface FoursquareRequest{
+        @GET("v2/venues/search")
+        public Call<FoursquareVenues> getVenues (@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
+
+        @GET("v2/venues/{venueId}/photos")
+        public Call<FoursquareVenues> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
