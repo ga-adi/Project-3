@@ -18,13 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,14 +34,13 @@ import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.Data;
-=======
+
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.WeatherCard;
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Fragments.DetailsFragment;
->>>>>>> perrys_branch
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -70,7 +69,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean mPortrait;
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
+    Singleton mSingletonArrayOfParentCards;
 
     ProgressBar progressbar;
 
@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSingletonArrayOfParentCards = Singleton.getInstance();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -263,13 +265,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
-        }
+    }
 
 
-    public void getForecastApi(){
+    public void getForecastApi() {
         String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 7);
         String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 8);
-        String latlon = latitude+","+longitude;
+        String latlon = latitude + "," + longitude;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mForecastUrl)
@@ -289,8 +291,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String currentLocation = response.body().getTimezone();
 
                 SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha z, EEE");
-                format.setTimeZone(TimeZone.getTimeZone("GMT"+response.body().getOffset()));
-                Date currentDate = new Date((long)(response.body().getCurrently().getTime() * 1000L));
+                format.setTimeZone(TimeZone.getTimeZone("GMT" + response.body().getOffset()));
+                Date currentDate = new Date((long) (response.body().getCurrently().getTime() * 1000L));
                 String formattedCurrentDate = format.format(currentDate);
 
 
@@ -299,24 +301,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String[] nextFiveDaysSummary = new String[5];
                 String[] nextFiveDaysHighTemp = new String[5];
                 String[] nextFiveDaysLowTemp = new String[5];
-                for(int i=0; i<5; i++){
-                    Date nextDayTime = new Date((long)(response.body().getDaily().getData().get(i+1).getTime() * 1000L));
+                for (int i = 0; i < 5; i++) {
+                    Date nextDayTime = new Date((long) (response.body().getDaily().getData().get(i + 1).getTime() * 1000L));
                     String formattedDate = format.format(nextDayTime);
                     nextFiveDaysDates[i] = formattedDate;
                     //If you want to just extract day names(i.e. Tue), comment out the line above this and uncomment the below one.
                     //nextFiveDaysDates[i] = formattedDate.substring(formattedDate.length()-3,formattedDate.length());
 
-                    nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i+1).getSummary();
+                    nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i + 1).getSummary();
                     nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMax());
-                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i+1).getTemperatureMin());
+                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
 
                     WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
                             formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
                             CardAdapter.TYPE_WEATHER, 0);
 
-                    //TODO: Add WeatherCard to Singleton
+                    mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
                 }
             }
+
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
@@ -324,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
-    public void getRedditApi(String subreddit){
+    public void getRedditApi(String subreddit) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mRedditUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -339,9 +342,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
 
                 List<RedditArticle> result = response.body().getData().getChildren();
-                String articleAuthor,articleUrl,articleSubreddit,articleContent, articleTitle, articleTime;
+                String articleAuthor, articleUrl, articleSubreddit, articleContent, articleTitle, articleTime;
                 int articleScore, articleNumOfComment, idNumber;
-                for(int i=0; i<result.size(); i++){
+                for (int i = 0; i < result.size(); i++) {
                     articleAuthor = result.get(i).getData().getAuthor();
                     articleSubreddit = result.get(i).getData().getSubreddit();
                     articleTitle = result.get(i).getData().getTitle();
@@ -350,10 +353,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     articleNumOfComment = result.get(i).getData().getNumComments();
                     articleScore = result.get(i).getData().getScore();
                     SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
-                    Date currentDate = new Date((long)(result.get(i).getData().getCreated() * 1000L));
+                    Date currentDate = new Date((long) (result.get(i).getData().getCreated() * 1000L));
                     articleTime = format.format(currentDate);
                     articleSubreddit = result.get(i).getData().getSubreddit();
-                    idNumber = i+1;
+                    idNumber = i + 1;
 
 
                     //This background method clears the mComments ArrayList(member variable) and stuffs new comment lists.
@@ -375,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         protected Void doInBackground(String... params) {
             String data = "";
-            try{
+            try {
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
@@ -384,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 CommentProcessor commentProcessor = new CommentProcessor(data);
                 mComments = new ArrayList<>();
                 mComments = commentProcessor.fetchComments();
-            }catch (Throwable e){
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
             return null;
@@ -398,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.d("REDDITARTICLE",mComments.get(1).getmAuthor() +"  "+ mComments.get(1).getmContent());
+            Log.d("REDDITARTICLE", mComments.get(1).getmAuthor() + "  " + mComments.get(1).getmContent());
         }
     }
 
@@ -464,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } else {
                 Toast.makeText(MainActivity.this, "Turn on GPS and try again", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(MainActivity.this, "No network connection", Toast.LENGTH_SHORT).show();
         }
     }
@@ -479,12 +482,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    public interface WeatherRequest{
+    public interface WeatherRequest {
         @GET("{latlon}/")
         Call<Weather> getWeather(@Path("latlon") String latlon);
     }
 
-    public interface RedditRequest{
+    public interface RedditRequest {
         @GET("{subreddit}/.json")
         Call<RedditResult> getRedditFeed(@Path("subreddit") String subreddit);
     }
@@ -499,6 +502,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
 
 
 }
