@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mCardsData.add(new CardData(CardType.News));        // index 1
         mCardsData.add(new CardData(CardType.Facebook));    // index 2
 
+
         // update each item in the card data array by pulling from db via asyc task
         new PullFromDbAsyncTask().execute(CardType.Weather);
         new PullFromDbAsyncTask().execute(CardType.News);
@@ -96,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecyclerAdapter(this, mCardsData);
         mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);
+
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this,R.anim.populaterecyclerview);
+        recyclerView.startAnimation(animation);
 
         // set up syncing
         mAccount = createSyncAccount(this);
@@ -271,6 +277,8 @@ public class MainActivity extends AppCompatActivity {
 
             switch (cardType) {
                 case Facebook:
+                    Animation flipcard = AnimationUtils.loadAnimation(MainActivity.this, R.anim.populaterecyclerview);
+                    //RecyclerAdapter.FacebookCard.startAnimation(flipcard);
                     mAdapter.notifyItemChanged(FACEBOOK_POSITION);
                     break;
                 case News:

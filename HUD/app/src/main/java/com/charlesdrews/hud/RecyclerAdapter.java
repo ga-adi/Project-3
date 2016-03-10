@@ -156,4 +156,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             mNewsRecyclerView = (RecyclerView) itemView.findViewById(R.id.newsRecyclerView);
         }
     }
+
 }

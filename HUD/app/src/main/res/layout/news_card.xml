@@ -12,7 +12,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageviewCard2"
+        android:id="@+id/imageviewCardNews"
         android:background="@drawable/rothkocard1"/>
 
     <RelativeLayout
@@ -30,9 +30,7 @@
             android:id="@+id/newsCardTitle"
             android:text="@string/news_card_title"
             android:textStyle="bold"
-            android:id="@+id/headline"
             android:layout_marginLeft="6dp"
-            android:textStyle="bold"
             android:layout_marginTop="4dp"
             android:textColor="#f9f1c8"
             android:textSize="18sp"
