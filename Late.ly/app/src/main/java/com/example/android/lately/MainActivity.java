@@ -377,6 +377,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void getRedditApi(String subreddit) {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mRedditUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -440,6 +441,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } catch (Throwable e) {
                 e.printStackTrace();
             }
+
             return null;
         }
 
@@ -542,6 +544,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
                 String latlon = latitude + "," + longitude;
+
+                //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
+                //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
 
                 getForecastApi();
                 getRedditApi("Fitness"); //This parameter is a place holder. We'll change it into the user topic

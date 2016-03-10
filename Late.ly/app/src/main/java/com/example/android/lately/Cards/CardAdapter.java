@@ -25,17 +25,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
     public static final int TYPE_EVENT = 2;
     public static final int TYPE_SMALL_ARTICLE = 3;
     public static final int TYPE_LARGE_ARTICLE = 4;
-    public static final int TAB_MAINPAGE = 1;
-    public static final int TAB_SPORTS = 2;
-    public static final int TAB_POLITICS = 3;
-    public static final int TAB_NATURE = 4;
-    public static final int TAB_TECH = 5;
-    public static final int TAB_CAREER = 6;
-    public static final int TAB_FOOD = 7;
-    public static final int TAB_DANCING = 8;
-    public static final int TAB_DATING = 9;
-    public static final int TAB_LANGUAGE = 10;
-    public static final int TAB_ANIMALS = 11;
+    public static final int TAB_MAINPAGE = 0;
+    public static final int TAB_POLITICS = 1;
+    public static final int TAB_TECH = 2;
+    public static final int TAB_CAREER = 3;
+    public static final int TAB_FOOD = 4;
+    public static final int TAB_DANCING = 5;
+    public static final int TAB_ANIMALS = 6;
+    public static final int TAB_LANGUAGE = 7;
+    public static final int TAB_SPORTS = 8;
+    public static final int TAB_NATURE = 9;
+    public static final int TAB_DATING = 10;
 
 
     public CardAdapter(List<ParentCard> parentCardList) {
