@@ -31,6 +31,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     private List<CardData> mCardsData;
     private Context mContext;
 
+    //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
     public RecyclerAdapter(Context context, List<CardData> cardsData) {
         mContext = context;
         mCardsData = cardsData;
