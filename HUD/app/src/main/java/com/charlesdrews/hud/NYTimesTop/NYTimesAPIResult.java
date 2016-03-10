@@ -22,7 +22,7 @@ public class NYTimesAPIResult {
     private Integer numResults;
     @SerializedName("results")
     @Expose
-    private List<Result> results = new ArrayList<Result>();
+    private List<com.charlesdrews.hud.NYTimesTop.Result> results = new ArrayList<>();
 
     /**
      *
@@ -92,7 +92,7 @@ public class NYTimesAPIResult {
      * @param results
      * The results
      */
-    public void setResults(List<Result> results) {
+    public void setResults(List<com.charlesdrews.hud.NYTimesTop.Result> results) {
         this.results = results;
     }
 
