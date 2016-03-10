@@ -9,8 +9,8 @@ public class EventCard extends ParentCard {
     String event;
     String numberOfPeople;
 
-    public EventCard(String time, String group, String event, String numberOfPeople, int cardType) {
-        super(cardType);
+    public EventCard(String time, String group, String event, String numberOfPeople, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.time = time;
         this.group = group;
         this.event = event;
@@ -48,4 +48,7 @@ public class EventCard extends ParentCard {
     public void setNumberOfPeople(String numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
     }
+
+
+
 }
