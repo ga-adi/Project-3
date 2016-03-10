@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
 
+    public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
+    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
+
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
@@ -102,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
         //TODO - check if error thrown when device offline
         ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
-        //TODO - figure out why this is syncing so frequently (definitely not just every 15 min)
-        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
+        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
 
     @Override
