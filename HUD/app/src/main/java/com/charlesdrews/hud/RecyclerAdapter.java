@@ -32,6 +32,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public LoginButton mFacebookLoginButton;
     public static CallbackManager mCallbackManager;
 
+
     public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
     }

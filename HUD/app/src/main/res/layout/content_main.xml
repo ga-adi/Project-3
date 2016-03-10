@@ -8,10 +8,18 @@
     tools:context="com.charlesdrews.hud.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ImageView
+        android:id="@+id/imageframe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </RelativeLayout>
