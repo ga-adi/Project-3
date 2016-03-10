@@ -28,9 +28,11 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.facebook.login.LoginManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
@@ -39,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //Facebook login button
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
+
         @Override
         public void onSuccess(LoginResult loginResult) {
             Profile profile = Profile.getCurrentProfile();
@@ -101,29 +104,49 @@ public class LoginActivity extends AppCompatActivity {
         profileTracker.startTracking();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+//        callback = new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                AccessToken accessToken = loginResult.getAccessToken();
+//                Profile profile = Profile.getCurrentProfile();
+//                nextActivity(profile);
+//                Toast.makeText(getApplicationContext(), "Logging in...", Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                Toast.makeText(LoginActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//
+//            public void onError(FacebookException e) {
+//                Toast.makeText(LoginActivity.this, "onError", Toast.LENGTH_SHORT).show();
+//                e.printStackTrace();
+//            }
+//        };
         loginButton.setReadPermissions("user_friends", "user_about_me", "user_posts", "user_photos");
-        callback = new FacebookCallback<LoginResult>() {
+//        loginButton.registerCallback(callbackManager, callback);
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                AccessToken accessToken = loginResult.getAccessToken();
-                Profile profile = Profile.getCurrentProfile();
-                nextActivity(profile);
-                Toast.makeText(getApplicationContext(), "Logging in...", Toast.LENGTH_SHORT).show();
+                // App code
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+                // App code
             }
 
             @Override
-            public void onError(FacebookException e) {
-                Toast.makeText(LoginActivity.this, "onError", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+            public void onError(FacebookException exception) {
+                // App code
             }
-        };
-        loginButton.setReadPermissions("user_friends");
-        loginButton.registerCallback(callbackManager, callback);
+        });
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends","user_posts"));
+
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -204,4 +227,6 @@ public class LoginActivity extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
+
+
 }

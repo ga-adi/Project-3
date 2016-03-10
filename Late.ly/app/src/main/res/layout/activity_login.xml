@@ -19,4 +19,9 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp"/>
 
+    <com.facebook.share.widget.ShareButton
+        android:id="@+id/fb_shareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

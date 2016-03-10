@@ -6,7 +6,9 @@
     <string name="frag4text">Frag 4</string>
     <string name="frag5text">Frag 5</string>
 
-    <string name="facebook_app_id">1022524367807625</string>
+    <string name="facebook_app_id">833865323407651</string>
+    <string name="facebook_app_secret">17ef8c26c6a4379cafc0eab5a41b9ec2</string>
+    <string name="accessToken">833865323407651|17ef8c26c6a4379cafc0eab5a41b9ec2</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,6 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.android.lately.Fragments.DetailsFragment;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -181,6 +188,29 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mPortrait = false;
         }
+
+        GraphRequest request= new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        String obj = response.getJSONObject().toString();
+                        try {
+                            String message1 = response.getJSONObject().getJSONArray("data").getJSONObject(0).getString("message");
+                            String message2 = response.getJSONObject().getJSONArray("data").getJSONObject(1).getString("message");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        );
+        request.executeAsync();
+
+
 
 //        if (mPortrait) {
 //        } else {
