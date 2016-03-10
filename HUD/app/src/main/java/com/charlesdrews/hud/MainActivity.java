@@ -43,11 +43,15 @@ import com.facebook.login.widget.LoginButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
     public static final int WEATHER_POSITION = 0;
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
+
+    public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
+    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
 
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
@@ -61,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAccount = createSyncAccount(this);
+        handleIntent(getIntent());
 
         ImageView backgroundImage = (ImageView)findViewById(R.id.imageframe);
         backgroundImage.setImageResource(R.drawable.rothkoyello);
@@ -80,11 +87,8 @@ public class MainActivity extends AppCompatActivity {
                 new CardContentObserver(new Handler())
         );
 
-        // set up array of card data for use in adapter
-        mCardsData = new ArrayList<>(ITEM_COUNT);
-        mCardsData.add(new CardData(CardType.Weather));     // index 0
-        mCardsData.add(new CardData(CardType.News));        // index 1
-        mCardsData.add(new CardData(CardType.Facebook));    // index 2
+        // set up recycler view - calls database for most recent data, then requests manual sync
+        new InitializeRecyclerViewAsyncTask().execute();
 
 
         // update each item in the card data array by pulling from db via asyc task
@@ -111,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO - check if error thrown when device offline
         ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
-        //TODO - figure out why this is syncing so frequently (definitely not just every 15 min)
-        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, 60 * 15);
+        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
 
     @Override
@@ -198,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
                 (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
 
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            Log.d(MainActivity.class.getCanonicalName(), "Account added successfully");
+            Log.d(TAG, "createSyncAccount: successful");
         } else {
-            Log.d(MainActivity.class.getCanonicalName(), "Account NOT added successfully");
+            Log.d(TAG, "createSyncAccount: failed");
         }
         return newAccount;
     }
@@ -216,60 +219,32 @@ public class MainActivity extends AppCompatActivity {
                 cancel(true);
             }
 
+            Cursor cursor;
+
             switch (mCardType) {
                 case Facebook: {
                     Log.d(TAG, "doInBackground: query facebook");
-                    return updateCardDataArrayFromCursor(getContentResolver().query(
-                            CardContentProvider.FACEBOOK_URI, null, null, null, null));
+                    cursor = getContentResolver().query(CardContentProvider.FACEBOOK_URI, null, null, null, null);
+                    break;
                 }
                 case News: {
                     Log.d(TAG, "doInBackground: query news");
-                    return updateCardDataArrayFromCursor(getContentResolver().query(
-                            CardContentProvider.NEWS_URI, null, null, null, null));
+                    cursor = getContentResolver().query(CardContentProvider.NEWS_URI, null, null, null, null);
+                    break;
                 }
                 case Weather: {
                     Log.d(TAG, "doInBackground: query weather");
-                    return updateCardDataArrayFromCursor(getContentResolver().query(
-                            CardContentProvider.WEATHER_URI, null, null, null, null));
+                    cursor = getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null);
+                    break;
                 }
                 default:
-                    return null;
+                    cursor = null;
+                    break;
             }
-        }
-
-        private CardType updateCardDataArrayFromCursor(Cursor cursor) {
-            if (cursor != null && cursor.moveToFirst()) {
-                switch (mCardType) {
-                    case Facebook: {
-                        FacebookCardData facebookCardData = new FacebookCardData(
-                                CardType.Facebook,
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
-                        );
-                        mCardsData.set(FACEBOOK_POSITION, facebookCardData);
-                        break;
-                    }
-                    case News: {
-                        NewsCardData newsCardData = new NewsCardData(CardType.News, cursor);
-                        mCardsData.set(NEWS_POSITION, newsCardData);
-                        break;
-                    }
-                    case Weather: {
-                        WeatherCardData weatherCardData = new WeatherCardData(
-                                CardType.Weather,
-                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_HIGH)),
-                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
-                        );
-                        mCardsData.set(WEATHER_POSITION, weatherCardData);
-                        break;
-                    }
-                    default:
-                        return null;
-                }
-                cursor.close();
-            }
+            updateCardDataArrayFromCursor(mCardType, cursor);
             return mCardType;
         }
+
 
         @Override
         protected void onPostExecute(CardType cardType) {
@@ -290,6 +265,39 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    private void updateCardDataArrayFromCursor(CardType cardType, Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            switch (cardType) {
+                case Facebook: {
+                    FacebookCardData facebookCardData = new FacebookCardData(
+                            CardType.Facebook,
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
+                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
+                    );
+                    mCardsData.set(FACEBOOK_POSITION, facebookCardData);
+                    break;
+                }
+                case News: {
+                    NewsCardData newsCardData = new NewsCardData(CardType.News, cursor);
+                    mCardsData.set(NEWS_POSITION, newsCardData);
+                    break;
+                }
+                case Weather: {
+                    WeatherCardData weatherCardData = new WeatherCardData(
+                            CardType.Weather,
+                            cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_HIGH)),
+                            cursor.getInt(cursor.getColumnIndex(DatabaseHelper.WEATHER_COL_LOW))
+                    );
+                    mCardsData.set(WEATHER_POSITION, weatherCardData);
+                    break;
+                }
+                default:
+                    return;
+            }
+            cursor.close();
         }
     }
 
@@ -321,5 +329,59 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO - this crashes if you close the login window without logging in
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // set up array of placeholder card data for use in adapter
+            mCardsData = new ArrayList<>(ITEM_COUNT);
+            mCardsData.add(new CardData(CardType.Weather));     // index 0
+            mCardsData.add(new CardData(CardType.News));        // index 1
+            mCardsData.add(new CardData(CardType.Facebook));    // index 2
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            // pull most recent data from database
+            updateCardDataArrayFromCursor(
+                    CardType.Facebook,
+                    getContentResolver().query(CardContentProvider.FACEBOOK_URI, null, null, null, null)
+            );
+
+            updateCardDataArrayFromCursor(
+                    CardType.News,
+                    getContentResolver().query(CardContentProvider.NEWS_URI, null, null, null, null)
+            );
+
+            updateCardDataArrayFromCursor(
+                    CardType.Weather,
+                    getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null)
+            );
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            // finish setting up recycler view & adapter
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
+            recyclerView.setLayoutManager(manager);
+            mAdapter = new RecyclerAdapter(mCardsData);
+            recyclerView.setAdapter(mAdapter);
+
+            // request manual sync
+            Bundle settingsBundle = new Bundle();
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+        }
     }
 }
