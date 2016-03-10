@@ -31,6 +31,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     private List<CardData> mCardsData;
     public LoginButton mFacebookLoginButton;
     public static CallbackManager mCallbackManager;
+    TextView mLoginText;
+
 
 
     public RecyclerAdapter(List<CardData> cardsData) {
@@ -50,6 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                mLoginText = (TextView)view.findViewById(R.id.status_update);
                 facebookLogin(view);
                 return new FacebookCard(view, type);
             }
@@ -158,7 +161,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             @Override
             public void onSuccess(LoginResult loginResult) {
 //                        Toast.makeText(MainActivity.class, "Logged in successfully", Toast.LENGTH_SHORT).show();
-//                        mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
+                       mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
 
             }
 
