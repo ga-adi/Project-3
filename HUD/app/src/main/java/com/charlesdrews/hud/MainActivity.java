@@ -200,6 +200,9 @@ public class MainActivity extends AppCompatActivity
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+
+        //TODO - this causes the refresh animation to start - it's stopped in PullFromDbAsync onPostExecute
+        // but if device is offline, that never runs, so animation never stops
     }
 
     @Override
@@ -356,11 +359,7 @@ public class MainActivity extends AppCompatActivity
         if (cursor != null && cursor.moveToFirst()) {
             switch (cardType) {
                 case Facebook: {
-                    FacebookCardData facebookCardData = new FacebookCardData(
-                            CardType.Facebook,
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
-                    );
+                    FacebookCardData facebookCardData = new FacebookCardData(CardType.Facebook, cursor);
                     mCardsData.set(FACEBOOK_POSITION, facebookCardData);
                     break;
                 }

@@ -167,10 +167,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "addFacebook: starting");
 
         SQLiteDatabase db = getWritableDatabase();
-        //TODO - check if values contains the correct keys
-        long rowId = db.insert(FACEBOOK_TABLE, null, values);
+
+        if (values.containsKey(DatabaseHelper.FACEBOOK_COL_AUTHOR)
+                && values.containsKey(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE)) {
+            long rowId = db.insert(FACEBOOK_TABLE, null, values);
+            //db.close();
+            return rowId;
+        } else {
+            return -1L;
+        }
+    }
+
+    public int deleteAllFacebook() {
+        Log.d(TAG, "deleteAllFacebook: starting");
+
+        SQLiteDatabase db = getWritableDatabase();
+        int rowsAffected = db.delete(FACEBOOK_TABLE, "1", null);
         //db.close();
-        return rowId;
+        return rowsAffected;
     }
 
     public Cursor getFacebook() {
@@ -187,7 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //db.close();
         return cursor;
     }
-    
+
     public long addReminder(ContentValues values) {
         Log.d(TAG, "addReminder: starting");
 
