@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.lately.MainActivity;
 import com.example.android.lately.R;
 
 import java.util.List;
@@ -23,10 +24,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
     ParentCardHolder mHolder;
     public static final int TYPE_WEATHER = 1;
     public static final int TYPE_EVENT = 2;
-    public static final int TYPE_SMALL_ARTICLE = 3;
-    public static final int TYPE_LARGE_ARTICLE = 4;
     public static final int TYPE_FOURSQUARE = 5;
     public static final int TYPE_REDDIT = 6;
+    public static final int TYPE_FACEBOOK = 7;
     public static final int TAB_MAINPAGE = 0;
     public static final int TAB_POLITICS = 1;
     public static final int TAB_TECH = 2;
@@ -58,12 +58,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_card, parent, false);
                 return new EventHolder(mView);
             //if a article card then
-            case TYPE_SMALL_ARTICLE:
-                mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.small_picture_article, parent, false);
-                return new SmallArticleHolder(mView);
             case TYPE_WEATHER:
                 mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card,parent, false);
                 return new WeatherHolder(mView);
+            case TYPE_FOURSQUARE:
+                mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.foursquare_card, parent, false);
+                return new FoursquareHolder(mView);
+            case TYPE_REDDIT:
+                mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reddit_card, parent, false);
+                return new RedditHolder(mView);
             default:
                 return null;
         }
@@ -93,43 +96,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 eventHolder.vCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //TODO send to detail fragment with card ID
                         eventHolder.vGroupName.setText("This works");
                         eventHolder.vCardView.setCardBackgroundColor(Color.GRAY);
+
                     }
                 });
-                break;
-
-            case TYPE_SMALL_ARTICLE:
-
-                SmallArticleCard smallArticleCard = (SmallArticleCard) mParentCardList.get(position);
-                final SmallArticleHolder smallArticleHolder = (SmallArticleHolder) mHolder;
-
-                smallArticleHolder.vTitle.setText(smallArticleCard.getmTitle());
-                smallArticleHolder.vSource.setText(smallArticleCard.getmSource());
-                smallArticleHolder.vTime.setText(smallArticleCard.getmTime());
-                //TODO add image here
-//                smallArticleHolder.vArticleImage.setImageResource(Color.LTGRAY);
-//                smallArticleHolder.vCompanyLogo.setText(smallArticleCard.getmTitle());
-                smallArticleHolder.vCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        smallArticleHolder.vTitle.setText("AwwwesssssoooooomE!!!");
-                    }
-                });
-
-                break;
-
-            case TYPE_LARGE_ARTICLE:
-
-                LargeArticleCard largeArticleCard = (LargeArticleCard) mParentCardList.get(position);
-                LargeArticleHolder largeArticleHolder = (LargeArticleHolder) mHolder;
-
-                largeArticleHolder.vTitle.setText(largeArticleCard.getmTitle());
-                largeArticleHolder.vSource.setText(largeArticleCard.getmSource());
-                largeArticleHolder.vTime.setText(largeArticleCard.getmTime());
-                //TODO add image here
-//                smallArticleHolder.vArticleImage.setImageResource(Color.LTGRAY);
-//                smallArticleHolder.vCompanyLogo.setText(smallArticleCard.getmTitle());
                 break;
 
             case TYPE_WEATHER:
@@ -162,9 +134,42 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 weatherHolder.vDay5Low.setText(weatherCard.getmNextFiveDaysLowTemp()[4]);
                 weatherHolder.vDay5Date.setText(weatherCard.getmNextFiveDaysDates()[4]);
 //                weatherHolder.vDay5Image.setImageDrawable(setWeatherImage(weatherCard.getmNextFiveDaysSummary()[4]));
-
                 break;
 
+            case TYPE_FOURSQUARE:
+
+                FoursquareCard foursquareCard = (FoursquareCard)mParentCardList.get(position);
+                final FoursquareHolder foursquareHolder = (FoursquareHolder) mHolder;
+
+                foursquareHolder.vVenueName.setText(foursquareCard.getVenueName());
+                foursquareHolder.vAddress.setText(foursquareCard.getVenueAddress());
+                //TODO place image with url
+                // foursquareHolder.vImage.setImage(foursquareCard.getVenuePhotoURL());
+                foursquareHolder.vCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO send to detail fragment with card ID
+                        foursquareHolder.vCardView.setCardBackgroundColor(Color.GRAY);
+                    }
+                });
+                break;
+
+            case TYPE_REDDIT:
+
+                RedditCard redditCard = (RedditCard)mParentCardList.get(position);
+                final RedditHolder redditHolder = (RedditHolder) mHolder;
+
+                redditHolder.vTitle.setText(redditCard.getmTitle());
+                redditHolder.vScore.setText(Integer.toString(redditCard.getmScore()));
+                redditHolder.vNumOfComments.setText(Integer.toString(redditCard.getmNumOfComment()) + " comments");
+                redditHolder.vAuthor.setText("By: " + redditCard.getmAuthor() + " to " + redditCard.getmSubreddit());
+                redditHolder.vCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO send to detail fragment with card ID
+                        redditHolder.vCardView.setBackgroundColor(Color.GRAY);
+                    }
+                });
         }
         mHolder = null;
     }
@@ -211,47 +216,38 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
         }
     }
 
-    public static class SmallArticleHolder extends ParentCardHolder {
+    public static class RedditHolder extends ParentCardHolder{
 
-        TextView vSource;
-        TextView vTitle;
-        TextView vTime;
-//        ImageView vCompanyLogo;
-//        ImageView vArticleImage;
+        TextView vScore, vTitle, vAuthor, vNumOfComments;
         CardView vCardView;
 
-        public SmallArticleHolder(View itemView) {
+        public RedditHolder(View itemView){
             super(itemView);
 
-            vSource = (TextView) itemView.findViewById(R.id.small_article_source);
-            vTitle = (TextView) itemView.findViewById(R.id.small_article_title);
-            vTime = (TextView) itemView.findViewById(R.id.small_article_time);
-//            vCompanyLogo = (ImageView) itemView.findViewById(R.id.small_article_icon);
-//            vArticleImage = (ImageView) itemView.findViewById(R.id.small_article_image);
-            vCardView = (CardView) itemView.findViewById(R.id.small_article_cardview);
+            vScore = (TextView) itemView.findViewById(R.id.reddit_card_score);
+            vTitle = (TextView) itemView.findViewById(R.id.reddit_card_title);
+            vAuthor = (TextView) itemView.findViewById(R.id.reddit_card_author_and_subreddit);
+            vNumOfComments = (TextView) itemView.findViewById(R.id.reddit_card_numberofcomments);
+            vCardView = (CardView) itemView.findViewById(R.id.reddit_card_cardview);
+        }
+    }
+
+    public static class FoursquareHolder extends ParentCardHolder{
+
+        TextView vVenueName, vAddress;
+        ImageView vImage;
+        CardView vCardView;
+
+        public FoursquareHolder(View itemView) {
+            super(itemView);
+            vVenueName = (TextView) itemView.findViewById(R.id.foursquarecard_venueName);
+            vAddress = (TextView) itemView.findViewById(R.id.foursquarecard_address);
+            vImage = (ImageView) itemView.findViewById(R.id.foursquarecard_image);
+            vCardView = (CardView) itemView.findViewById(R.id.foursquarecard_cardView);
 
         }
     }
 
-    public static class LargeArticleHolder extends ParentCardHolder {
-
-        TextView vSource;
-        TextView vTitle;
-        TextView vTime;
-        ImageView vCompanyLogo;
-        ImageView vArticleImage;
-
-        public LargeArticleHolder(View itemView) {
-            super(itemView);
-
-            vSource = (TextView) itemView.findViewById(R.id.large_article_source);
-            vTitle = (TextView) itemView.findViewById(R.id.large_article_title);
-            vTime = (TextView) itemView.findViewById(R.id.large_article_time);
-            vCompanyLogo = (ImageView) itemView.findViewById(R.id.large_article_icon);
-            vArticleImage = (ImageView) itemView.findViewById(R.id.large_article_image);
-
-        }
-    }
 
     public static class WeatherHolder extends ParentCardHolder {
 

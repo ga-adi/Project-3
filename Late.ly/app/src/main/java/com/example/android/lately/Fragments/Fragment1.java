@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.EventCard;
+import com.example.android.lately.Cards.FoursquareCard;
 import com.example.android.lately.Cards.ParentCard;
+import com.example.android.lately.Cards.RedditCard;
+import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Cards.SmallArticleCard;
 import com.example.android.lately.Cards.WeatherCard;
 import com.example.android.lately.R;
@@ -50,7 +53,9 @@ public class Fragment1 extends Fragment {
         //Dummy ArrayList
         mTestArray = new ArrayList<ParentCard>();
         mTestArray.add(new WeatherCard("99", "SUNNY","FLORIDA","SEPT 12 1991", new String[]{"MON","TUE","WED","THU","FRI"}, new String[]{"MON","TUE","WED","THU","FRI"}, new String[]{"98","78","65","75","80"}, new String[]{"75","63","60","70","75"}, CardAdapter.TYPE_WEATHER,CardAdapter.TAB_MAINPAGE, 1));
-//        mTestArray.add(new EventCard("10:10","ADI", "MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
+        mTestArray.add(new RedditCard("Jhonny Bananas", new ArrayList<RedditComment>(), "Content", 99, 613,"/r/beautiful", "99:99", "This Project rocks and we are proud", "1092120", CardAdapter.TYPE_REDDIT, CardAdapter.TAB_MAINPAGE, 3));
+        mTestArray.add(new FoursquareCard("999 Success and Employement Way", "98", "Fortune Wealth Happiness", "10293i1jnd", "o9je92hoi",CardAdapter.TYPE_FOURSQUARE, CardAdapter.TAB_MAINPAGE, 4));
+        mTestArray.add(new EventCard("10:10","ADI", "MasterClass with James", "21 Awesome Programmers", "86", "9:00", "987 igqiwue Place", "PartyCenterEfforts",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
 //        mTestArray.add(new EventCard("10:10","ADI", "MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
 //        mTestArray.add(new EventCard("10:10","ADI", "1MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
 //        mTestArray.add(new EventCard("10:10","ADI", "2MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
