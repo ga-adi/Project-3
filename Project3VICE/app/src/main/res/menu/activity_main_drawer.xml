@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home"
+            android:checked="false"
+            android:title="HOME" />
+        <item
+            android:id="@+id/photoTitle"
+            android:checked="false"
+            android:title="PHOTO" />
+        <item
+            android:id="@+id/comicsTitle"
+            android:checked="false"
+            android:title="COMICS" />
+        <item
+            android:id="@+id/stuffTitle"
+            android:checked="false"
+            android:title="STUFF" />
+        <item
+            android:id="@+id/filmTitle"
+            android:checked="false"
+            android:title="FILM" />
+        <item
+            android:id="@+id/festivalsTitle"
+            android:checked="false"
+            android:title="FESTIVALS" />
+        <item
+            android:id="@+id/galleryTitle"
+            android:checked="false"
+            android:title="GALLERY" />
+        <item
+            android:id="@+id/noiseyTitle"
+            android:checked="false"
+            android:title="NOISEY" />
+        <item
+            android:id="@+id/interviewsTitle"
+            android:checked="false"
+            android:title="INTERVIEWS" />
+        <item
+            android:id="@+id/cultureTitle"
+            android:checked="false"
+            android:title="CULTURE" />
+        <item
+            android:id="@+id/columnTitle"
+            android:checked="false"
+            android:title="COLUMN" />
+
+    </group>
+</menu>
