@@ -8,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
+import com.charlesdrews.hud.CardsData.MtaStatusCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
@@ -56,7 +58,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         CardType type = mCardTypes.get(viewType);
 
-        //TODO - inflate the correct layout for each possible CardType value
         switch (type) {
             case Weather: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
@@ -75,6 +76,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             case Reminders: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminders_card, parent, false);
                 return new RemindersCard(view, parent.getContext(), type);
+            }
+            case MtaStatus: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mta_card, parent, false);
+                return new MtaStatusCard(view, parent.getContext(), type);
             }
             default:
                 return new CardViewHolder(view, parent.getContext(), null);
@@ -98,7 +103,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         if (holder == null || data == null) { return; }
 
-        //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
             case Weather: {
                 if ( !(data instanceof WeatherCardData) ) { return; }
@@ -156,6 +160,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 });
                 break;
             }
+            case MtaStatus: {
+                if ( !(data instanceof MtaStatusCardData) ) { return; }
+                MtaStatusCard mtaStatusCard = (MtaStatusCard) holder;
+                MtaStatusCardData mtaStatusCardData = (MtaStatusCardData) data;
+
+                mtaStatusCard.mWebView.getSettings().setJavaScriptEnabled(true);
+                mtaStatusCard.mWebView.loadUrl(mtaStatusCardData.getWidgetUrl());
+                break;
+            }
             default:
                 break;
         }
@@ -181,7 +194,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-    //TODO - extend CardViewHolder for each possible CardType value
     public class WeatherCard extends CardViewHolder {
         TextView mHighTemp, mLowTemp;
 
@@ -204,7 +216,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
     public class NewsCard extends CardViewHolder {
         RecyclerView mNewsRecyclerView;
-        //TODO - add a text view saying when it was last updated???
 
         public NewsCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
@@ -215,12 +226,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public class RemindersCard extends CardViewHolder {
         RecyclerView mRemindersRecyclerView;
         FloatingActionButton mAddReminderButton;
-        //TODO - add a text view saying when it was last updated???
 
         public RemindersCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
             mRemindersRecyclerView = (RecyclerView) itemView.findViewById(R.id.remindersRecyclerView);
             mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
+        }
+    }
+
+    public class MtaStatusCard extends CardViewHolder {
+        WebView mWebView;
+
+        public MtaStatusCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
+            mWebView = (WebView) itemView.findViewById(R.id.mtaWebView);
         }
     }
 

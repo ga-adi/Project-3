@@ -9,6 +9,7 @@
     <ImageView
         android:id="@+id/newsItemThumbnail"
         android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
         android:layout_width="48dp"
         android:layout_height="48dp" />
 
