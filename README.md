@@ -10,9 +10,11 @@ HUD (short for heads-up-display), is a personal assistant app that keeps track o
 
 
 ### BUGS:
-* When adding a reminder, the first reminder will occasionally not show up in a list of reminders.
+* When adding a reminder, the first reminder added will occasionally not show up, but subsequent reminders show up just fine.
 * Facebook....oh god pelase send help.
+* The weather API never came to fruition either.
 * Sometimes cardview animations run twice, especially if the cards are refreshed.
+* There is a search view in the toolbar, but sadly no search functionality... yet.
 
 ### LINK:
 https://trello.com/b/K1z4GuIq/project-3
