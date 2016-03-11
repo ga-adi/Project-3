@@ -32,12 +32,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.android.lately.Cards.CardAdapter;
+import com.example.android.lately.Cards.EventCard;
+import com.example.android.lately.Cards.FoursquareCard;
+import com.example.android.lately.Cards.RedditCard;
 import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Cards.WeatherCard;
 import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Foursquare.FoursquarePhotos.FoursquarePhotos;
 import com.example.android.lately.Foursquare.FoursquareVenues;
 import com.example.android.lately.Fragments.DetailsFragment;
+import com.example.android.lately.Meetup.MeetupEvents;
+import com.example.android.lately.Meetup.MeetupPhotos.MeetupPhotos;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Toolbar mMainToolbar;
     boolean mPortrait;
     ArrayList<String> redditUrlList;
+    ArrayList<String> venueIdList;
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
     Singleton mSingletonArrayOfParentCards;
@@ -88,12 +94,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     int mSports;
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
     private static String mRedditUrl = "https://www.reddit.com/r/";
-    public static String mFoursquareUrl = "https://api.foursquare.com/v2/venues/search?client_id=JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312&client_secret=PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35&v=20130815&ll=";
     public static final String mFoursquareEndpoint = "https://api.foursquare.com/";
     public static final String FOURSQUARE_CLIENT_ID = "JLOYBXMM0G3SFCJASFGDZJTAHOMYOMUO2JDCF0YIOPPYN312";
     public static final String FOURSQUARE_CLIENT_SECRET = "PIWMY5DZACK0F5U0J4PIHRUJWVSLGX14R1CPZRNGJXTIGJ35";
     public static final String FOURSQUARE_VERSION_NUMBER = "20130815";
-
+    public static final String mMeetupEndPoint = "https://api.meetup.com/";
+    public static final String mMeetupKey = "152c38353e11216219776676c5c366a";
+    public static final String mMeetupTime = ",1w";
+    public static final String mMeetupSign = "true";
+    public static final String mMeetupPage = "20";
+    public static final String mMeetupRadius = "40";
+    public String foursquarePhotoUrl;
+    public String meetupPhotoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,8 +376,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         CardAdapter.TYPE_WEATHER, 0);
 
                 mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
-
-                //TODO : Creating a constructor and stuff String variables above
             }
 
             @Override
@@ -384,10 +394,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         redditUrlList = new ArrayList<>();
 
         RedditRequest redditRequest = retrofit.create(RedditRequest.class);
-
+        //TODO After the selection page work is done, delete the line below(tabLayout.add(1). It's a place holder.
+        tabTypes.add(1);
         for (int i = 0; i < tabTypes.size(); i++) {
             //TODO Switch statement goes here
-            Call<RedditResult> result = redditRequest.getRedditFeed("PLACEHOLDER");
+            //TODO Line belew is hard coded. Should pass the switched query keyword as a parameter.
+            Call<RedditResult> result = redditRequest.getRedditFeed("Fitness");
             result.enqueue(new Callback<RedditResult>() {
                 @Override
                 public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
@@ -411,8 +423,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         idNumber = i + 1;
 
                         //TODO Create object here. Type null for the comment parameter.
+                        RedditCard redditCard = new RedditCard(articleAuthor,null,articleContent,articleNumOfComment,articleScore,articleSubreddit,
+                                articleTime,articleTitle,articleUrl,CardAdapter.TYPE_REDDIT,CardAdapter.TAB_SPORTS,Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
+
+                        mSingletonArrayOfParentCards.addParentCard(redditCard, CardAdapter.TAB_MAINPAGE);
+                        mSingletonArrayOfParentCards.addParentCard(redditCard, CardAdapter.TAB_SPORTS);
 
                     }
+                    String[] urlArray = redditUrlList.toArray(new String[0]);
+                    commentAsyncTask = new CommentAsyncTask();
+                    commentAsyncTask.execute(urlArray);
                 }
 
                 @Override
@@ -420,8 +440,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     t.printStackTrace();
                 }
             });
-            String[] urlArray = (String[]) redditUrlList.toArray();
-            commentAsyncTask.execute(urlArray);
         }
     }
 
@@ -431,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String data = "";
             try {
                 for (int i = 0; i < params.length; i++) {
-                    URL url = new URL(params[i]);
+                    URL url = new URL(params[i]+"/.json");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.connect();
                     InputStream inStream = connection.getInputStream();
@@ -439,8 +457,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     CommentProcessor commentProcessor = new CommentProcessor(data);
                     mComments = new ArrayList<>();
                     mComments = commentProcessor.fetchComments();
-                    //TODO After making singleton getInstance method and arrayList getter, uncomment the line below.
-                    //Singleton.getInstance().getArrayList().get(i+1).setComments(mComments);
+
+                    if(Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).get(i+1).getmCardType() == CardAdapter.TYPE_REDDIT) {
+                        RedditCard redditCard = (RedditCard) Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).get(i + 1);
+                        redditCard.setmComments(mComments);
+                    }
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -457,11 +478,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.d("REDDITARTICLE", mComments.get(1).getmAuthor() + "  " + mComments.get(1).getmContent());
         }
     }
 
     public void getFoursquareApi(String latlon) {
+
+        venueIdList = new ArrayList<>();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mFoursquareEndpoint)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -469,48 +492,100 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         final FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
         Call<FoursquareVenues> result = foursquareRequest.getVenues(FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER, latlon);
         result.enqueue(new Callback<FoursquareVenues>() {
-                           @Override
-                           public void onResponse
-                                   (Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
-                               for (int i = 0; i < response.body().getResponse().getVenues().size(); i++) {
-                                   String venueId = response.body().getResponse().getVenues().get(i).getId();
-                                   String venueName = response.body().getResponse().getVenues().get(i).getName();
-                                   String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
-                                   String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
-                                   String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
-                                   String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
-                                   String venueAddress = streetAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
-                                   final String[] photoUrl = {"PLACE HOLDER"};
+            @Override
+            public void onResponse
+                    (Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
+                for (int i = 0; i < response.body().getResponse().getVenues().size(); i++) {
+                    final String venueId = response.body().getResponse().getVenues().get(i).getId();
+                    final String venueName = response.body().getResponse().getVenues().get(i).getName();
+                    String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
+                    String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
+                    String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
+                    String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
+                    final String venueAddress = streetAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
+                    final String venueUrl = response.body().getResponse().getVenues().get(i).getUrl();
 
-                                   final Call<FoursquarePhotos> photos = foursquareRequest.getPhotoes(venueId, FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER);
-                                   photos.enqueue(new Callback<FoursquarePhotos>() {
-                                       @Override
-                                       public void onResponse(Call<FoursquarePhotos> call, Response<FoursquarePhotos> response) {
-                                           for (int i = 0; i < response.body().getResponse().getPhotos().getCount(); i++) {
-                                               String prefix = response.body().getResponse().getPhotos().getItems().get(i).getPrefix();
-                                               String suffix = response.body().getResponse().getPhotos().getItems().get(i).getSuffix();
-                                               int width = response.body().getResponse().getPhotos().getItems().get(i).getWidth();
-                                               int height = response.body().getResponse().getPhotos().getItems().get(i).getHeight();
-                                               photoUrl[i] = prefix + width + "x" + height + suffix;
-                                           }
-                                       }
+                    Call<FoursquarePhotos> photos = foursquareRequest.getPhotoes(venueId, FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER);
+                    photos.enqueue(new Callback<FoursquarePhotos>() {
+                        @Override
+                        public void onResponse(Call<FoursquarePhotos> call, Response<FoursquarePhotos> response) {
+                            if(response.body().getResponse().getPhotos().getItems().size() != 0) {
+                                String prefix = response.body().getResponse().getPhotos().getItems().get(0).getPrefix();
+                                String suffix = response.body().getResponse().getPhotos().getItems().get(0).getSuffix();
+                                int width = response.body().getResponse().getPhotos().getItems().get(0).getWidth();
+                                int height = response.body().getResponse().getPhotos().getItems().get(0).getHeight();
+                                foursquarePhotoUrl = prefix + width + "x" + height + suffix;
 
-                                       @Override
-                                       public void onFailure(Call<FoursquarePhotos> call, Throwable t) {
-                                           t.printStackTrace();
-                                       }
-                                   });
-                                   //TODO Create object here!
-                               }
-                           }
+                                FoursquareCard foursquareCard = new FoursquareCard(venueAddress,venueId,venueName,venueUrl,foursquarePhotoUrl,CardAdapter.TYPE_FOURSQUARE,CardAdapter.TAB_MAINPAGE,Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
+                                mSingletonArrayOfParentCards.addParentCard(foursquareCard, CardAdapter.TAB_MAINPAGE);
+                            }
+                        }
 
-                           @Override
-                           public void onFailure(Call<FoursquareVenues> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<FoursquarePhotos> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
+            }
 
-                           }
-                       }
+            @Override
+            public void onFailure(Call<FoursquareVenues> call, Throwable t) {
 
-        );
+            }
+        });
+    }
+
+    public void getMeetupApi(ArrayList<Integer> tabTypes, String lat, String lon) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mMeetupEndPoint)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        //TODO The line below(tabLayout.add(1)) should be deleted after selection page is done.
+        tabTypes.add(1);
+        for (int i = 0; i < tabTypes.size(); i++) {
+            final MeetupRequest meetupRequest = retrofit.create(MeetupRequest.class);
+            Call<MeetupEvents> result = meetupRequest.getEvents(mMeetupRadius, mMeetupPage, mMeetupKey, mMeetupTime, "34", lat, lon);
+            result.enqueue(new Callback<MeetupEvents>() {
+                @Override
+                public void onResponse(Call<MeetupEvents> call, Response<MeetupEvents> response) {
+                    for (int j = 0; j < response.body().getResults().size(); j++) {
+                        String eventId = response.body().getResults().get(j).getId();
+                        String eventName = response.body().getResults().get(j).getName();
+                        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
+                        Date currentDate = new Date((long) (response.body().getResults().get(j).getTime() * 1000L));
+                        String eventTime = format.format(currentDate);
+                        String groupName = response.body().getResults().get(j).getGroup().getName();
+                        String eventDescription = response.body().getResults().get(j).getDescription();
+                        String venueName = "Venue will be shown to members only";
+                        String venueAddress = "Members only";
+                        String groupUrl = response.body().getResults().get(j).getGroup().getUrlname();
+                        String eventUrl = response.body().getResults().get(j).getEventUrl();
+                        if (response.body().getResults().get(j).getVenue() != null) {
+                            venueName = response.body().getResults().get(j).getVenue().getName();
+                            String venueStreetAddress = response.body().getResults().get(j).getVenue().getAddress1();
+                            String venueCityAddress = response.body().getResults().get(j).getVenue().getCity();
+                            String venueStateAddress = response.body().getResults().get(j).getVenue().getState();
+                            venueAddress = venueCityAddress + ", " + venueCityAddress + ", " + venueStateAddress;
+                        } else {
+                            venueAddress = "Unknown";
+                        }
+
+                        EventCard eventCard = new EventCard(eventName, eventDescription, eventUrl, groupName, "20", eventTime, venueAddress, venueName,
+                                CardAdapter.TYPE_EVENT, CardAdapter.TAB_TECH,Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
+                        Singleton.getInstance().addParentCard(eventCard, CardAdapter.TAB_MAINPAGE);
+                        Singleton.getInstance().addParentCard(eventCard, CardAdapter.TAB_TECH);
+                        Log.d("ADDED A CARD : ",eventCard.getEvent()+" "+eventCard.getVenueAddress());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MeetupEvents> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
 
@@ -575,9 +650,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
 
                 getForecastApi();
-//                getRedditApi(new ArrayList<Integer>()); //This parameter is a place holder. We'll change it into the user topic int.
+                getRedditApi(new ArrayList<Integer>()); //This parameter is a place holder. We'll change it into the user topic int.
                 getFoursquareApi(latlon);
-//                    getMeetupApi();
+                getMeetupApi(new ArrayList<Integer>(), latitude, longitude);
 
             } else {
                 Toast.makeText(MainActivity.this, "Turn on GPS and try again", Toast.LENGTH_SHORT).show();
@@ -614,6 +689,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @GET("v2/venues/{venueId}/photos")
         public Call<FoursquarePhotos> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
+<<<<<<< HEAD
+=======
+    }
+
+    public interface MeetupRequest {
+        @GET("2/open_events?sign=true")
+        public Call<MeetupEvents> getEvents(@Query("radius") String radius, @Query("page") String page, @Query("key") String key, @Query("time") String time, @Query("category") String category, @Query("lat") String lat, @Query("lon") String lon);
+
+        @GET("2/photos?&sign=true&photo-host=public")
+        public Call<MeetupPhotos> getPhotos(@Query("key") String key, @Query("group_urlname") String groupUrlname, @Query("page") String page);
+>>>>>>> branch-claire
     }
 
     public void createTabs(ArrayList selection) {
