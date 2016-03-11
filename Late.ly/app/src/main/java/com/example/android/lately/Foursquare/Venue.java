@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Venue {
 
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -43,6 +44,14 @@ public class Venue {
     @Expose
     private List<Object> venueChains = new ArrayList<Object>();
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      *

@@ -30,6 +30,7 @@ import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.RedditComment;
 import com.example.android.lately.Cards.WeatherCard;
 import com.example.android.lately.Forecast.Weather;
+import com.example.android.lately.Foursquare.FoursquarePhotos.FoursquarePhotos;
 import com.example.android.lately.Foursquare.FoursquareVenues;
 import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
@@ -43,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -57,6 +59,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.HEAD;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Window mWindow;
     Toolbar mMainToolbar;
     boolean mPortrait;
+    ArrayList<String> redditUrlList;
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
     Singleton mSingletonArrayOfParentCards;
@@ -129,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         selection.add("Language");
         selection.add("Sports");
         selection.add("Politics");
-
-
-
 
         createTabs(selection);
 
@@ -301,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //TODO : Creating a constructor and stuff String variables above
             }
 
-
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
@@ -309,53 +309,54 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
-    public void getRedditApi(String subreddit) {
-
+    public void getRedditApi(ArrayList<Integer> tabTypes) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mRedditUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        final ArrayList<String> urlList = new ArrayList<>();
+        redditUrlList = new ArrayList<>();
 
         RedditRequest redditRequest = retrofit.create(RedditRequest.class);
-        Call<RedditResult> result = redditRequest.getRedditFeed(subreddit);
-        result.enqueue(new Callback<RedditResult>() {
-            @Override
-            public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
 
-                List<RedditArticle> result = response.body().getData().getChildren();
-                String articleAuthor, articleUrl, articleSubreddit, articleContent, articleTitle, articleTime;
-                int articleScore, articleNumOfComment, idNumber;
+        for (int i = 0; i < tabTypes.size(); i++) {
+            //TODO Switch statement goes here
+            Call<RedditResult> result = redditRequest.getRedditFeed("PLACEHOLDER");
+            result.enqueue(new Callback<RedditResult>() {
+                @Override
+                public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
 
-                for (int i = 0; i < result.size(); i++) {
-                    articleAuthor = result.get(i).getData().getAuthor();
-                    articleSubreddit = result.get(i).getData().getSubreddit();
-                    articleTitle = result.get(i).getData().getTitle();
-                    articleContent = result.get(i).getData().getSelftext();
-                    articleUrl = result.get(i).getData().getUrl();
-                    articleNumOfComment = result.get(i).getData().getNumComments();
-                    articleScore = result.get(i).getData().getScore();
-                    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
-                    Date currentDate = new Date((long) (result.get(i).getData().getCreated() * 1000L));
-                    articleTime = format.format(currentDate);
-                    articleSubreddit = result.get(i).getData().getSubreddit();
+                    List<RedditArticle> result = response.body().getData().getChildren();
+                    String articleAuthor, articleUrl, articleSubreddit, articleContent, articleTitle, articleTime;
+                    int articleScore, articleNumOfComment, idNumber;
+                    for (int i = 0; i < result.size(); i++) {
+                        articleAuthor = result.get(i).getData().getAuthor();
+                        articleSubreddit = result.get(i).getData().getSubreddit();
+                        articleTitle = result.get(i).getData().getTitle();
+                        articleContent = result.get(i).getData().getSelftext();
+                        articleUrl = result.get(i).getData().getUrl();
+                        redditUrlList.add(articleUrl);
+                        articleNumOfComment = result.get(i).getData().getNumComments();
+                        articleScore = result.get(i).getData().getScore();
+                        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy hha, EEE");
+                        Date currentDate = new Date((long) (result.get(i).getData().getCreated() * 1000L));
+                        articleTime = format.format(currentDate);
+                        articleSubreddit = result.get(i).getData().getSubreddit();
+                        idNumber = i + 1;
 
+                        //TODO Create object here. Type null for the comment parameter.
 
-                    //This background method clears the mComments ArrayList(member variable) and stuffs new comment lists.
-                    //So you don't need to instantiate a new comment ArrayList here.
-                    //Just stuff mComment as a parameter of the reddit article constructor after this async task execute method.
-
-                    //Build a new reddit article object here.
-                    idNumber = i + 1;
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<RedditResult> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<RedditResult> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+            String[] urlArray = (String[]) redditUrlList.toArray();
+            commentAsyncTask.execute(urlArray);
+        }
     }
 
     public class CommentAsyncTask extends AsyncTask<String, Void, Void> {
@@ -363,14 +364,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected Void doInBackground(String... params) {
             String data = "";
             try {
-                URL url = new URL(params[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream inStream = connection.getInputStream();
-                data = getInputData(inStream);
-                CommentProcessor commentProcessor = new CommentProcessor(data);
-                mComments = new ArrayList<>();
-                mComments = commentProcessor.fetchComments();
+                for (int i = 0; i < params.length; i++) {
+                    URL url = new URL(params[i]);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    InputStream inStream = connection.getInputStream();
+                    data = getInputData(inStream);
+                    CommentProcessor commentProcessor = new CommentProcessor(data);
+                    mComments = new ArrayList<>();
+                    mComments = commentProcessor.fetchComments();
+                    //TODO After making singleton getInstance method and arrayList getter, uncomment the line below.
+                    //Singleton.getInstance().getArrayList().get(i+1).setComments(mComments);
+                }
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -395,28 +400,51 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .baseUrl(mFoursquareEndpoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
+        final FoursquareRequest foursquareRequest = retrofit.create(FoursquareRequest.class);
         Call<FoursquareVenues> result = foursquareRequest.getVenues(FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER, latlon);
         result.enqueue(new Callback<FoursquareVenues>() {
-            @Override
-            public void onResponse(Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
-                for (int i = 0; i < response.body().getResponse().getVenues().size(); i++) {
-                    String venueName = response.body().getResponse().getVenues().get(i).getName();
-                    String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
-                    String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
-                    String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
-                    String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
-                    String venueAddress = stateAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
+                           @Override
+                           public void onResponse
+                                   (Call<FoursquareVenues> call, Response<FoursquareVenues> response) {
+                               for (int i = 0; i < response.body().getResponse().getVenues().size(); i++) {
+                                   String venueId = response.body().getResponse().getVenues().get(i).getId();
+                                   String venueName = response.body().getResponse().getVenues().get(i).getName();
+                                   String streetAddress = response.body().getResponse().getVenues().get(i).getLocation().getAddress();
+                                   String cityAddress = response.body().getResponse().getVenues().get(i).getLocation().getCity();
+                                   String stateAddress = response.body().getResponse().getVenues().get(i).getLocation().getState();
+                                   String zipcodeAddress = response.body().getResponse().getVenues().get(i).getLocation().getPostalCode();
+                                   String venueAddress = streetAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
+                                   final String[] photoUrl = {"PLACE HOLDER"};
 
-                }
-            }
+                                   final Call<FoursquarePhotos> photos = foursquareRequest.getPhotoes(venueId, FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER);
+                                   photos.enqueue(new Callback<FoursquarePhotos>() {
+                                       @Override
+                                       public void onResponse(Call<FoursquarePhotos> call, Response<FoursquarePhotos> response) {
+                                           for (int i = 0; i < response.body().getResponse().getPhotos().getCount(); i++) {
+                                               String prefix = response.body().getResponse().getPhotos().getItems().get(i).getPrefix();
+                                               String suffix = response.body().getResponse().getPhotos().getItems().get(i).getSuffix();
+                                               int width = response.body().getResponse().getPhotos().getItems().get(i).getWidth();
+                                               int height = response.body().getResponse().getPhotos().getItems().get(i).getHeight();
+                                               photoUrl[i] = prefix + width + "x" + height + suffix;
+                                           }
+                                       }
 
-            @Override
-            public void onFailure(Call<FoursquareVenues> call, Throwable t) {
+                                       @Override
+                                       public void onFailure(Call<FoursquarePhotos> call, Throwable t) {
+                                           t.printStackTrace();
+                                       }
+                                   });
+                                   //TODO Create object here!
+                               }
+                           }
 
-            }
-        });
+                           @Override
+                           public void onFailure(Call<FoursquareVenues> call, Throwable t) {
+
+                           }
+                       }
+
+        );
     }
 
 
@@ -477,14 +505,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
                 String latlon = latitude + "," + longitude;
-
-                //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
-                //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
+                        //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
+                        //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
 
                 getForecastApi();
-                getRedditApi("Fitness"); //This parameter is a place holder. We'll change it into the user topic
+//                getRedditApi(new ArrayList<Integer>()); //This parameter is a place holder. We'll change it into the user topic int.
                 getFoursquareApi(latlon);
 //                    getMeetupApi();
+
             } else {
                 Toast.makeText(MainActivity.this, "Turn on GPS and try again", Toast.LENGTH_SHORT).show();
             }
@@ -519,8 +547,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         public Call<FoursquareVenues> getVenues(@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
 
         @GET("v2/venues/{venueId}/photos")
-        public Call<FoursquareVenues> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
-
+        public Call<FoursquarePhotos> getPhotoes (@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
     }
 
     public void createTabs(ArrayList selection) {
@@ -674,8 +701,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    public String redditSwitcher(int TAB){
-        switch (TAB){
+    public String redditSwitcher(int TAB) {
+        switch (TAB) {
             case CardAdapter.TAB_MAINPAGE:
                 return "AskReddit";
             case CardAdapter.TAB_POLITICS:
@@ -703,8 +730,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    public String meetupSwitcher(int TAB){
-        switch (TAB){
+    public String meetupSwitcher(int TAB) {
+        switch (TAB) {
             case CardAdapter.TAB_MAINPAGE:
                 return "4";
             case CardAdapter.TAB_POLITICS:
