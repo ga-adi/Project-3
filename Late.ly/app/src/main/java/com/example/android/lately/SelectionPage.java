@@ -1,15 +1,16 @@
 package com.example.android.lately;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /**
  * Created by perrycooperman on 3/9/16.
  */
-public class SelectionPage extends AppCompatActivity{
+public class SelectionPage extends AppCompatActivity {
 
     CardView vPolitics;
     CardView vTech;
@@ -32,6 +33,7 @@ public class SelectionPage extends AppCompatActivity{
     boolean mNature = false;
     boolean mSports = false;
     boolean mDating = false;
+    ArrayList<String> mSelections;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +53,15 @@ public class SelectionPage extends AppCompatActivity{
         vSubmit = (CardView) findViewById(R.id.selectionpage_submit);
 
 
-
         vPolitics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mPolitics){
+                if (mPolitics) {
                     mPolitics = false;
-                    vPolitics.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vPolitics.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mPolitics = true;
-                    vPolitics.setCardBackgroundColor(Color.WHITE);
+                    vPolitics.setCardBackgroundColor(R.color.colorPrimaryPolitics);
                 }
             }
         });
@@ -68,12 +69,12 @@ public class SelectionPage extends AppCompatActivity{
         vTech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTech){
+                if (mTech) {
                     mTech = false;
-                    vTech.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vTech.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mTech = true;
-                    vTech.setCardBackgroundColor(Color.WHITE);
+                    vTech.setCardBackgroundColor(R.color.colorPrimaryTech);
                 }
 
             }
@@ -82,12 +83,12 @@ public class SelectionPage extends AppCompatActivity{
         vCareer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCareer){
+                if (mCareer) {
                     mCareer = false;
-                    vCareer.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vCareer.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mCareer = true;
-                    vCareer.setCardBackgroundColor(Color.WHITE);
+                    vCareer.setCardBackgroundColor(R.color.colorPrimaryCareer);
                 }
 
             }
@@ -96,12 +97,12 @@ public class SelectionPage extends AppCompatActivity{
         vFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFood){
+                if (mFood) {
                     mFood = false;
-                    vFood.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vFood.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mFood = true;
-                    vFood.setCardBackgroundColor(Color.WHITE);
+                    vFood.setCardBackgroundColor(R.color.colorPrimaryFood);
                 }
 
             }
@@ -110,12 +111,12 @@ public class SelectionPage extends AppCompatActivity{
         vDancing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDancing){
+                if (mDancing) {
                     mDancing = false;
-                    vDancing.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vDancing.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mDancing = true;
-                    vDancing.setCardBackgroundColor(Color.WHITE);
+                    vDancing.setCardBackgroundColor(R.color.colorPrimaryDancing);
                 }
 
             }
@@ -124,12 +125,12 @@ public class SelectionPage extends AppCompatActivity{
         vAnimals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAnimals){
+                if (mAnimals) {
                     mAnimals = false;
-                    vAnimals.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vAnimals.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mAnimals = true;
-                    vAnimals.setCardBackgroundColor(Color.WHITE);
+                    vAnimals.setCardBackgroundColor(R.color.colorPrimaryAnimals);
                 }
 
             }
@@ -138,12 +139,12 @@ public class SelectionPage extends AppCompatActivity{
         vLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLanguage){
+                if (mLanguage) {
                     mLanguage = false;
-                    vLanguage.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vLanguage.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mLanguage = true;
-                    vLanguage.setCardBackgroundColor(Color.WHITE);
+                    vLanguage.setCardBackgroundColor(R.color.colorPrimaryLanguage);
                 }
 
             }
@@ -152,12 +153,12 @@ public class SelectionPage extends AppCompatActivity{
         vNature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mNature){
+                if (mNature) {
                     mNature = false;
-                    vNature.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vNature.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mNature = true;
-                    vNature.setCardBackgroundColor(Color.WHITE);
+                    vNature.setCardBackgroundColor(R.color.colorPrimaryNature);
                 }
 
             }
@@ -166,12 +167,12 @@ public class SelectionPage extends AppCompatActivity{
         vSports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSports){
+                if (mSports) {
                     mSports = false;
-                    vSports.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vSports.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mSports = true;
-                    vSports.setCardBackgroundColor(Color.WHITE);
+                    vSports.setCardBackgroundColor(R.color.colorPrimarySports);
                 }
 
             }
@@ -180,23 +181,54 @@ public class SelectionPage extends AppCompatActivity{
         vDating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDating){
+                if (mDating) {
                     mDating = false;
-                    vDating.setCardBackgroundColor(Color.GRAY);
-                }else{
+                    vDating.setCardBackgroundColor(R.color.colorSelection);
+                } else {
                     mDating = true;
-                    vDating.setCardBackgroundColor(Color.WHITE);
+                    vDating.setCardBackgroundColor(R.color.colorPrimaryDating);
                 }
 
             }
         });
-
-        vSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
+//// TODO: 3/11/16 add arraylist in accordance to cardadapter and put to shared preferences
+//        vSubmit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mPolitics) {
+//                    mSelections.add()
+//                }
+//                if (mTech) {
+//                    mSelections.add()
+//                }
+//                if (mCareer) {
+//                    mSelections.add()
+//                }
+//                if (mFood) {
+//                    mSelections.add()
+//                }
+//                if (mDancing) {
+//                    mSelections.add()
+//                }
+//                if (mAnimals) {
+//                    mSelections.add()
+//                }
+//                if (mLanguage) {
+//                    mSelections.add()
+//                }
+//                if (mNature) {
+//                    mSelections.add()
+//                }
+//                if (mSports) {
+//                    mSelections.add()
+//                }
+//                if (mDating) {
+//                    mSelections.add()
+//                }
+//                Intent intent = new Intent(SelectionPage.this, MainActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
     }
 }

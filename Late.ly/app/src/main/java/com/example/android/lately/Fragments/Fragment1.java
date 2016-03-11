@@ -21,8 +21,9 @@ import java.util.ArrayList;
 public class Fragment1 extends Fragment {
 
     boolean mPortrait;
-    RecyclerView mTestRecyclerView;
-    CardAdapter mTestAdapter;
+    RecyclerView mRecyclerView;
+    CardAdapter mAdapter;
+
     ArrayList<ParentCard> mTestArray;
 
 
@@ -31,7 +32,7 @@ public class Fragment1 extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fragment1, container, false);
 
-        mTestRecyclerView = (RecyclerView) rootView.findViewById(R.id.testRecyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
         int portrait = getResources().getConfiguration().orientation;
         if (portrait == 1) {
@@ -60,12 +61,12 @@ public class Fragment1 extends Fragment {
         mTestArray.add(new EventCard("10:10","ADI", "7MasterClass with James", "21 Awesome Programmers",CardAdapter.TYPE_EVENT,CardAdapter.TAB_MAINPAGE, 1));
 
         //no clue what this does
-        mTestRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        mTestRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setLayoutManager(llm);
 
-        mTestAdapter = new CardAdapter(mTestArray);
-        mTestRecyclerView.setAdapter(mTestAdapter);
+        mAdapter = new CardAdapter(mTestArray);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

@@ -36,7 +36,6 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 //    ArrayList<String> selections = new ArrayList<String>();
 //get the arraylist of selections and feed it into here.
 
-
     @Override
     public Fragment getItem(int position) {
 
@@ -163,6 +162,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
             }
     }
+//// TODO: 3/11/16 cases similar to cardadapter
 
     @Override
     public int getCount() {
