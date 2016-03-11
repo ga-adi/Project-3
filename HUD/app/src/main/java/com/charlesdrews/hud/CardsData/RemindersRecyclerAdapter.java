@@ -21,9 +21,9 @@ import java.util.Locale;
  * Created by charlie on 3/10/16.
  */
 public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecyclerAdapter.ViewHolder> {
-    ArrayList<RemindersCardData.ReminderItem> mData;
+    ArrayList<Reminder> mData;
 
-    public RemindersRecyclerAdapter(ArrayList<RemindersCardData.ReminderItem> data) {
+    public RemindersRecyclerAdapter(ArrayList<Reminder> data) {
         mData = data;
     }
 
@@ -35,7 +35,7 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final RemindersCardData.ReminderItem item = mData.get(position);
+        final Reminder item = mData.get(position);
 
         Date dateTime = new Date(item.getDateTimeInMillis());
         SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, h:mm a", Locale.getDefault());

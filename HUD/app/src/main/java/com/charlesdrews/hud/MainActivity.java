@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.Reminder;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -41,7 +42,8 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ReminderCreator.OnReminderSubmittedListener {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
@@ -130,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this, "Query: " + query, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onReminderSubmitted(Reminder reminder) {
+        //TODO - do something w/ the reminder - update the UI!
+        Toast.makeText(MainActivity.this, reminder.getReminderText(), Toast.LENGTH_SHORT).show();
     }
 
     public class CardContentObserver extends ContentObserver {
