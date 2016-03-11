@@ -26,15 +26,6 @@ public class Datum_ {
     @SerializedName("moonPhase")
     @Expose
     private Double moonPhase;
-    @SerializedName("precipIntensity")
-    @Expose
-    private Double precipIntensity;
-    @SerializedName("precipIntensityMax")
-    @Expose
-    private Double precipIntensityMax;
-    @SerializedName("precipProbability")
-    @Expose
-    private Double precipProbability;
     @SerializedName("temperatureMin")
     @Expose
     private Double temperatureMin;
@@ -198,59 +189,7 @@ public class Datum_ {
         this.moonPhase = moonPhase;
     }
 
-    /**
-     *
-     * @return
-     * The precipIntensity
-     */
-    public Double getPrecipIntensity() {
-        return precipIntensity;
-    }
 
-    /**
-     *
-     * @param precipIntensity
-     * The precipIntensity
-     */
-    public void setPrecipIntensity(Double precipIntensity) {
-        this.precipIntensity = precipIntensity;
-    }
-
-    /**
-     *
-     * @return
-     * The precipIntensityMax
-     */
-    public Double getPrecipIntensityMax() {
-        return precipIntensityMax;
-    }
-
-    /**
-     *
-     * @param precipIntensityMax
-     * The precipIntensityMax
-     */
-    public void setPrecipIntensityMax(Double precipIntensityMax) {
-        this.precipIntensityMax = precipIntensityMax;
-    }
-
-    /**
-     *
-     * @return
-     * The precipProbability
-     */
-    public Double getPrecipProbability() {
-        return precipProbability;
-    }
-
-    /**
-     *
-     * @param precipProbability
-     * The precipProbability
-     */
-    public void setPrecipProbability(Double precipProbability) {
-        this.precipProbability = precipProbability;
-    }
 
     /**
      *

@@ -8,13 +8,53 @@ public class EventCard extends ParentCard {
     String group;
     String event;
     String numberOfPeople;
+    String eventDescription;
+    String venueAddress;
+    String venueName;
+    String eventUrl;
 
-    public EventCard(String time, String group, String event, String numberOfPeople, int cardType, int tabType, int id) {
-        super(cardType, tabType, id);
-        this.time = time;
-        this.group = group;
+    public EventCard(String event, String eventDescription, String eventUrl, String group, String numberOfPeople, String time, String venueAddress, String venueName, int mCardType, int mTabType, int mId) {
+        super(mCardType, mTabType, mId);
         this.event = event;
+        this.eventDescription = eventDescription;
+        this.eventUrl = eventUrl;
+        this.group = group;
         this.numberOfPeople = numberOfPeople;
+        this.time = time;
+        this.venueAddress = venueAddress;
+        this.venueName = venueName;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public String getEventUrl() {
+        return eventUrl;
+    }
+
+    public void setEventUrl(String eventUrl) {
+        this.eventUrl = eventUrl;
+    }
+
+    public String getVenueAddress() {
+        return venueAddress;
+    }
+
+    public void setVenueAddress(String venueAddress) {
+        this.venueAddress = venueAddress;
+    }
+
+    public String getVenueName() {
+        return venueName;
+    }
+
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
     }
 
     public String getTime() {
