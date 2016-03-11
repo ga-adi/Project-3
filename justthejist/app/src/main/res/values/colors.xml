@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimaryFrag1">#F44336</color>
+    <color name="colorPrimaryDarkFrag1">#D32F2F</color>
+    <color name="colorPrimaryDarkerFrag1">#B71C1C</color>
+    <color name="colorAccentFrag1">#FF4081</color>
+
+
+    <color name="colorPrimaryFrag2">#E91E63</color>
+    <color name="colorPrimaryDarkFrag2">#C2185B</color>
+    <color name="colorPrimaryDarkerFrag2">#880e4f</color>
+    <color name="colorAccentFrag2">#FF4081</color>
+
+
+    <color name="colorPrimaryFrag3">#9C27B0</color>
+    <color name="colorPrimaryDarkFrag3">#7B1FA2</color>
+    <color name="colorPrimaryDarkerFrag3">#4A148C</color>
+    <color name="colorAccentFrag3">#FF4081</color>
+
+
+    <color name="colorPrimaryFrag4">#009688</color>
+    <color name="colorPrimaryDarkFrag4">#00796B</color>
+    <color name="colorPrimaryDarkerFrag4">#004D40</color>
+    <color name="colorAccentFrag4">#FF4081</color>
+
+    <color name="colorPrimaryFrag5">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag5">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag5">#1B5E20</color>
+    <color name="colorAccentFrag5">#FF4081</color>
+
+    <color name="colorPrimaryFrag6">#536DFE</color>
+    <color name="colorPrimaryDarkFrag6">#3D5AFE</color>
+    <color name="colorPrimaryDarkerFrag6">#304FFE</color>
+    <color name="colorAccentFrag6">#FF4081</color>
+
+    <color name="colorPrimaryFrag7">#E040FB</color>
+    <color name="colorPrimaryDarkFrag7">#D500F9</color>
+    <color name="colorPrimaryDarkerFrag7">#AA00FF</color>
+    <color name="colorAccentFrag7">#FF4081</color>
+
+    <color name="colorPrimaryFrag8">#18FFFF</color>
+    <color name="colorPrimaryDarkFrag8">#00E5FF</color>
+    <color name="colorPrimaryDarkerFrag8">#00B8D4</color>
+    <color name="colorAccentFrag8">#FF4081</color>
+
+    <color name="colorPrimaryFrag9">#64FFDA</color>
+    <color name="colorPrimaryDarkFrag9">#1DE9B6</color>
+    <color name="colorPrimaryDarkerFrag9">#00BFA5</color>
+    <color name="colorAccentFrag9">#FF4081</color>
+
+    <color name="colorPrimaryFrag10">#FFAB40</color>
+    <color name="colorPrimaryDarkFrag10">#FF9100</color>
+    <color name="colorPrimaryDarkerFrag10">#FF6D00</color>
+    <color name="colorAccentFrag10">#FF4081</color>
+
+    <color name="colorPrimaryFrag11">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag11">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag11">#1B5E20</color>
+    <color name="colorAccentFrag11">#FF4081</color>
+
+    <color name="colorPrimaryFrag12">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag12">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag12">#1B5E20</color>
+    <color name="colorAccentFrag12">#FF4081</color>
+
+    <color name="colorPrimaryFrag13">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag13">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag13">#1B5E20</color>
+    <color name="colorAccentFrag13">#FF4081</color>
+
+    <color name="colorPrimaryFrag14">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag14">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag14">#1B5E20</color>
+    <color name="colorAccentFrag14">#FF4081</color>
+
+    <color name="colorPrimaryFrag15">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag15">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag15">#1B5E20</color>
+    <color name="colorAccentFrag15">#FF4081</color>
+
+    <color name="colorPrimaryFrag16">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag16">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag16">#1B5E20</color>
+    <color name="colorAccentFrag16">#FF4081</color>
+
+    <color name="colorPrimaryFrag17">#4CAF50</color>
+    <color name="colorPrimaryDarkFrag17">#388E3C</color>
+    <color name="colorPrimaryDarkerFrag17">#1B5E20</color>
+    <color name="colorAccentFrag17">#FF4081</color>
+
+</resources>
