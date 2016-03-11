@@ -1,22 +1,13 @@
 package com.charlesdrews.hud;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
@@ -133,7 +124,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 RemindersCardData remindersCardData = (RemindersCardData) data;
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 remindersCard.mRemindersRecyclerView.setLayoutManager(layoutManager);
+
+                remindersCard.mRemindersRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext, 15));
 
                 RemindersRecyclerAdapter adapter = new RemindersRecyclerAdapter(remindersCardData.getReminders());
                 remindersCard.mRemindersRecyclerView.setAdapter(adapter);

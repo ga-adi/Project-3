@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -20,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -136,8 +136,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onReminderSubmitted(Reminder reminder) {
-        //TODO - do something w/ the reminder - update the UI!
-        Toast.makeText(MainActivity.this, reminder.getReminderText(), Toast.LENGTH_SHORT).show();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
+        Long alarmTime = reminder.getDateTimeInMillis();
+        if (alarmTime != -1L) {
+            values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
+        }
+        getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
     }
 
     public class CardContentObserver extends ContentObserver {
@@ -165,6 +170,16 @@ public class MainActivity extends AppCompatActivity
                 case CardContentProvider.WEATHER: {
                     Log.d(TAG, "onChange: weather");
                     new PullFromDbAsyncTask().execute(CardType.Weather);
+                    break;
+                }
+                case CardContentProvider.REMINDERS: {
+                    Log.d(TAG, "onChange: reminders");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
+                    break;
+                }
+                case CardContentProvider.REMINDERS_ID: {
+                    Log.d(TAG, "onChange: reminders/id");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
                     break;
                 }
                 default:

@@ -17,6 +17,7 @@ import com.charlesdrews.hud.CardsData.Reminder;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -28,6 +29,7 @@ public class ReminderCreator {
     private EditText mInput;
     private AlertDialog mAlertDialog;
     private Calendar mCurrentTime, mAlarmTime;
+    private boolean mAlarmSet = false;
 
     public ReminderCreator(Context context) {
         mContextRef = new WeakReference<>(context);
@@ -82,8 +84,8 @@ public class ReminderCreator {
             mInput.setError("Please enter a reminder");
             mInput.requestFocus();
         } else {
-            //TODO - create new ReminderItem
-            Reminder reminder = new Reminder(0, "hello", 0L);
+            Reminder reminder = new Reminder(0, mInput.getText().toString(),
+                    (mAlarmSet ? mAlarmTime.getTime().getTime() : -1));
             ((MainActivity) mContextRef.get()).onReminderSubmitted(reminder);
             mAlertDialog.dismiss();
         }
@@ -124,6 +126,7 @@ public class ReminderCreator {
                                 mAlarmTime.get(Calendar.DAY_OF_MONTH),
                                 hourOfDay, minute
                         );
+                        mAlarmSet = true;
                         makeAlarmTimeVisible();
                     }
                 },
@@ -136,7 +139,7 @@ public class ReminderCreator {
 
     private void makeAlarmTimeVisible() {
         if (mAlarmTime != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, h:mm a", Locale.getDefault());
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
             String alarmTimeString = " Alarm date/time: " + formatter.format(mAlarmTime.getTime());
 
             TextView alarmTimeText = (TextView) mAlertDialog.findViewById(R.id.reminder_alarm_time);

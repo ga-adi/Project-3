@@ -37,16 +37,19 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Reminder item = mData.get(position);
 
-        Date dateTime = new Date(item.getDateTimeInMillis());
-        SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, h:mm a", Locale.getDefault());
-        holder.mDateTime.setText(formatter.format(dateTime));
-
         holder.mReminderText.setText(item.getReminderText());
+
+        Long dateTimeInMillis = item.getDateTimeInMillis();
+        if (dateTimeInMillis != -1L) {
+            Date dateTime = new Date(dateTimeInMillis);
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
+            holder.mDateTime.setText(formatter.format(dateTime));
+        }
 
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(holder.mContext, "Clicked: " + item.getReminderText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(holder.mContext, "Clicked item " + item.getId(), Toast.LENGTH_SHORT).show();
             }
         });
     }
