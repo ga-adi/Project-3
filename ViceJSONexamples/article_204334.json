@@ -1,0 +1,81 @@
+{
+    "data": {
+        "article": {
+            "title": "Daily VICE: We Meet a Model-Turned-Artist Reimagining the Female Form on Today's 'Daily VICE'",
+            "preview": "Then the Creators Project takes us inside New York's Armory Show art fair to discuss the fetishization of African art and Motherboard goes behind the scenes of Richard Branson's Bitcoin summit.",
+            "tags": [
+                "Daily VICE",
+                "Motherboard",
+                "bitcoin",
+                "art",
+                "The Creators Project",
+                "Delphine Diallo",
+                "Richard Branson",
+                "finance",
+                "money",
+                "internet",
+                "digital",
+                "3D printing",
+                "photography",
+                "African Art",
+                "The Armory Show",
+                "New York City",
+                "New York",
+                "3D Brooklyn",
+                "female form",
+                "VICE US"
+            ],
+            "body": "<p>On today's episode of <em>Daily VICE, </em>we meet <a href=\"http://thecreatorsproject.vice.com/blog/delphine-diallo\" target=\"_blank\">Delphine Diallo</a>, a former model who uses 3-D printing in her photography to challenge the media's representation of the female body. Then the Creators Project takes us inside New York's <a href=\"http://thecreatorsproject.vice.com/blog/armory-show-2016\" target=\"_blank\">Armory Show</a> art fair to discuss the fetishization of African art and Motherboard attends an elite bitcoin summit on <a href=\"http://motherboard.vice.com/read/bitcoin-blockchain-summit-with-richard-branson-on-necker-island\" target=\"_blank\">Richard Branson's island paradise</a>.</p><p><em>Watch </em>Daily VICE<em> in the VICE channel on go90. Head to </em><a href=\"http://go90.com/\" target=\"_blank\">go90.com</a><em> to learn more and download the app.</em><br></p>",
+            "feedText": null,
+            "seriesTitle": "Daily VICE",
+            "seriesDescription": "Daily Stories from VICE",
+            "id": "204334",
+            "seriesId": "1571",
+            "episodeNumber": null,
+            "part": null,
+            "url": "http://www.vice.com/video/daily-vice-delphine-diallo-photography-art-308",
+            "author": "VICE Staff",
+            "pubDate": "2016-03-08 14:49:00",
+            "pubTimestamp": 1457448540,
+            "category": "stuff",
+            "contributor": {
+                "id": "9",
+                "slug": null,
+                "email": "beta@vice.com",
+                "username": "vice",
+                "firstname": "VICE Staff",
+                "lastname": null,
+                "jobtitle": "",
+                "twitter": "",
+                "facebook": "",
+                "bio": "",
+                "avatar": "",
+                "google_plus_url": null,
+                "image_path": null,
+                "image_file_name": null,
+                "image_crop_path": null,
+                "image_width": "0",
+                "image_height": "0"
+            },
+            "nsfw": false,
+            "nsfb": false,
+            "thumb": "https://vice-images.vice.com/images/articles/crops/2016/03/08/today-on-daily-vice-1457448865-crop_mobile.jpg?resize=*:*&output-quality=75",
+            "image": "https://vice-images.vice.com/images/articles/meta/2016/03/08/today-on-daily-vice-1457448865.jpg?resize=*:*&output-quality=75",
+            "thumb_10_4": "https://vice-images.vice.com/images/articles/crops/2016/03/08/today-on-daily-vice-1457448865-crop_lede.jpg?resize=*:*&output-quality=75",
+            "thumb_10_3": "https://vice-images.vice.com/images/articles/crops/2016/03/08/today-on-daily-vice-1457448865-crop_desktop.jpg?resize=*:*&output-quality=75",
+            "thumb_16_9": "https://vice-images.vice.com/images/articles/crops/2016/03/08/today-on-daily-vice-1457448865-crop_mobile.jpg?resize=*:*&output-quality=75",
+            "thumb_7_10": "",
+            "media": {
+                "video": {
+                    "duration": "07:10",
+                    "video_duration": "430",
+                    "ooyalaId": "5qM2ZzMTE6ShCa4grZMQ5NNFp5Lvpheg",
+                    "thrid_party_video_id": "5qM2ZzMTE6ShCa4grZMQ5NNFp5Lvpheg",
+                    "video_type": "ooyala"
+                }
+            },
+            "otherParts": null,
+            "dnd": null
+        }
+    }
+}

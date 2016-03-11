@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.project3vice.ArticleActivity"
+    tools:showIn="@layout/activity_article">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/authorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textStyle="bold"/>
+
+        <com.ooyala.android.OoyalaPlayerLayout
+            android:id="@+id/ooyalaPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone">
+        </com.ooyala.android.OoyalaPlayerLayout>
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></WebView>
+
+        <TextView
+            android:id="@+id/tagsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
