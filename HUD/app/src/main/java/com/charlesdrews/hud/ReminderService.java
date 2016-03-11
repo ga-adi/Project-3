@@ -27,7 +27,7 @@ public class ReminderService extends IntentService {
                 this, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_notifications_black_18dp)
+                .setSmallIcon(R.drawable.ic_notifications_white_18dp)
                 .setContentTitle("Reminder")
                 .setContentText(intent.getStringExtra(DatabaseHelper.REMINDERS_COL_TEXT))
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE)

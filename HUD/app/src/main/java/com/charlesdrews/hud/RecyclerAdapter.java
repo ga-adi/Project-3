@@ -1,25 +1,27 @@
 package com.charlesdrews.hud;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.MtaStatusCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
-import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
-import com.charlesdrews.hud.CardsData.RemindersRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -43,6 +45,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public LoginButton mFacebookLoginButton;
     public static CallbackManager mCallbackManager;
     TextView mLoginText;
+    private int lastPosition = -1;
+    private Context context;
+    public CardData container;
     public static boolean mIsLoggedInToFacebook;
     public ShareButton mShareButton;
 
@@ -69,7 +74,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
-                mLoginText = (TextView)view.findViewById(R.id.status_update);
                 facebookLogin(view);
                 mShareButton = (ShareButton)view.findViewById(R.id.shareButton);
                 return new FacebookCard(view, parent.getContext(), type);
@@ -123,8 +127,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 FacebookCard facebookCard = (FacebookCard) holder;
                 FacebookCardData facebookData = (FacebookCardData) data;
 
-                facebookCard.mAuthor.setText(facebookData.getAuthor());
-                facebookCard.mStatusUpdate.setText(facebookData.getStatusUpdate());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                facebookCard.mRecyclerView.setLayoutManager(layoutManager);
+
+                facebookCard.mRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext));
+
+                FacebookRecyclerAdapter adapter = new FacebookRecyclerAdapter(facebookData.getFacebookItems());
+                facebookCard.mRecyclerView.setAdapter(adapter);
                 break;
             }
             case News: {
@@ -177,6 +187,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             default:
                 break;
         }
+        if (isPreLollipopDevice()) {
+            holder.mCardView.setPreventCornerOverlap(false);
+        }
     }
 
     @Override
@@ -187,6 +200,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public class CardViewHolder extends RecyclerView.ViewHolder {
         Context mContext;
         CardType mCardType;
+        CardView mCardView;
 
         public CardViewHolder(View itemView, Context context, CardType cardType) {
             super(itemView);
@@ -206,16 +220,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             super(itemView, context, cardType);
             mHighTemp = (TextView) itemView.findViewById(R.id.high_temp);
             mLowTemp = (TextView) itemView.findViewById(R.id.low_temp);
+            mCardView = (CardView) itemView.findViewById(R.id.weatherCard);
         }
     }
 
     public class FacebookCard extends CardViewHolder {
-        TextView mAuthor, mStatusUpdate;
+        RecyclerView mRecyclerView;
 
         public FacebookCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
-            mAuthor = (TextView) itemView.findViewById(R.id.author);
-            mStatusUpdate = (TextView) itemView.findViewById(R.id.status_update);
+            mRecyclerView = (RecyclerView) itemView.findViewById(R.id.facebookRecyclerView);
+            mCardView = (CardView) itemView.findViewById(R.id.facebookCard);
         }
     }
 
@@ -225,6 +240,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         public NewsCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
             mNewsRecyclerView = (RecyclerView) itemView.findViewById(R.id.newsRecyclerView);
+            mCardView = (CardView) itemView.findViewById(R.id.newsCard);
         }
     }
 
@@ -236,6 +252,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             super(itemView, context, cardType);
             mRemindersRecyclerView = (RecyclerView) itemView.findViewById(R.id.remindersRecyclerView);
             mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
+            mCardView = (CardView) itemView.findViewById(R.id.remindersCard);
         }
     }
 
@@ -245,6 +262,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         public MtaStatusCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
             mWebView = (WebView) itemView.findViewById(R.id.mtaWebView);
+            mCardView = (CardView) itemView.findViewById(R.id.mtaStatusCard);
         }
     }
 
@@ -268,7 +286,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 mIsLoggedInToFacebook = false;
             }
         });
-
     }
 
+    private boolean isPreLollipopDevice() {
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
+    }
 }

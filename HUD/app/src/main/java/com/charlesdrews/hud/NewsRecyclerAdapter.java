@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.CardsData;
+package com.charlesdrews.hud;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.charlesdrews.hud.R;
+import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

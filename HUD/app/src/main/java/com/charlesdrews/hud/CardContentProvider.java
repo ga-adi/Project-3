@@ -141,17 +141,17 @@ public class CardContentProvider extends ContentProvider {
 
         switch (uriType) {
             case FACEBOOK:
-                Log.d(TAG, "insert: facebook");
-                //TODO - need a db helper method for deleting facebook data
+                Log.d(TAG, "delete: facebook");
+                rowsAffected = mDbHelper.deleteAllFacebook();
                 break;
 
             case NEWS:
-                Log.d(TAG, "insert: news");
+                Log.d(TAG, "delete: news");
                 rowsAffected = mDbHelper.deleteAllNews();
                 break;
 
             case WEATHER:
-                Log.d(TAG, "insert: weather");
+                Log.d(TAG, "delete: weather");
                 //TODO - need a db helper method for deleting weather data
                 break;
 

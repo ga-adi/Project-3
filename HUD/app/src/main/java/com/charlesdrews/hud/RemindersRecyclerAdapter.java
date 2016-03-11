@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.CardsData;
+package com.charlesdrews.hud;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,8 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.charlesdrews.hud.CardContentProvider;
-import com.charlesdrews.hud.R;
+import com.charlesdrews.hud.CardsData.Reminder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,18 +46,12 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecy
         if (dateTimeInMillis > 0) {
             Date dateTime = new Date(dateTimeInMillis);
             SimpleDateFormat formatter = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
-            holder.mDateTime.setText(formatter.format(dateTime));
+            String alarmMessage = "Alarm date/time: " + formatter.format(dateTime);
+            holder.mDateTime.setText(alarmMessage);
             holder.mDateTime.setVisibility(View.VISIBLE);
         } else {
             holder.mDateTime.setVisibility(View.GONE);
         }
-
-        holder.mContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(holder.mContext, "Clicked item " + item.getId(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

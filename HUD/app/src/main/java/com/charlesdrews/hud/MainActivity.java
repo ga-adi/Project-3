@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +24,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.MtaStatusCardData;
@@ -42,7 +44,7 @@ import com.charlesdrews.hud.CardsData.WeatherCardData;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements ReminderCreator.OnReminderSubmittedListener {
+        implements ReminderCreator.OnReminderSubmittedListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
@@ -52,13 +54,13 @@ public class MainActivity extends AppCompatActivity
     public static final int REMINDERS_POSITION = 3;
     public static final int MTA_STATUS_POSITION = 4;
 
-    public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
-    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
+    public static final long SYNC_INTERVAL = 60; // seconds
 
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
-    private RecyclerView mRecyclerView;
+    private MyRecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,14 +83,51 @@ public class MainActivity extends AppCompatActivity
                 new CardContentObserver(new Handler())
         );
 
-        // set up recycler view - calls database for most recent data, then requests manual sync
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        new InitializeRecyclerViewAsyncTask().execute();
+        // set up array of placeholder card data for use in adapter
+        mCardsData = new ArrayList<>(ITEM_COUNT);
+        mCardsData.add(new CardData(CardType.Weather));                     // index 0
+        mCardsData.add(new CardData(CardType.News));                        // index 1
+        mCardsData.add(new CardData(CardType.Facebook));                    // index 2
+        mCardsData.add(new RemindersCardData(CardType.Reminders, null));    // index 3
+        mCardsData.add(new MtaStatusCardData(CardType.MtaStatus));          // index 4
+
+        // set up recycler view
+        mRecyclerView = (MyRecyclerView) findViewById(R.id.recyclerView);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
+        mRecyclerView.setLayoutManager(manager);
+
+        mAdapter = new RecyclerAdapter(mCardsData);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        // initialize data for recycler view
+        new InitRecyclerDataAsyncTask().execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // set up syncing
+        ContentResolver.setIsSyncable(mAccount, CardContentProvider.AUTHORITY, 1);
         ContentResolver.setMasterSyncAutomatically(true);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
+
+        // if activity started from reminder notification, scroll to reminders
+        if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
+            mRecyclerView.getLayoutManager().scrollToPosition(REMINDERS_POSITION);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ContentResolver.cancelSync(mAccount, CardContentProvider.AUTHORITY);
+        ContentResolver.setIsSyncable(mAccount, CardContentProvider.AUTHORITY, 0);
     }
 
     @Override
@@ -153,9 +192,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onRefresh() {
+        Log.d(TAG, "onRefresh: handle swipe refresh gesture");
+
+        // request manual sync
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+
+        //TODO - this causes the refresh animation to start - it's stopped in PullFromDbAsync onPostExecute
+        // but if device is offline, that never runs, so animation never stops
+    }
+
+    @Override
     public void onReminderSubmitted(Reminder reminder) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
+
         Long alarmTime = reminder.getDateTimeInMillis();
         if (alarmTime > 0) {
             values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
@@ -297,6 +351,7 @@ public class MainActivity extends AppCompatActivity
                 default:
                     break;
             }
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -304,11 +359,7 @@ public class MainActivity extends AppCompatActivity
         if (cursor != null && cursor.moveToFirst()) {
             switch (cardType) {
                 case Facebook: {
-                    FacebookCardData facebookCardData = new FacebookCardData(
-                            CardType.Facebook,
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
-                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
-                    );
+                    FacebookCardData facebookCardData = new FacebookCardData(CardType.Facebook, cursor);
                     mCardsData.set(FACEBOOK_POSITION, facebookCardData);
                     break;
                 }
@@ -338,21 +389,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            // set up array of placeholder card data for use in adapter
-            mCardsData = new ArrayList<>(ITEM_COUNT);
-            mCardsData.add(new CardData(CardType.Weather));                     // index 0
-            mCardsData.add(new CardData(CardType.News));                        // index 1
-            mCardsData.add(new CardData(CardType.Facebook));                    // index 2
-            mCardsData.add(new RemindersCardData(CardType.Reminders, null));    // index 3
-            mCardsData.add(new MtaStatusCardData(CardType.MtaStatus));          // index 4
-
-        }
+    public class InitRecyclerDataAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -384,24 +421,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            // finish setting up recycler view & adapter
-            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-            RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
-            mRecyclerView.setLayoutManager(manager);
-            mAdapter = new RecyclerAdapter(mCardsData);
-            mRecyclerView.setAdapter(mAdapter);
-
-            // if activity started from reminder notification, scroll to reminders
-            if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
-                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, REMINDERS_POSITION);
-            }
-
-            // request manual sync
-            Bundle settingsBundle = new Bundle();
-            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+            mRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 
