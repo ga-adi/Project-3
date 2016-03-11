@@ -505,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     final String venueAddress = streetAddress + ", " + cityAddress + ", " + stateAddress + ", " + zipcodeAddress;
                     final String venueUrl = response.body().getResponse().getVenues().get(i).getUrl();
 
-                    Call<FoursquarePhotos> photos = foursquareRequest.getPhotos(venueId, FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER);
+                    Call<FoursquarePhotos> photos = foursquareRequest.getPhotoes(venueId, FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET, FOURSQUARE_VERSION_NUMBER);
                     photos.enqueue(new Callback<FoursquarePhotos>() {
                         @Override
                         public void onResponse(Call<FoursquarePhotos> call, Response<FoursquarePhotos> response) {
@@ -682,7 +682,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Call<RedditResult> getRedditFeed(@Path("subreddit") String subreddit);
     }
 
+    public interface FoursquareRequest {
+        @GET("v2/venues/search")
+        public Call<FoursquareVenues> getVenues(@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
 
+        @GET("v2/venues/{venueId}/photos")
+        public Call<FoursquarePhotos> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
+    }
 
     public interface MeetupRequest {
         @GET("2/open_events?sign=true")
