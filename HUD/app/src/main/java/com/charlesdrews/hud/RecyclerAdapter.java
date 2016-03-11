@@ -114,6 +114,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
                 newsCard.mNewsRecyclerView.setLayoutManager(layoutManager);
 
+                newsCard.mNewsRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext, 15));
+
                 NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
                 newsCard.mNewsRecyclerView.setAdapter(adapter);
                 break;

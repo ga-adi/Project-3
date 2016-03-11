@@ -40,10 +40,13 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecy
         holder.mReminderText.setText(item.getReminderText());
 
         Long dateTimeInMillis = item.getDateTimeInMillis();
-        if (dateTimeInMillis != -1L) {
+        if (dateTimeInMillis > 0) {
             Date dateTime = new Date(dateTimeInMillis);
             SimpleDateFormat formatter = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
             holder.mDateTime.setText(formatter.format(dateTime));
+            holder.mDateTime.setVisibility(View.VISIBLE);
+        } else {
+            holder.mDateTime.setVisibility(View.GONE);
         }
 
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
