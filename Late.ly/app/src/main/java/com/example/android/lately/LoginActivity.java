@@ -160,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
         //Facebook login
         Profile profile = Profile.getCurrentProfile();
         nextActivity(profile);
+
     }
 
     @Override
