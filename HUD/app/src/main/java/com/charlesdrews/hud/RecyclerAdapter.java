@@ -1,31 +1,34 @@
 package com.charlesdrews.hud;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
+import com.charlesdrews.hud.CardsData.MtaStatusCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.charlesdrews.hud.CardsData.RemindersRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,8 +41,14 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
+    public LoginButton mFacebookLoginButton;
+    public static CallbackManager mCallbackManager;
+    TextView mLoginText;
+    private int lastPosition = -1;
+    private Context context;
+    public CardData container;
 
-    //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
+
     public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
     }
@@ -55,7 +64,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         CardType type = mCardTypes.get(viewType);
 
-        //TODO - inflate the correct layout for each possible CardType value
         switch (type) {
             case Weather: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_card, parent, false);
@@ -63,6 +71,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                mLoginText = (TextView)view.findViewById(R.id.status_update);
+                facebookLogin(view);
                 return new FacebookCard(view, parent.getContext(), type);
             }
             case News: {
@@ -72,6 +82,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             case Reminders: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminders_card, parent, false);
                 return new RemindersCard(view, parent.getContext(), type);
+            }
+            case MtaStatus: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mta_card, parent, false);
+                return new MtaStatusCard(view, parent.getContext(), type);
             }
             default:
                 return new CardViewHolder(view, parent.getContext(), null);
@@ -95,7 +109,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
         if (holder == null || data == null) { return; }
 
-        //TODO - bind data to views for each possible CardType value
         switch (holder.getCardType()) {
             case Weather: {
                 if ( !(data instanceof WeatherCardData) ) { return; }
@@ -123,6 +136,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
                 newsCard.mNewsRecyclerView.setLayoutManager(layoutManager);
 
+                newsCard.mNewsRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext));
+
                 NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
                 newsCard.mNewsRecyclerView.setAdapter(adapter);
                 break;
@@ -133,7 +149,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 RemindersCardData remindersCardData = (RemindersCardData) data;
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 remindersCard.mRemindersRecyclerView.setLayoutManager(layoutManager);
+
+                remindersCard.mRemindersRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext));
 
                 RemindersRecyclerAdapter adapter = new RemindersRecyclerAdapter(remindersCardData.getReminders());
                 remindersCard.mRemindersRecyclerView.setAdapter(adapter);
@@ -141,9 +161,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 remindersCard.mAddReminderButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        launchAddReminderDialog(holder.mContext);
+                        new ReminderCreator(holder.mContext).launchDialog();
                     }
                 });
+                break;
+            }
+            case MtaStatus: {
+                if ( !(data instanceof MtaStatusCardData) ) { return; }
+                MtaStatusCard mtaStatusCard = (MtaStatusCard) holder;
+                MtaStatusCardData mtaStatusCardData = (MtaStatusCardData) data;
+
+                mtaStatusCard.mWebView.getSettings().setJavaScriptEnabled(true);
+                mtaStatusCard.mWebView.loadUrl(mtaStatusCardData.getWidgetUrl());
                 break;
             }
             default:
@@ -171,7 +200,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-    //TODO - extend CardViewHolder for each possible CardType value
     public class WeatherCard extends CardViewHolder {
         TextView mHighTemp, mLowTemp;
 
@@ -194,7 +222,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
     public class NewsCard extends CardViewHolder {
         RecyclerView mNewsRecyclerView;
-        //TODO - add a text view saying when it was last updated???
 
         public NewsCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
@@ -205,7 +232,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public class RemindersCard extends CardViewHolder {
         RecyclerView mRemindersRecyclerView;
         FloatingActionButton mAddReminderButton;
-        //TODO - add a text view saying when it was last updated???
 
         public RemindersCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
@@ -214,25 +240,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
         }
     }
 
-    public void launchAddReminderDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Add Reminder");
-        EditText input = new EditText(context);
-        input.setHint("Enter reminder content");
-        builder.setView(input);
-        builder.setNegativeButton("Cancel", null);
-        builder.setNeutralButton("Add Alarm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "Add alarm", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "yup", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
+    public class MtaStatusCard extends CardViewHolder {
+        WebView mWebView;
+
+        public MtaStatusCard(View itemView, Context context, CardType cardType) {
+            super(itemView, context, cardType);
+            mWebView = (WebView) itemView.findViewById(R.id.mtaWebView);
+        }
     }
+
+    public void facebookLogin(View view){
+        mFacebookLoginButton = (LoginButton)view.findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions("user_likes");
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+//                        Toast.makeText(MainActivity.class, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                       mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
+
+            }
+
+            @Override
+            public void onCancel() {
+//                        Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+//                        Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
