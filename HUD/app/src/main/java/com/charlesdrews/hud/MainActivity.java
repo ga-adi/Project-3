@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -20,11 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.Reminder;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -41,7 +42,8 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ReminderCreator.OnReminderSubmittedListener {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
@@ -132,6 +134,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onReminderSubmitted(Reminder reminder) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
+        Long alarmTime = reminder.getDateTimeInMillis();
+        if (alarmTime != -1L) {
+            values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
+        }
+        getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+    }
+
     public class CardContentObserver extends ContentObserver {
         private final String TAG = CardContentObserver.class.getCanonicalName();
 
@@ -157,6 +170,16 @@ public class MainActivity extends AppCompatActivity {
                 case CardContentProvider.WEATHER: {
                     Log.d(TAG, "onChange: weather");
                     new PullFromDbAsyncTask().execute(CardType.Weather);
+                    break;
+                }
+                case CardContentProvider.REMINDERS: {
+                    Log.d(TAG, "onChange: reminders");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
+                    break;
+                }
+                case CardContentProvider.REMINDERS_ID: {
+                    Log.d(TAG, "onChange: reminders/id");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
                     break;
                 }
                 default:

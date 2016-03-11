@@ -122,11 +122,15 @@ public class CardContentProvider extends ContentProvider {
                 throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
         }
 
-        //TODO - check if id == -1 which indicates db error
+        if (id == -1L) {
+            Log.d(TAG, "insert: error inserting to db");
+        }
 
         Log.d(TAG, "insert: notify content resolver");
 
-        //getContext().getContentResolver().notifyChange(uri, null); // notify from sync adapter instead
+        if (uriType == REMINDERS) { // for other card types notify from the sync adapter instead
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return Uri.withAppendedPath(uri, String.valueOf(id));
     }
 
