@@ -18,8 +18,8 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-        mDetailsTest = (TextView) getActivity().findViewById(R.id.detailsFragmentTextView);
-        mDetailsTest.setText("Java works");
+        mDetailsTest = (TextView) view.findViewById(R.id.detailsFragmentTextView);
+        mDetailsTest.setText("Java works\n\n\n\n\n\n bahaaahahahha");
         return view;
     }
 }

@@ -10,8 +10,8 @@ public class SmallArticleCard extends ParentCard {
     String mTime;
 
 
-    public SmallArticleCard(String mSource, String mTitle, String mTime, int mCardType) {
-        super(mCardType);
+    public SmallArticleCard(String mSource, String mTitle, String mTime, int cardType, int tabType, int id) {
+        super(cardType, tabType, id);
         this.mSource = mSource;
         this.mTitle = mTitle;
         this.mTime = mTime;
