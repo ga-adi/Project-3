@@ -27,9 +27,6 @@ import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.Reminder;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.CardsData.CardData;
@@ -37,8 +34,6 @@ import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
@@ -58,7 +53,6 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
-    private TextView mLoginText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +66,7 @@ public class MainActivity extends AppCompatActivity
         ImageView backgroundImage = (ImageView)findViewById(R.id.imageframe);
         backgroundImage.setImageResource(R.drawable.rothkoyello);
 
-        //TODO facebook stuff
-        mLoginText = (TextView)findViewById(R.id.status_update);
-        //TODO - can this initialization be done in an async task?
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        new FacebookInitAsync().execute();
 
         // register content observers
         getContentResolver().registerContentObserver(
@@ -245,7 +236,6 @@ public class MainActivity extends AppCompatActivity
             return mCardType;
         }
 
-
         @Override
         protected void onPostExecute(CardType cardType) {
             super.onPostExecute(cardType);
@@ -368,6 +358,15 @@ public class MainActivity extends AppCompatActivity
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
             ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+        }
+    }
+
+    public class FacebookInitAsync extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            return null;
         }
     }
 }
