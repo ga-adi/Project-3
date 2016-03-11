@@ -1,4 +1,4 @@
-package com.charlesdrews.hud.CardsData;
+package com.charlesdrews.hud;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,8 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.charlesdrews.hud.CardContentProvider;
-import com.charlesdrews.hud.R;
+import com.charlesdrews.hud.CardsData.Reminder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
