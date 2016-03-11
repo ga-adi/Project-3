@@ -8,5 +8,6 @@ public enum CardType {
     Weather,
     News,
     Facebook,
-    Reminders
+    Reminders,
+    MtaStatus
 }

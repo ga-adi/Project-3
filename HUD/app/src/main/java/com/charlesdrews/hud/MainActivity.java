@@ -21,10 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.MtaStatusCardData;
 import com.charlesdrews.hud.CardsData.Reminder;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.facebook.FacebookSdk;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
     public static final int REMINDERS_POSITION = 3;
+    public static final int MTA_STATUS_POSITION = 4;
 
     public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
     public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         new InitializeRecyclerViewAsyncTask().execute();
 
         // set up syncing
+        ContentResolver.setMasterSyncAutomatically(true);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
@@ -110,6 +114,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
@@ -124,6 +132,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        WebView webView = (WebView) findViewById(R.id.mtaWebView);
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void refreshWebView() {
+        WebView webView = (WebView) findViewById(R.id.mtaWebView);
+        if (webView != null) {
+            webView.loadUrl(((MtaStatusCardData) mCardsData.get(MTA_STATUS_POSITION)).getWidgetUrl());
+        }
+    }
+
+    @Override
     public void onReminderSubmitted(Reminder reminder) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
@@ -132,6 +157,23 @@ public class MainActivity extends AppCompatActivity
             values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
         }
         getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+    }
+
+    public static Account createSyncAccount(Context context) {
+        Account newAccount = new Account(
+                context.getString(R.string.account),
+                context.getString(R.string.account_type)
+        );
+
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            Log.d(TAG, "createSyncAccount: successful");
+        } else {
+            Log.d(TAG, "createSyncAccount: failed");
+        }
+        return newAccount;
     }
 
     public class CardContentObserver extends ContentObserver {
@@ -174,24 +216,8 @@ public class MainActivity extends AppCompatActivity
                 default:
                     break;
             }
+            refreshWebView();
         }
-    }
-
-    public static Account createSyncAccount(Context context) {
-        Account newAccount = new Account(
-                context.getString(R.string.account),
-                context.getString(R.string.account_type)
-        );
-
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            Log.d(TAG, "createSyncAccount: successful");
-        } else {
-            Log.d(TAG, "createSyncAccount: failed");
-        }
-        return newAccount;
     }
 
     private class PullFromDbAsyncTask extends AsyncTask<CardType, Void, CardType> {
@@ -297,10 +323,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
     public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -309,10 +331,12 @@ public class MainActivity extends AppCompatActivity
 
             // set up array of placeholder card data for use in adapter
             mCardsData = new ArrayList<>(ITEM_COUNT);
-            mCardsData.add(new CardData(CardType.Weather));     // index 0
-            mCardsData.add(new CardData(CardType.News));        // index 1
-            mCardsData.add(new CardData(CardType.Facebook));    // index 2
-            mCardsData.add(new RemindersCardData(CardType.Reminders, null)); // index 3
+            mCardsData.add(new CardData(CardType.Weather));                     // index 0
+            mCardsData.add(new CardData(CardType.News));                        // index 1
+            mCardsData.add(new CardData(CardType.Facebook));                    // index 2
+            mCardsData.add(new RemindersCardData(CardType.Reminders, null));    // index 3
+            mCardsData.add(new MtaStatusCardData(CardType.MtaStatus));          // index 4
+
         }
 
         @Override
