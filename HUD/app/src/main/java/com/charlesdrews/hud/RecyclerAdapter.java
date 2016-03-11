@@ -4,11 +4,15 @@ import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
+import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -39,6 +43,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     public LoginButton mFacebookLoginButton;
     public static CallbackManager mCallbackManager;
     TextView mLoginText;
+    private int lastPosition = -1;
+    private Context context;
+    public CardData container;
 
 
     public RecyclerAdapter(List<CardData> cardsData) {

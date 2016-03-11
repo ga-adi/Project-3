@@ -14,11 +14,13 @@
         android:id="@+id/imageviewCard1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rothkocard2" />
+        android:padding="4dp"
+        android:background="@drawable/rothkowhite" />
 
     <WebView
         android:id="@+id/mtaWebView"
         android:layout_gravity="center_horizontal"
+        android:padding="4dp"
         android:layout_width="230dp"
         android:layout_height="430dp" />
 

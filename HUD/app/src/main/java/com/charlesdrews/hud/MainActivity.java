@@ -24,6 +24,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
-    private RecyclerView mRecyclerView;
+    private MyRecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +91,8 @@ public class MainActivity extends AppCompatActivity
         mCardsData.add(new RemindersCardData(CardType.Reminders, null));    // index 3
         mCardsData.add(new MtaStatusCardData(CardType.MtaStatus));          // index 4
 
-        // set up recycler view & adapter
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        // set up recycler view
+        mRecyclerView = (MyRecyclerView) findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(manager);
@@ -102,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         // initialize data for recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         new InitRecyclerDataAsyncTask().execute();
     }
 
