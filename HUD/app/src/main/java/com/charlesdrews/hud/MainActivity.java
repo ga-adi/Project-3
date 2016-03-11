@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -20,11 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.Reminder;
+import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -40,13 +42,15 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ReminderCreator.OnReminderSubmittedListener {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
     public static final int WEATHER_POSITION = 0;
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
+    public static final int REMINDERS_POSITION = 3;
 
     public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
     public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
@@ -128,6 +132,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onReminderSubmitted(Reminder reminder) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
+        Long alarmTime = reminder.getDateTimeInMillis();
+        if (alarmTime != -1L) {
+            values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
+        }
+        getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+    }
+
     public class CardContentObserver extends ContentObserver {
         private final String TAG = CardContentObserver.class.getCanonicalName();
 
@@ -153,6 +168,16 @@ public class MainActivity extends AppCompatActivity {
                 case CardContentProvider.WEATHER: {
                     Log.d(TAG, "onChange: weather");
                     new PullFromDbAsyncTask().execute(CardType.Weather);
+                    break;
+                }
+                case CardContentProvider.REMINDERS: {
+                    Log.d(TAG, "onChange: reminders");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
+                    break;
+                }
+                case CardContentProvider.REMINDERS_ID: {
+                    Log.d(TAG, "onChange: reminders/id");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
                     break;
                 }
                 default:
@@ -207,6 +232,11 @@ public class MainActivity extends AppCompatActivity {
                     cursor = getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null);
                     break;
                 }
+                case Reminders: {
+                    Log.d(TAG, "doInBackground: query reminders");
+                    cursor = getContentResolver().query(CardContentProvider.REMINDERS_URI, null, null, null, null);
+                    break;
+                }
                 default:
                     cursor = null;
                     break;
@@ -229,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Weather:
                     mAdapter.notifyItemChanged(WEATHER_POSITION);
+                    break;
+                case Reminders:
+                    mAdapter.notifyItemChanged(REMINDERS_POSITION);
                     break;
                 default:
                     break;
@@ -262,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
                     mCardsData.set(WEATHER_POSITION, weatherCardData);
                     break;
                 }
+                case Reminders: {
+                    RemindersCardData remCardData = new RemindersCardData(CardType.Reminders, cursor);
+                    mCardsData.set(REMINDERS_POSITION, remCardData);
+                    break;
+                }
                 default:
                     return;
             }
@@ -269,34 +307,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void facebookLogin(){
-
-        mFacebookLoginButton = (LoginButton)findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions("user_likes");
-        mCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
-
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO - this crashes if you close the login window without logging in
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -310,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
             mCardsData.add(new CardData(CardType.Weather));     // index 0
             mCardsData.add(new CardData(CardType.News));        // index 1
             mCardsData.add(new CardData(CardType.Facebook));    // index 2
+            mCardsData.add(new RemindersCardData(CardType.Reminders, null)); // index 3
         }
 
         @Override
@@ -329,6 +342,11 @@ public class MainActivity extends AppCompatActivity {
             updateCardDataArrayFromCursor(
                     CardType.Weather,
                     getContentResolver().query(CardContentProvider.WEATHER_URI, null, null, null, null)
+            );
+
+            updateCardDataArrayFromCursor(
+                    CardType.Reminders,
+                    getContentResolver().query(CardContentProvider.REMINDERS_URI, null, null, null, null)
             );
 
             return null;
@@ -351,6 +369,5 @@ public class MainActivity extends AppCompatActivity {
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
             ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
         }
-        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

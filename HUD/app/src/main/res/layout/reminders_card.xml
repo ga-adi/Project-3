@@ -12,33 +12,36 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageviewCardNews"
+        android:id="@+id/imageviewCard3"
         android:background="@drawable/rothkocard1"/>
 
     <RelativeLayout
         android:padding="5dp"
-        android:id="@+id/cardLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/newsCardTitle"
-            android:text="@string/news_card_title"
+            android:id="@+id/remindersCardTitle"
+            android:text="@string/reminders_card_title"
             android:textStyle="bold"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_centerHorizontal="true"
-            android:textColor="#f9f1c8"
-            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/newsRecyclerView"
-            android:layout_below="@id/newsCardTitle"/>
+            android:id="@+id/remindersRecyclerView"
+            android:layout_below="@id/remindersCardTitle"/>
 
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addReminderButton"
+        app:fabSize="mini"
+        android:elevation="4dp"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_add_white_18dp"
+        android:layout_gravity="bottom|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </android.support.v7.widget.CardView>

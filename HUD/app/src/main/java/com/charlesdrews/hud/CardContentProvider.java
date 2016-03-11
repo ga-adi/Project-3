@@ -19,23 +19,29 @@ public class CardContentProvider extends ContentProvider {
     public static final String FACEBOOK_PATH = DatabaseHelper.FACEBOOK_TABLE;
     public static final String NEWS_PATH = DatabaseHelper.NEWS_TABLE;
     public static final String WEATHER_PATH = DatabaseHelper.WEATHER_TABLE;
+    public static final String REMINDERS_PATH = DatabaseHelper.REMINDERS_TABLE;
 
     public static final String BASE_URI_STRING = "content://" + AUTHORITY;
     public static final Uri FACEBOOK_URI = Uri.parse(BASE_URI_STRING + "/" + FACEBOOK_PATH);
     public static final Uri NEWS_URI = Uri.parse(BASE_URI_STRING + "/" + NEWS_PATH);
     public static final Uri WEATHER_URI = Uri.parse(BASE_URI_STRING + "/" + WEATHER_PATH);
+    public static final Uri REMINDERS_URI = Uri.parse(BASE_URI_STRING + "/" + REMINDERS_PATH);
 
     public static final String ERR_MSG_UNKNOWN_URI = "Unknown URI: ";
 
     public static final int FACEBOOK = 1;
     public static final int NEWS = 2;
     public static final int WEATHER = 3;
+    public static final int REMINDERS = 4;
+    public static final int REMINDERS_ID = 5;
 
     public static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
         sUriMatcher.addURI(AUTHORITY, FACEBOOK_PATH, FACEBOOK);
         sUriMatcher.addURI(AUTHORITY, NEWS_PATH, NEWS);
         sUriMatcher.addURI(AUTHORITY, WEATHER_PATH, WEATHER);
+        sUriMatcher.addURI(AUTHORITY, REMINDERS_PATH, REMINDERS);
+        sUriMatcher.addURI(AUTHORITY, REMINDERS_PATH + "/#", REMINDERS_ID);
     }
 
     private DatabaseHelper mDbHelper;
@@ -72,7 +78,12 @@ public class CardContentProvider extends ContentProvider {
                 Log.d(TAG, "query: weather");
                 cursor = mDbHelper.getWeather();
                 break;
-            
+
+            case REMINDERS:
+                Log.d(TAG, "query: reminders");
+                cursor = mDbHelper.getReminders();
+                break;
+
             default:
                 throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
         }
@@ -102,15 +113,24 @@ public class CardContentProvider extends ContentProvider {
                 id = mDbHelper.addWeather(values);
                 break;
 
+            case REMINDERS:
+                Log.d(TAG, "insert: reminders");
+                id = mDbHelper.addReminder(values);
+                break;
+
             default:
                 throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
         }
 
-        //TODO - check if id == -1 which indicates db error
+        if (id == -1L) {
+            Log.d(TAG, "insert: error inserting to db");
+        }
 
         Log.d(TAG, "insert: notify content resolver");
 
-        //getContext().getContentResolver().notifyChange(uri, null); // notify from sync adapter instead
+        if (uriType == REMINDERS) { // for other card types notify from the sync adapter instead
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return Uri.withAppendedPath(uri, String.valueOf(id));
     }
 
@@ -135,6 +155,16 @@ public class CardContentProvider extends ContentProvider {
                 //TODO - need a db helper method for deleting weather data
                 break;
 
+            case REMINDERS:
+                Log.d(TAG, "delete: all reminders");
+                rowsAffected = mDbHelper.deleteAllReminders();
+                break;
+
+            case REMINDERS_ID:
+                Log.d(TAG, "delete: reminder by id");
+                rowsAffected = mDbHelper.deleteReminderById(Integer.parseInt(uri.getLastPathSegment()));
+                break;
+
             default:
                 throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
         }
@@ -147,12 +177,22 @@ public class CardContentProvider extends ContentProvider {
         return rowsAffected;
     }
 
-    public int update(
-            Uri uri,
-            ContentValues values,
-            String selection,
-            String[] selectionArgs) {
-        //TODO
-        return 0;
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        int uriType = sUriMatcher.match(uri);
+        int rowsAffected = 0;
+
+        switch (uriType) {
+            case REMINDERS_ID:
+                break;
+
+            default:
+                throw new IllegalArgumentException(ERR_MSG_UNKNOWN_URI + uri);
+        }
+
+        Log.d(TAG, "update: notify content resolver");
+        if (rowsAffected > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsAffected;
     }
 }
