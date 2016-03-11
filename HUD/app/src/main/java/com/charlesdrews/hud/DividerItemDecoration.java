@@ -16,11 +16,9 @@ import android.view.View;
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
-    private final int mVerticalSpaceHeight;
     private Drawable mDivider;
 
-    public DividerItemDecoration(Context context, int verticalSpaceHeight) {
-        mVerticalSpaceHeight = verticalSpaceHeight;
+    public DividerItemDecoration(Context context) {
         final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
         mDivider = styledAttributes.getDrawable(0);
         styledAttributes.recycle();
@@ -43,10 +41,5 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
         }
-    }
-
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.bottom = mVerticalSpaceHeight;
     }
 }

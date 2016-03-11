@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.charlesdrews.hud.CardsData.CardData;
 import com.charlesdrews.hud.CardsData.CardType;
@@ -18,6 +19,11 @@ import com.charlesdrews.hud.CardsData.NewsRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
 import com.charlesdrews.hud.CardsData.RemindersRecyclerAdapter;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +36,11 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardViewHolder> {
     private final ArrayList<CardType> mCardTypes = new ArrayList<>(Arrays.asList(CardType.values()));
     private List<CardData> mCardsData;
+    public LoginButton mFacebookLoginButton;
+    public static CallbackManager mCallbackManager;
+    TextView mLoginText;
 
-    //TODO - pass parent.getContext() to ViewHolder constructor, rather than taking context here
+
     public RecyclerAdapter(List<CardData> cardsData) {
         mCardsData = cardsData;
     }
@@ -55,6 +64,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                mLoginText = (TextView)view.findViewById(R.id.status_update);
+                facebookLogin(view);
                 return new FacebookCard(view, parent.getContext(), type);
             }
             case News: {
@@ -116,7 +127,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 newsCard.mNewsRecyclerView.setLayoutManager(layoutManager);
 
                 newsCard.mNewsRecyclerView.addItemDecoration(
-                        new DividerItemDecoration(holder.mContext, 15));
+                        new DividerItemDecoration(holder.mContext));
 
                 NewsRecyclerAdapter adapter = new NewsRecyclerAdapter(newsCardData.getNewsItems());
                 newsCard.mNewsRecyclerView.setAdapter(adapter);
@@ -132,7 +143,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 remindersCard.mRemindersRecyclerView.setLayoutManager(layoutManager);
 
                 remindersCard.mRemindersRecyclerView.addItemDecoration(
-                        new DividerItemDecoration(holder.mContext, 15));
+                        new DividerItemDecoration(holder.mContext));
 
                 RemindersRecyclerAdapter adapter = new RemindersRecyclerAdapter(remindersCardData.getReminders());
                 remindersCard.mRemindersRecyclerView.setAdapter(adapter);
@@ -212,4 +223,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             mAddReminderButton = (FloatingActionButton) itemView.findViewById(R.id.addReminderButton);
         }
     }
+
+    public void facebookLogin(View view){
+        mFacebookLoginButton = (LoginButton)view.findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions("user_likes");
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+//                        Toast.makeText(MainActivity.class, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                       mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
+
+            }
+
+            @Override
+            public void onCancel() {
+//                        Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+//                        Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
