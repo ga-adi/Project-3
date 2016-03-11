@@ -2,6 +2,8 @@ package com.charlesdrews.hud;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
+    private RecyclerView mRecyclerView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         );
 
         // set up recycler view - calls database for most recent data, then requests manual sync
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         new InitializeRecyclerViewAsyncTask().execute();
 
         // set up syncing
@@ -153,10 +157,21 @@ public class MainActivity extends AppCompatActivity
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
         Long alarmTime = reminder.getDateTimeInMillis();
-        if (alarmTime != -1L) {
+        if (alarmTime > 0) {
             values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
+            setNotificationAlarm(alarmTime, reminder.getReminderText());
         }
         getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+    }
+
+    public void setNotificationAlarm(Long alarmTimeInMillis, String message) {
+        Intent intent = new Intent(this, ReminderService.class);
+        intent.putExtra(DatabaseHelper.REMINDERS_COL_TEXT, message);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, alarmTimeInMillis, pendingIntent);
+        Toast.makeText(MainActivity.this, "Alarm set", Toast.LENGTH_SHORT).show();
     }
 
     public static Account createSyncAccount(Context context) {
@@ -371,11 +386,16 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(aVoid);
 
             // finish setting up recycler view & adapter
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
-            recyclerView.setLayoutManager(manager);
+            mRecyclerView.setLayoutManager(manager);
             mAdapter = new RecyclerAdapter(mCardsData);
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(mAdapter);
+
+            // if activity started from reminder notification, scroll to reminders
+            if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
+                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, REMINDERS_POSITION);
+            }
 
             // request manual sync
             Bundle settingsBundle = new Bundle();
