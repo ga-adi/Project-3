@@ -18,10 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-<<<<<<< HEAD
-=======
 import android.view.Menu;
->>>>>>> 3478d4ef7ed5401154dbfb7016aa3c893a9d1c19
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,27 +33,23 @@ import com.example.android.lately.Forecast.Weather;
 import com.example.android.lately.Foursquare.FoursquarePhotos.FoursquarePhotos;
 import com.example.android.lately.Foursquare.FoursquareVenues;
 import com.example.android.lately.Fragments.DetailsFragment;
-<<<<<<< HEAD
+import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
+import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
+import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-
-import org.json.JSONException;
-=======
-import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
-import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
-import com.example.android.lately.Reddit.RedditArticle.RedditResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
->>>>>>> 3478d4ef7ed5401154dbfb7016aa3c893a9d1c19
+
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -71,7 +64,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.HEAD;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -251,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mPortrait = false;
         }
 
-<<<<<<< HEAD
         GraphRequest request= new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/feed",
@@ -283,7 +274,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //            transaction.replace(R.id.detailsFragmentContainer, fragment);
 //            transaction.commit();
 //        }
-=======
         if (mPortrait) {
         } else {
             Fragment fragment = new DetailsFragment();
@@ -402,7 +392,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             String[] urlArray = (String[]) redditUrlList.toArray();
             commentAsyncTask.execute(urlArray);
         }
->>>>>>> 3478d4ef7ed5401154dbfb7016aa3c893a9d1c19
     }
 
     public class CommentAsyncTask extends AsyncTask<String, Void, Void> {
