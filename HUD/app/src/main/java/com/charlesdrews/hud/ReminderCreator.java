@@ -17,7 +17,6 @@ import com.charlesdrews.hud.CardsData.Reminder;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**

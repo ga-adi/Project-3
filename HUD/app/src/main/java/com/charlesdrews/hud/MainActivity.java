@@ -157,6 +157,11 @@ public class MainActivity extends AppCompatActivity
             setNotificationAlarm(alarmTime, reminder.getReminderText());
         }
         getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+
+        RecyclerView remindersRecycler = (RecyclerView) findViewById(R.id.remindersRecyclerView);
+        if (remindersRecycler != null) {
+            remindersRecycler.getAdapter().notifyDataSetChanged();
+        }
     }
 
     public void setNotificationAlarm(Long alarmTimeInMillis, String message) {
@@ -387,11 +392,6 @@ public class MainActivity extends AppCompatActivity
             mAdapter = new RecyclerAdapter(mCardsData);
             mRecyclerView.setAdapter(mAdapter);
 
-            // if activity started from reminder notification, scroll to reminders
-            if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
-                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, REMINDERS_POSITION);
-            }
-
             // request manual sync
 //            Bundle settingsBundle = new Bundle();
 //            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -402,6 +402,12 @@ public class MainActivity extends AppCompatActivity
             ContentResolver.setMasterSyncAutomatically(true);
             ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
             ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
+
+            // if activity started from reminder notification, scroll to reminders
+            if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
+                //mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, REMINDERS_POSITION);
+                mRecyclerView.getLayoutManager().scrollToPosition(REMINDERS_POSITION);
+            }
         }
     }
 
