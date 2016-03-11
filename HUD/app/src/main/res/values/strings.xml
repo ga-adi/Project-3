@@ -10,4 +10,5 @@
     <string name="facebook_app_id">980688392019422</string>
 
     <string name="news_card_title">Latest headlines from the New York Times</string>
+    <string name="reminders_card_title">Reminders</string>
 </resources>

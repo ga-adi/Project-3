@@ -69,27 +69,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // TODO - make the Facebook API call, parse the response, and create
         // TODO   a new ContentValues object with values for each column in the database
 
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                //TODO {post-id}
-                "/{1370430319_10206094192418409}",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        JSONObject facebookObject = response.getJSONObject();
-                        Log.d("Facebook object", facebookObject.toString());
+        //TODO {1370430319_10206094192418409} is my latest post
+
+        if (RecyclerAdapter.mIsLoggedInToFacebook) {
+            new GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    "/me/feed",
+                    null,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
+                            JSONObject facebookObject = response.getJSONObject();
+                            Log.d("Facebook object", facebookObject.toString());
+                        }
                     }
-                }
-        ).executeAsync();
+            ).executeAsync();
+        }
 
+            // manual test values
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Kyle");
+            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Facebook must die");
+            return values;
 
-        // manual test values
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Kyle");
-        values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Boo Twitter! Yay Facebook!");
-        return values;
     }
+
+
+
 
     public void getNewsData() {
         NYTimesAPI.Factory.getInstance().getTopNYTimes().enqueue(new Callback<NYTimesAPIResult>() {
