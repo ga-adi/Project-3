@@ -8,6 +8,7 @@ ___
 ###  WHAT IT DOES:
 HUD (short for heads-up-display), is a personal assistant app that keeps track of top news stories, Facebook posts, reminders, and other pertinent info in an interface that is fast, clean, and intuitive.  We like to say that HUD provides you with what's important, when it's important.  Unlike other personal assistant apps, HUD does not rely on collecting your search history to deliver relevant cards to you.  Any info you provide to it is done so voluntary.  When it comes to personal data, we favor an opt-in approach to an opt-out one.
 * Data syncs automatically every minute while app open, and manually after user does the refresh gesture (swipe down)
+* Cards are animated - they fly in from the bottom of the screen - on each recycler view refresh
 * Web data saved to database for offline access
 * NYTimes headlines/thumbnails link out to the article in the browser
 * User can log into facebook (if user is Kyle; other users have to wait until facebook approves our app)
