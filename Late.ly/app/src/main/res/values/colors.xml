@@ -64,4 +64,7 @@
     <color name="colorPrimaryDarkerTech">#558B2F</color>
     <color name="colorAccentTech">#FF4081</color>
 
+
+    <color name="colorSelection">#ffee00</color>
+
 </resources>

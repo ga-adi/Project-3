@@ -10,4 +10,5 @@
         android:text="XML Text"
         android:id="@+id/detailsFragmentTextView"/>
 
+
 </FrameLayout>

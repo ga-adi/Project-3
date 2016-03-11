@@ -1,7 +1,10 @@
 package com.example.android.lately;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -13,12 +16,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,15 +41,20 @@ import com.example.android.lately.Fragments.DetailsFragment;
 import com.example.android.lately.Reddit.RedditArticle.Comments.CommentProcessor;
 import com.example.android.lately.Reddit.RedditArticle.RedditArticle;
 import com.example.android.lately.Reddit.RedditArticle.RedditResult;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -59,7 +69,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.HEAD;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -75,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     CommentAsyncTask commentAsyncTask;
     Singleton mSingletonArrayOfParentCards;
     TabLayout mTabLayout;
-    public static String stuff;
 
     int mSports;
     private static String mForecastUrl = "https://api.forecast.io/forecast/39a42687f8dbe7c14cd4f97d201af744/";
@@ -238,7 +246,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             mPortrait = false;
         }
+        GraphRequest request = new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        String obj = response.getJSONObject().toString();
+                        try {
+                            String message1 = response.getJSONObject().getJSONArray("data").getJSONObject(0).getString("message");
+                            String message2 = response.getJSONObject().getJSONArray("data").getJSONObject(1).getString("message");
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        );
+        request.executeAsync();
+
+
+//        if (mPortrait) {
+//        } else {
+//            Fragment fragment = new DetailsFragment();
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentTransaction transaction = fm.beginTransaction();
+//            transaction.replace(R.id.detailsFragmentContainer, fragment);
+//            transaction.commit();
+//        }
         if (mPortrait) {
         } else {
             Fragment fragment = new DetailsFragment();
@@ -247,6 +284,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             transaction.replace(R.id.detailsFragmentContainer, fragment);
             transaction.commit();
         }
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+
+        if (isConnected) {
+            //connected notification
+            builder.setSmallIcon(android.R.drawable.presence_online);
+            builder.setContentTitle("Network Status");
+            builder.setContentText("The network is up");
+
+            Notification notification = builder.build();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(12345, notification);
+
+        } else {
+            builder.setSmallIcon(android.R.drawable.stat_notify_error);
+            builder.setContentTitle("Network Status");
+            builder.setContentText("The network is down");
+
+            Notification notification = builder.build();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(12345, notification);
+        }
+
     }
 
     public void getForecastApi() {
@@ -505,8 +571,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
                 String latlon = latitude + "," + longitude;
-                        //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
-                        //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
+                //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
+                //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
 
                 getForecastApi();
 //                getRedditApi(new ArrayList<Integer>()); //This parameter is a place holder. We'll change it into the user topic int.
@@ -547,7 +613,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         public Call<FoursquareVenues> getVenues(@Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version, @Query("ll") String ll);
 
         @GET("v2/venues/{venueId}/photos")
-        public Call<FoursquarePhotos> getPhotoes (@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
+        public Call<FoursquarePhotos> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
     }
 
     public void createTabs(ArrayList selection) {
@@ -758,16 +824,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return "4";
         }
     }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(MainActivity.this, SelectionPage.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }
