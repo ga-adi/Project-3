@@ -21,9 +21,9 @@ import java.util.Locale;
  * Created by charlie on 3/10/16.
  */
 public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecyclerAdapter.ViewHolder> {
-    ArrayList<RemindersCardData.ReminderItem> mData;
+    ArrayList<Reminder> mData;
 
-    public RemindersRecyclerAdapter(ArrayList<RemindersCardData.ReminderItem> data) {
+    public RemindersRecyclerAdapter(ArrayList<Reminder> data) {
         mData = data;
     }
 
@@ -35,18 +35,24 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter<RemindersRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final RemindersCardData.ReminderItem item = mData.get(position);
-
-        Date dateTime = new Date(item.getDateTimeInMillis());
-        SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, h:mm a", Locale.getDefault());
-        holder.mDateTime.setText(formatter.format(dateTime));
+        final Reminder item = mData.get(position);
 
         holder.mReminderText.setText(item.getReminderText());
+
+        Long dateTimeInMillis = item.getDateTimeInMillis();
+        if (dateTimeInMillis > 0) {
+            Date dateTime = new Date(dateTimeInMillis);
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM d, h:mm a", Locale.getDefault());
+            holder.mDateTime.setText(formatter.format(dateTime));
+            holder.mDateTime.setVisibility(View.VISIBLE);
+        } else {
+            holder.mDateTime.setVisibility(View.GONE);
+        }
 
         holder.mContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(holder.mContext, "Clicked: " + item.getReminderText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(holder.mContext, "Clicked item " + item.getId(), Toast.LENGTH_SHORT).show();
             }
         });
     }
