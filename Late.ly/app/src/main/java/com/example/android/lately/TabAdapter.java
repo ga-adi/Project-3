@@ -24,18 +24,13 @@ import java.util.ArrayList;
 public class TabAdapter extends FragmentStatePagerAdapter {
 
     int mTabNumber;
-    ArrayList<String> selections = new ArrayList<String>();
-//selections.
+    ArrayList<String> mSelections = new ArrayList<String>();
+
 
     public TabAdapter(FragmentManager fm, int tabNumber) {
         super(fm);
         this.mTabNumber = tabNumber;
     }
-
-
-//    ArrayList<String> selections = new ArrayList<String>();
-//get the arraylist of selections and feed it into here.
-
 
     @Override
     public Fragment getItem(int position) {
@@ -45,53 +40,52 @@ public class TabAdapter extends FragmentStatePagerAdapter {
                 Fragment1 tab1 = new Fragment1();
                 return tab1;
             case 1:
-//                Fragment tab2 = getFragmentForCategory(selections);
-                Fragment tab2 = new Fragment1();
-
+                Fragment tab2 = getFragmentForCategory(Selections().get(0));
+                //                Fragment tab2 = new Fragment1();
                 return tab2;
             case 2:
-//                Fragment tab3 = getFragmentForCategory(selections);
-                Fragment tab3 = new Fragment1();
+                Fragment tab3 = getFragmentForCategory(Selections().get(1));
+//                Fragment tab3 = new Fragment1();
 
                 return tab3;
             case 3:
-//                Fragment tab4 = getFragmentForCategory(selections);
-                Fragment tab4 = new Fragment1();
+                Fragment tab4 = getFragmentForCategory(Selections().get(2));
+//                Fragment tab4 = new Fragment1();
 
                 return tab4;
             case 4:
-//                Fragment tab5 = getFragmentForCategory(selections);
-                Fragment tab5 = new Fragment1();
+                Fragment tab5 = getFragmentForCategory(Selections().get(3));
+//                Fragment tab5 = new Fragment1();
 
                 return tab5;
             case 5:
-//                Fragment tab6 = getFragmentForCategory(selections);
-                Fragment tab6 = new Fragment1();
+                Fragment tab6 = getFragmentForCategory(Selections().get(4));
+//                Fragment tab6 = new Fragment1();
 
                 return tab6;
             case 6:
-//                Fragment tab7 = getFragmentForCategory(selections);
-                Fragment tab7 = new Fragment1();
+                Fragment tab7 = getFragmentForCategory(Selections().get(5));
+//                Fragment tab7 = new Fragment1();
 
                 return tab7;
             case 7:
-//                Fragment tab8 = getFragmentForCategory(selections);
-                Fragment tab8 = new Fragment1();
+                Fragment tab8 = getFragmentForCategory(Selections().get(6));
+//                Fragment tab8 = new Fragment1();
 
                 return tab8;
             case 8:
-//                Fragment tab9 = getFragmentForCategory(selections);
-                Fragment tab9 = new Fragment1();
+                Fragment tab9 = getFragmentForCategory(Selections().get(7));
+//                Fragment tab9 = new Fragment1();
 
                 return tab9;
             case 9:
-//                Fragment tab10 = getFragmentForCategory(selections);
-                Fragment tab10 = new Fragment1();
+                Fragment tab10 = getFragmentForCategory(Selections().get(8));
+//                Fragment tab10 = new Fragment1();
 
                 return tab10;
             case 10:
-//                Fragment tab11 = getFragmentForCategory(selections);
-                Fragment tab11 = new Fragment1();
+                Fragment tab11 = getFragmentForCategory(Selections().get(9));
+//                Fragment tab11 = new Fragment1();
 
                 return tab11;
             default:
@@ -139,10 +133,18 @@ public class TabAdapter extends FragmentStatePagerAdapter {
             case "Tech":
                 fragment = new FragmentTech();
                 return fragment;
-
         }
         return null;
     }
 
+    public ArrayList<String> Selections(){
+        mSelections.add("bah");
+        mSelections.add("bah");
+        mSelections.add("bah");
+        mSelections.add("bah");
+        mSelections.add("bah");
+        return mSelections;
+    }
 }
+
 
