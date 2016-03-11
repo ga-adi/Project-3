@@ -66,15 +66,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // TODO - make the Facebook API call, parse the response, and create
         // TODO   a new ContentValues object with values for each column in the database
 
-        // manual test values
-        mContentResolver.delete(CardContentProvider.FACEBOOK_URI, null, null); // clear table
-        for (int i = 1; i < 6; i++) {
-            ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Facebook friend #" + i);
-            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "This is a status update...");
-            mContentResolver.insert(CardContentProvider.FACEBOOK_URI, values);
-        }
-        mContentResolver.notifyChange(CardContentProvider.FACEBOOK_URI, null);
         //TODO {1370430319_10206094192418409} is my latest post
 
         if (RecyclerAdapter.mIsLoggedInToFacebook) {
@@ -93,11 +84,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             ).executeAsync();
         }
 
-            // manual test values
+        // manual test values
+        mContentResolver.delete(CardContentProvider.FACEBOOK_URI, null, null); // clear table
+        for (int i = 1; i < 6; i++) {
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Kyle");
-            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Facebook for the loss");
-
+            values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Facebook friend #" + i);
+            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "This is a status update...");
+            mContentResolver.insert(CardContentProvider.FACEBOOK_URI, values);
+        }
+        mContentResolver.notifyChange(CardContentProvider.FACEBOOK_URI, null);
     }
 
     public void getNewsData() {
