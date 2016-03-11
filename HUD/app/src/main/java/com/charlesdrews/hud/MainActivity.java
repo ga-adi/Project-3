@@ -2,8 +2,11 @@ package com.charlesdrews.hud;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -20,15 +23,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.charlesdrews.hud.CardsData.MtaStatusCardData;
+import com.charlesdrews.hud.CardsData.Reminder;
 import com.charlesdrews.hud.CardsData.RemindersCardData;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 
 import com.charlesdrews.hud.CardsData.CardData;
@@ -36,12 +38,11 @@ import com.charlesdrews.hud.CardsData.CardType;
 import com.charlesdrews.hud.CardsData.FacebookCardData;
 import com.charlesdrews.hud.CardsData.NewsCardData;
 import com.charlesdrews.hud.CardsData.WeatherCardData;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ReminderCreator.OnReminderSubmittedListener {
     private static final String TAG = MainActivity.class.getCanonicalName();
 
     public static final int ITEM_COUNT = 3;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NEWS_POSITION = 1;
     public static final int FACEBOOK_POSITION = 2;
     public static final int REMINDERS_POSITION = 3;
+    public static final int MTA_STATUS_POSITION = 4;
 
     public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
     public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
     private Account mAccount;
-    private TextView mLoginText;
+    private RecyclerView mRecyclerView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +72,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView backgroundImage = (ImageView)findViewById(R.id.imageframe);
         backgroundImage.setImageResource(R.drawable.rothkoyello);
 
-        //TODO facebook stuff
-        mLoginText = (TextView)findViewById(R.id.status_update);
-        //TODO - can this initialization be done in an async task?
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        new FacebookInitAsync().execute();
 
         // register content observers
         getContentResolver().registerContentObserver(
@@ -83,9 +82,11 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // set up recycler view - calls database for most recent data, then requests manual sync
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         new InitializeRecyclerViewAsyncTask().execute();
 
         // set up syncing
+        ContentResolver.setMasterSyncAutomatically(true);
         ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
@@ -117,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
@@ -128,6 +133,62 @@ public class MainActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this, "Query: " + query, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        WebView webView = (WebView) findViewById(R.id.mtaWebView);
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void refreshWebView() {
+        WebView webView = (WebView) findViewById(R.id.mtaWebView);
+        if (webView != null) {
+            webView.loadUrl(((MtaStatusCardData) mCardsData.get(MTA_STATUS_POSITION)).getWidgetUrl());
+        }
+    }
+
+    @Override
+    public void onReminderSubmitted(Reminder reminder) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.REMINDERS_COL_TEXT, reminder.getReminderText());
+        Long alarmTime = reminder.getDateTimeInMillis();
+        if (alarmTime > 0) {
+            values.put(DatabaseHelper.REMINDERS_COL_WHEN, alarmTime);
+            setNotificationAlarm(alarmTime, reminder.getReminderText());
+        }
+        getContentResolver().insert(CardContentProvider.REMINDERS_URI, values);
+    }
+
+    public void setNotificationAlarm(Long alarmTimeInMillis, String message) {
+        Intent intent = new Intent(this, ReminderService.class);
+        intent.putExtra(DatabaseHelper.REMINDERS_COL_TEXT, message);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, alarmTimeInMillis, pendingIntent);
+        Toast.makeText(MainActivity.this, "Alarm set", Toast.LENGTH_SHORT).show();
+    }
+
+    public static Account createSyncAccount(Context context) {
+        Account newAccount = new Account(
+                context.getString(R.string.account),
+                context.getString(R.string.account_type)
+        );
+
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            Log.d(TAG, "createSyncAccount: successful");
+        } else {
+            Log.d(TAG, "createSyncAccount: failed");
+        }
+        return newAccount;
     }
 
     public class CardContentObserver extends ContentObserver {
@@ -157,27 +218,21 @@ public class MainActivity extends AppCompatActivity {
                     new PullFromDbAsyncTask().execute(CardType.Weather);
                     break;
                 }
+                case CardContentProvider.REMINDERS: {
+                    Log.d(TAG, "onChange: reminders");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
+                    break;
+                }
+                case CardContentProvider.REMINDERS_ID: {
+                    Log.d(TAG, "onChange: reminders/id");
+                    new PullFromDbAsyncTask().execute(CardType.Reminders);
+                    break;
+                }
                 default:
                     break;
             }
+            refreshWebView();
         }
-    }
-
-    public static Account createSyncAccount(Context context) {
-        Account newAccount = new Account(
-                context.getString(R.string.account),
-                context.getString(R.string.account_type)
-        );
-
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            Log.d(TAG, "createSyncAccount: successful");
-        } else {
-            Log.d(TAG, "createSyncAccount: failed");
-        }
-        return newAccount;
     }
 
     private class PullFromDbAsyncTask extends AsyncTask<CardType, Void, CardType> {
@@ -221,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
             updateCardDataArrayFromCursor(mCardType, cursor);
             return mCardType;
         }
-
 
         @Override
         protected void onPostExecute(CardType cardType) {
@@ -284,11 +338,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        RecyclerAdapter.mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
     public class InitializeRecyclerViewAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -297,10 +346,12 @@ public class MainActivity extends AppCompatActivity {
 
             // set up array of placeholder card data for use in adapter
             mCardsData = new ArrayList<>(ITEM_COUNT);
-            mCardsData.add(new CardData(CardType.Weather));     // index 0
-            mCardsData.add(new CardData(CardType.News));        // index 1
-            mCardsData.add(new CardData(CardType.Facebook));    // index 2
-            mCardsData.add(new RemindersCardData(CardType.Reminders, null)); // index 3
+            mCardsData.add(new CardData(CardType.Weather));                     // index 0
+            mCardsData.add(new CardData(CardType.News));                        // index 1
+            mCardsData.add(new CardData(CardType.Facebook));                    // index 2
+            mCardsData.add(new RemindersCardData(CardType.Reminders, null));    // index 3
+            mCardsData.add(new MtaStatusCardData(CardType.MtaStatus));          // index 4
+
         }
 
         @Override
@@ -335,17 +386,31 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             // finish setting up recycler view & adapter
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager manager = new LinearLayoutManager(MainActivity.this);
-            recyclerView.setLayoutManager(manager);
+            mRecyclerView.setLayoutManager(manager);
             mAdapter = new RecyclerAdapter(mCardsData);
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(mAdapter);
+
+            // if activity started from reminder notification, scroll to reminders
+            if (getIntent().getBooleanExtra(ReminderService.SCROLL_TO_REMINDERS, false)) {
+                mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, REMINDERS_POSITION);
+            }
 
             // request manual sync
             Bundle settingsBundle = new Bundle();
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
             ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+        }
+    }
+
+    public class FacebookInitAsync extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            return null;
         }
     }
 }

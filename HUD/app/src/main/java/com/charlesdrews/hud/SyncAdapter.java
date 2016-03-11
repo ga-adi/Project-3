@@ -16,6 +16,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -52,7 +53,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(TAG, "onPerformSync: starting");
 
         Log.d(TAG, "onPerformSync: insert facebook");
-        mContentResolver.insert(CardContentProvider.FACEBOOK_URI, getFacebookData());
+        ContentValues values = getFacebookData();
+        mContentResolver.insert(CardContentProvider.FACEBOOK_URI, values);
         mContentResolver.notifyChange(CardContentProvider.FACEBOOK_URI, null);
 
         Log.d(TAG, "onPerformSync: insert news");
@@ -74,13 +76,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         if (RecyclerAdapter.mIsLoggedInToFacebook) {
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
-                    "/me/feed",
+                    //TODO "/me?fields=id,name,posts",
+                    "/me?fields=posts",
                     null,
                     HttpMethod.GET,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
                             JSONObject facebookObject = response.getJSONObject();
-                            Log.d("Facebook object", facebookObject.toString());
+
                         }
                     }
             ).executeAsync();
@@ -89,7 +92,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             // manual test values
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Kyle");
-            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Facebook must die");
+            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Facebook for the loss");
             return values;
 
     }
