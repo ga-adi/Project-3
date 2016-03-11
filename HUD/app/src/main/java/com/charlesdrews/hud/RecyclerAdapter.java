@@ -26,8 +26,10 @@ import com.charlesdrews.hud.CardsData.WeatherCardData;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.share.widget.ShareButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +48,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     private int lastPosition = -1;
     private Context context;
     public CardData container;
+    public static boolean mIsLoggedInToFacebook;
+    public ShareButton mShareButton;
 
 
     public RecyclerAdapter(List<CardData> cardsData) {
@@ -71,6 +75,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
                 facebookLogin(view);
+                mShareButton = (ShareButton)view.findViewById(R.id.shareButton);
                 return new FacebookCard(view, parent.getContext(), type);
             }
             case News: {
@@ -263,24 +268,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
 
     public void facebookLogin(View view){
         mFacebookLoginButton = (LoginButton)view.findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions("user_likes");
+        mFacebookLoginButton.setReadPermissions("user_posts");
         mCallbackManager = CallbackManager.Factory.create();
         mFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-//                        Toast.makeText(MainActivity.class, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                       mLoginText.setText("User ID: " + loginResult.getAccessToken().getUserId() + "Auth token: " + loginResult.getAccessToken().getToken());
-
+                mIsLoggedInToFacebook = true;
             }
 
             @Override
             public void onCancel() {
-//                        Toast.makeText(MainActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+                mIsLoggedInToFacebook = false;
             }
 
             @Override
             public void onError(FacebookException error) {
-//                        Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+                mIsLoggedInToFacebook = false;
             }
         });
     }

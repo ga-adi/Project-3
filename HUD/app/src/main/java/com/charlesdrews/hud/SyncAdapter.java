@@ -12,6 +12,13 @@ import android.util.Log;
 
 import com.charlesdrews.hud.NYTimesTop.NYTimesAPIResult;
 import com.charlesdrews.hud.NYTimesTop.Result;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -68,6 +75,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             mContentResolver.insert(CardContentProvider.FACEBOOK_URI, values);
         }
         mContentResolver.notifyChange(CardContentProvider.FACEBOOK_URI, null);
+        //TODO {1370430319_10206094192418409} is my latest post
+
+        if (RecyclerAdapter.mIsLoggedInToFacebook) {
+            new GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    //TODO "/me?fields=id,name,posts",
+                    "/me?fields=posts",
+                    null,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
+                            JSONObject facebookObject = response.getJSONObject();
+
+                        }
+                    }
+            ).executeAsync();
+        }
+
+            // manual test values
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.FACEBOOK_COL_AUTHOR, "Kyle");
+            values.put(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE, "Facebook for the loss");
+
     }
 
     public void getNewsData() {

@@ -28,7 +28,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp" />
-
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/facebookRecyclerView"
             android:padding="5dp"
