@@ -27,6 +27,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
     public static final int TYPE_LARGE_ARTICLE = 4;
     public static final int TYPE_FOURSQUARE = 5;
     public static final int TYPE_REDDIT = 6;
+    public static final int TYPE_FACEBOOK = 7;
     public static final int TAB_MAINPAGE = 0;
     public static final int TAB_POLITICS = 1;
     public static final int TAB_TECH = 2;

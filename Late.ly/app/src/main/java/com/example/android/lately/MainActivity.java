@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.android.lately.Cards.CardAdapter;
 import com.example.android.lately.Cards.EventCard;
+import com.example.android.lately.Cards.FacebookCard;
 import com.example.android.lately.Cards.FoursquareCard;
 import com.example.android.lately.Cards.RedditCard;
 import com.example.android.lately.Cards.RedditComment;
@@ -106,11 +107,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String mMeetupRadius = "40";
     public String foursquarePhotoUrl;
     public String meetupPhotoUrl;
+    public String facebookUsername;
+    public String facebookUserImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        facebookUsername = getIntent().getStringExtra("name") + " " + getIntent().getStringExtra("surname");
+        facebookUserImage = getIntent().getStringExtra("imageUrl");
 
         mSingletonArrayOfParentCards = Singleton.getInstance();
 
@@ -258,27 +264,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             mPortrait = false;
         }
-        GraphRequest request = new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me/feed",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        String obj = response.getJSONObject().toString();
-                        try {
-                            String message1 = response.getJSONObject().getJSONArray("data").getJSONObject(0).getString("message");
-                            String message2 = response.getJSONObject().getJSONArray("data").getJSONObject(1).getString("message");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-        );
-        request.executeAsync();
-
 
 //        if (mPortrait) {
 //        } else {
@@ -392,14 +377,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
 
         redditUrlList = new ArrayList<>();
+        ArrayList<String> subredditSelections = new ArrayList<>();
+        for (int l = 0; l <tabTypes.size() ; l++) {
+            String subreddit = redditSwitcher(tabTypes.get(l));
+            subredditSelections.add(subreddit);
+        }
 
         RedditRequest redditRequest = retrofit.create(RedditRequest.class);
-        //TODO After the selection page work is done, delete the line below(tabLayout.add(1). It's a place holder.
-        tabTypes.add(1);
-        for (int i = 0; i < tabTypes.size(); i++) {
-            //TODO Switch statement goes here
-            //TODO Line belew is hard coded. Should pass the switched query keyword as a parameter.
-            Call<RedditResult> result = redditRequest.getRedditFeed("Fitness");
+
+        for (int i = 0; i < subredditSelections.size(); i++) {
+            Call<RedditResult> result = redditRequest.getRedditFeed(subredditSelections.get(i));
             result.enqueue(new Callback<RedditResult>() {
                 @Override
                 public void onResponse(Call<RedditResult> call, Response<RedditResult> response) {
@@ -541,11 +528,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .baseUrl(mMeetupEndPoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        //TODO The line below(tabLayout.add(1)) should be deleted after selection page is done.
-        tabTypes.add(1);
-        for (int i = 0; i < tabTypes.size(); i++) {
+
+        ArrayList<String> selections = new ArrayList<>();
+
+        for (int l = 0; l <tabTypes.size(); l++) {
+            String selection = meetupSwitcher(tabTypes.get(l));
+            selections.add(selection);
+        }
+
+        for (int i = 0; i < selections.size(); i++) {
             final MeetupRequest meetupRequest = retrofit.create(MeetupRequest.class);
-            Call<MeetupEvents> result = meetupRequest.getEvents(mMeetupRadius, mMeetupPage, mMeetupKey, mMeetupTime, "34", lat, lon);
+            Call<MeetupEvents> result = meetupRequest.getEvents(mMeetupRadius, mMeetupPage, mMeetupKey, mMeetupTime, selections.get(i), lat, lon);
             result.enqueue(new Callback<MeetupEvents>() {
                 @Override
                 public void onResponse(Call<MeetupEvents> call, Response<MeetupEvents> response) {
@@ -586,6 +579,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             });
         }
+    }
+
+    public void getFacebookFeed(){
+        GraphRequest request = new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        String obj = response.getJSONObject().toString();
+                        try {
+                            for (int i = 0; i <response.getJSONObject().getJSONArray("data").length() ; i++) {
+                                if(!response.getJSONObject().getJSONArray("data").getJSONObject(i).optString("message").isEmpty()) {
+                                    String feedMessage = response.getJSONObject().getJSONArray("data").getJSONObject(i).getString("message");
+                                    String feedTime = (response.getJSONObject().getJSONArray("data").getJSONObject(i).getString("created_time")).substring(0, 10);
+                                    Log.d("FACEBOOK FEED JSON : ", feedMessage);
+                                    Log.d("FACEBOOK FEED JSON : ", feedTime);
+                                FacebookCard facebookCard = new FacebookCard(feedTime, facebookUserImage, feedMessage, facebookUsername, CardAdapter.TYPE_FACEBOOK, CardAdapter.TAB_MAINPAGE, Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
+                                Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).add(facebookCard);
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        );
+        request.executeAsync();
     }
 
 
@@ -646,13 +670,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String latitude = String.valueOf(mLastLocation.getLatitude()).substring(0, 5);
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
                 String latlon = latitude + "," + longitude;
-                //TODO create for loop length of master_string_selection_topic_tab_array. Pass the TAB int inside the API calls
-                //TODO Create method get SPECIFICREDDITCALLSWITCHER(TAB) to return to specific topic call required while maintaining the TAB
 
                 getForecastApi();
-                getRedditApi(new ArrayList<Integer>()); //This parameter is a place holder. We'll change it into the user topic int.
+                //getRedditApi(new ArrayList<Integer>()); //TODO This parameter is a place holder. We'll change it into the user topic int.
                 getFoursquareApi(latlon);
-                getMeetupApi(new ArrayList<Integer>(), latitude, longitude);
+                //getMeetupApi(new ArrayList<Integer>(), latitude, longitude); //TODO This one also.
+                getFacebookFeed();
 
             } else {
                 Toast.makeText(MainActivity.this, "Turn on GPS and try again", Toast.LENGTH_SHORT).show();
@@ -689,8 +712,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @GET("v2/venues/{venueId}/photos")
         public Call<FoursquarePhotos> getPhotoes(@Path("venueId") String venueId, @Query("client_id") String clientId, @Query("client_secret") String clientSecret, @Query("v") String version);
-<<<<<<< HEAD
-=======
+
     }
 
     public interface MeetupRequest {
@@ -699,7 +721,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @GET("2/photos?&sign=true&photo-host=public")
         public Call<MeetupPhotos> getPhotos(@Query("key") String key, @Query("group_urlname") String groupUrlname, @Query("page") String page);
->>>>>>> branch-claire
     }
 
     public void createTabs(ArrayList selection) {
@@ -918,6 +939,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Intent intent = new Intent(MainActivity.this, SelectionPage.class);
             startActivity(intent);
             return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
