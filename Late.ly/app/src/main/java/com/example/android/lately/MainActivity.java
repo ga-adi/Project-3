@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 //Getting current weather status
 
-                String currentTemperature = String.valueOf(response.body().getCurrently().getTemperature());
+                String currentTemperature = String.valueOf((response.body().getCurrently().getTemperature()).intValue());
                 String currentSummary = response.body().getCurrently().getSummary();
                 String currentLocation = response.body().getTimezone();
 
@@ -342,13 +342,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 for (int i = 0; i < 5; i++) {
                     Date nextDayTime = new Date((long) (response.body().getDaily().getData().get(i + 1).getTime() * 1000L));
                     String formattedDate = format.format(nextDayTime);
-                    nextFiveDaysDates[i] = formattedDate;
+                    //nextFiveDaysDates[i] = formattedDate;
                     //If you want to just extract day names(i.e. Tue), comment out the line above this and uncomment the below one.
-                    //nextFiveDaysDates[i] = formattedDate.substring(formattedDate.length()-3,formattedDate.length());
+                    nextFiveDaysDates[i] = formattedDate.substring(formattedDate.length()-3,formattedDate.length());
 
                     nextFiveDaysSummary[i] = response.body().getDaily().getData().get(i + 1).getSummary();
-                    nextFiveDaysHighTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMax());
-                    nextFiveDaysLowTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
+                    nextFiveDaysHighTemp[i] = String.valueOf((response.body().getDaily().getData().get(i + 1).getTemperatureMax()).intValue());
+                    nextFiveDaysLowTemp[i] = String.valueOf((response.body().getDaily().getData().get(i + 1).getTemperatureMin()).intValue());
                 }
                 WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
                         formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TYPE_WEATHER, CardAdapter.TAB_MAINPAGE, 0);
