@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity
     public static final int REMINDERS_POSITION = 3;
     public static final int MTA_STATUS_POSITION = 4;
 
-    public static final long SYNC_INTERVAL_IN_MINUTES = 15L;
-    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 15;
+    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * 60;
 
     private ArrayList<CardData> mCardsData;
     private RecyclerView.Adapter mAdapter;
@@ -84,11 +84,6 @@ public class MainActivity extends AppCompatActivity
         // set up recycler view - calls database for most recent data, then requests manual sync
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         new InitializeRecyclerViewAsyncTask().execute();
-
-        // set up syncing
-        ContentResolver.setMasterSyncAutomatically(true);
-        ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
     }
 
     @Override
@@ -398,10 +393,15 @@ public class MainActivity extends AppCompatActivity
             }
 
             // request manual sync
-            Bundle settingsBundle = new Bundle();
-            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+//            Bundle settingsBundle = new Bundle();
+//            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//            ContentResolver.requestSync(mAccount, CardContentProvider.AUTHORITY, settingsBundle);
+
+            // set up syncing
+            ContentResolver.setMasterSyncAutomatically(true);
+            ContentResolver.setSyncAutomatically(mAccount, CardContentProvider.AUTHORITY, true);
+            ContentResolver.addPeriodicSync(mAccount, CardContentProvider.AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL);
         }
     }
 
