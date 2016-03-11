@@ -63,7 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
             }
             case Facebook: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
-                mLoginText = (TextView)view.findViewById(R.id.status_update);
                 facebookLogin(view);
                 return new FacebookCard(view, parent.getContext(), type);
             }
@@ -116,8 +115,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
                 FacebookCard facebookCard = (FacebookCard) holder;
                 FacebookCardData facebookData = (FacebookCardData) data;
 
-                facebookCard.mAuthor.setText(facebookData.getAuthor());
-                facebookCard.mStatusUpdate.setText(facebookData.getStatusUpdate());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(holder.mContext);
+                facebookCard.mRecyclerView.setLayoutManager(layoutManager);
+
+                facebookCard.mRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(holder.mContext));
+
+                FacebookRecyclerAdapter adapter = new FacebookRecyclerAdapter(facebookData.getFacebookItems());
+                facebookCard.mRecyclerView.setAdapter(adapter);
                 break;
             }
             case News: {
@@ -208,12 +213,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CardVi
     }
 
     public class FacebookCard extends CardViewHolder {
-        TextView mAuthor, mStatusUpdate;
+        RecyclerView mRecyclerView;
 
         public FacebookCard(View itemView, Context context, CardType cardType) {
             super(itemView, context, cardType);
-            mAuthor = (TextView) itemView.findViewById(R.id.author);
-            mStatusUpdate = (TextView) itemView.findViewById(R.id.status_update);
+            mRecyclerView = (RecyclerView) itemView.findViewById(R.id.facebookRecyclerView);
             mCardView = (CardView) itemView.findViewById(R.id.facebookCard);
         }
     }

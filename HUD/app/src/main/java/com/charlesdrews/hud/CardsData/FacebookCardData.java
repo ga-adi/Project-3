@@ -1,23 +1,40 @@
 package com.charlesdrews.hud.CardsData;
 
+import android.database.Cursor;
+
+import com.charlesdrews.hud.DatabaseHelper;
+
+import java.util.ArrayList;
+
 /**
  * Created by charlie on 3/7/16.
  */
 public class FacebookCardData extends CardData {
-    //TODO - feel free to change this around - this was just for testing
-    private String mAuthor, mStatusUpdateText;
+    private ArrayList<FacebookItem> mFacebookItems;
 
-    public FacebookCardData(CardType type, String author, String statusUpdateText) {
+    public FacebookCardData(CardType type, Cursor cursor) {
         super(type);
-        mAuthor = author;
-        mStatusUpdateText = statusUpdateText;
+        mFacebookItems = new ArrayList<>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            mFacebookItems.add(new FacebookItem(
+                    cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_AUTHOR)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseHelper.FACEBOOK_COL_STATUS_UPDATE))
+            ));
+        }
     }
 
-    public String getAuthor() {
-        return mAuthor;
-    }
+    public ArrayList<FacebookItem> getFacebookItems() { return mFacebookItems; }
 
-    public String getStatusUpdate() {
-        return mStatusUpdateText;
+    public class FacebookItem {
+        private String mAuthor, mStatusUpdate;
+
+        public FacebookItem(String author, String statusUpdate) {
+            mAuthor = author;
+            mStatusUpdate = statusUpdate;
+        }
+
+        public String getAuthor() { return mAuthor; }
+
+        public String getStatusUpdate() { return mStatusUpdate; }
     }
 }
