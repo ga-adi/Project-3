@@ -10,33 +10,24 @@ import java.util.ArrayList;
  */
 public class Singleton {
 
-    ArrayList<ParentCard> mMainPageArray;
-    ArrayList<ParentCard> mPoliticsArray;
-    ArrayList<ParentCard> mTechArray;
-    ArrayList<ParentCard> mCareerArray;
-    ArrayList<ParentCard> mFoodArray;
-    ArrayList<ParentCard> mDancingArray;
-    ArrayList<ParentCard> mAnimalsArray;
-    ArrayList<ParentCard> mLanguageArray;
-    ArrayList<ParentCard> mNatureArray;
-    ArrayList<ParentCard> mSportsArray;
-    ArrayList<ParentCard> mDatingArray;
+    ArrayList<ParentCard> mMainPageArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mPoliticsArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mTechArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mCareerArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mFoodArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mDancingArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mAnimalsArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mLanguageArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mNatureArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mSportsArray = new ArrayList<ParentCard>();
+    ArrayList<ParentCard> mDatingArray = new ArrayList<ParentCard>();
 
 
-    private static Singleton singleton = new Singleton();
+
+
+    //private static Singleton singleton = new Singleton();
 
     public Singleton() {
-            this.mMainPageArray = new ArrayList<ParentCard>();
-            this.mPoliticsArray = new ArrayList<ParentCard>();
-            this.mTechArray = new ArrayList<ParentCard>();
-            this.mCareerArray = new ArrayList<ParentCard>();
-            this.mFoodArray = new ArrayList<ParentCard>();
-            this.mDancingArray = new ArrayList<ParentCard>();
-            this.mAnimalsArray = new ArrayList<ParentCard>();
-            this.mLanguageArray = new ArrayList<ParentCard>();
-            this.mNatureArray = new ArrayList<ParentCard>();
-            this.mSportsArray = new ArrayList<ParentCard>();
-            this.mDatingArray = new ArrayList<ParentCard>();
     }
 
     public ArrayList<ParentCard> getArrayList(int TAB) {
@@ -137,7 +128,16 @@ public class Singleton {
         }
     }
 
+    public int getSize(){
+        return mMainPageArray.size();
+    }
+
+    public static Singleton singleton;
+
     public static Singleton getInstance() {
+        if(singleton == null){
+            singleton = new Singleton();
+        }
         return singleton;
     }
 

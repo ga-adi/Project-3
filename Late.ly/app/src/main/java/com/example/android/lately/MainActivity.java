@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ArrayList<String> venueIdList;
     ArrayList<RedditComment> mComments;
     CommentAsyncTask commentAsyncTask;
-    Singleton mSingletonArrayOfParentCards;
+//    Singleton mSingletonArrayOfParentCards;
     TabLayout mTabLayout;
 
     int mSports;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         facebookUsername = getIntent().getStringExtra("name") + " " + getIntent().getStringExtra("surname");
         facebookUserImage = getIntent().getStringExtra("imageUrl");
 
-        mSingletonArrayOfParentCards = Singleton.getInstance();
+//        mSingletonArrayOfParentCards = Singleton.getInstance();
 
         mSports = 1;
 
@@ -265,14 +265,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mPortrait = false;
         }
 
-//        if (mPortrait) {
-//        } else {
-//            Fragment fragment = new DetailsFragment();
-//            FragmentManager fm = getSupportFragmentManager();
-//            FragmentTransaction transaction = fm.beginTransaction();
-//            transaction.replace(R.id.detailsFragmentContainer, fragment);
-//            transaction.commit();
-//        }
+
+
         if (mPortrait) {
         } else {
             Fragment fragment = new DetailsFragment();
@@ -357,10 +351,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     nextFiveDaysLowTemp[i] = String.valueOf(response.body().getDaily().getData().get(i + 1).getTemperatureMin());
                 }
                 WeatherCard weatherCard = new WeatherCard(currentTemperature, currentSummary, currentLocation,
-                        formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TAB_MAINPAGE,
-                        CardAdapter.TYPE_WEATHER, 0);
+                        formattedCurrentDate, nextFiveDaysDates, nextFiveDaysSummary, nextFiveDaysHighTemp, nextFiveDaysLowTemp, CardAdapter.TYPE_WEATHER, CardAdapter.TAB_MAINPAGE, 0);
 
-                mSingletonArrayOfParentCards.addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
+                Singleton.getInstance().addParentCard(weatherCard, CardAdapter.TAB_MAINPAGE);
             }
 
             @Override
@@ -370,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
-    public void getRedditApi(ArrayList<Integer> tabTypes) {
+    public void getRedditApi(final ArrayList<Integer> tabTypes) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mRedditUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -411,10 +404,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                         //TODO Create object here. Type null for the comment parameter.
                         RedditCard redditCard = new RedditCard(articleAuthor,null,articleContent,articleNumOfComment,articleScore,articleSubreddit,
-                                articleTime,articleTitle,articleUrl,CardAdapter.TYPE_REDDIT,CardAdapter.TAB_SPORTS,Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
-
-                        mSingletonArrayOfParentCards.addParentCard(redditCard, CardAdapter.TAB_MAINPAGE);
-                        mSingletonArrayOfParentCards.addParentCard(redditCard, CardAdapter.TAB_SPORTS);
+                                articleTime,articleTitle,articleUrl,CardAdapter.TYPE_REDDIT,CardAdapter.TAB_FOOD,Singleton.getInstance().getSize());
+                        Log.d("REDDIT",redditCard.getmTitle());
+                        Singleton.getInstance().addParentCard(redditCard, CardAdapter.TAB_MAINPAGE);
+                        Singleton.getInstance().addParentCard(redditCard, CardAdapter.TAB_FOOD);
 
                     }
                     String[] urlArray = redditUrlList.toArray(new String[0]);
@@ -503,8 +496,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 int height = response.body().getResponse().getPhotos().getItems().get(0).getHeight();
                                 foursquarePhotoUrl = prefix + width + "x" + height + suffix;
 
-                                FoursquareCard foursquareCard = new FoursquareCard(venueAddress,venueId,venueName,venueUrl,foursquarePhotoUrl,CardAdapter.TYPE_FOURSQUARE,CardAdapter.TAB_MAINPAGE,Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
-                                mSingletonArrayOfParentCards.addParentCard(foursquareCard, CardAdapter.TAB_MAINPAGE);
+                                //FoursquareCard foursquareCard = new FoursquareCard(venueAddress,venueId,venueName,venueUrl,foursquarePhotoUrl,CardAdapter.TYPE_FOURSQUARE,CardAdapter.TAB_MAINPAGE,Singleton.getInstance().getSize());
+                                FoursquareCard foursquareCard1 = new FoursquareCard(venueAddress,venueId,venueName,venueUrl,foursquarePhotoUrl,CardAdapter.TYPE_FOURSQUARE,CardAdapter.TAB_MAINPAGE,1);
+                                Singleton.getInstance().addParentCard(foursquareCard1, CardAdapter.TAB_MAINPAGE);
                             }
                         }
 
@@ -598,7 +592,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                     Log.d("FACEBOOK FEED JSON : ", feedMessage);
                                     Log.d("FACEBOOK FEED JSON : ", feedTime);
                                 FacebookCard facebookCard = new FacebookCard(feedTime, facebookUserImage, feedMessage, facebookUsername, CardAdapter.TYPE_FACEBOOK, CardAdapter.TAB_MAINPAGE, Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).size());
-                                Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).add(facebookCard);
+                                Singleton.getInstance().addParentCard(facebookCard,CardAdapter.TAB_MAINPAGE);
+                                Log.d("fb", String.valueOf(Singleton.getInstance().getArrayList(CardAdapter.TAB_MAINPAGE).get(0).getmCardType()));
+
                                 }
                             }
 
@@ -671,8 +667,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String longitude = String.valueOf(mLastLocation.getLongitude()).substring(0, 5);
                 String latlon = latitude + "," + longitude;
 
+                ArrayList<Integer> topics = new ArrayList<Integer>();
+                topics.add(CardAdapter.TAB_FOOD);
                 getForecastApi();
-                //getRedditApi(new ArrayList<Integer>()); //TODO This parameter is a place holder. We'll change it into the user topic int.
+                getRedditApi(topics); //TODO This parameter is a place holder. We'll change it into the user topic int.
                 getFoursquareApi(latlon);
                 //getMeetupApi(new ArrayList<Integer>(), latitude, longitude); //TODO This one also.
                 getFacebookFeed();
@@ -720,10 +718,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @GET("2/photos?&sign=true&photo-host=public")
         public Call<MeetupPhotos> getPhotos(@Query("key") String key, @Query("group_urlname") String groupUrlname, @Query("page") String page);
-<<<<<<< HEAD
 
-=======
->>>>>>> branch-claire
     }
 
     public void createTabs(ArrayList selection) {

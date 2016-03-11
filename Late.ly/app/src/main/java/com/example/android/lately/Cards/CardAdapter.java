@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.android.lately.MainActivity;
 import com.example.android.lately.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -67,6 +69,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             case TYPE_REDDIT:
                 mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reddit_card, parent, false);
                 return new RedditHolder(mView);
+            case TYPE_FACEBOOK:
+                mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.facebook_card, parent, false);
+                return new FacebookHolder(mView);
             default:
                 return null;
         }
@@ -154,6 +159,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
                 });
                 break;
 
+            case TYPE_FACEBOOK:
+
+                FacebookCard facebookCard = (FacebookCard)mParentCardList.get(position);
+                final FacebookHolder facebookHolder = (FacebookHolder) mHolder;
+
+                facebookHolder.vTime.setText(facebookCard.getCreatedTime());
+                facebookHolder.vContent.setText(facebookCard.getMessage());
+                facebookHolder.vName.setText(facebookCard.getUsername());
+
+                break;
             case TYPE_REDDIT:
 
                 RedditCard redditCard = (RedditCard)mParentCardList.get(position);
@@ -213,6 +228,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ParentCardHold
             vEventName = (TextView) itemView.findViewById(R.id.eventcard_eventname);
             vNumberOfPeople = (TextView) itemView.findViewById(R.id.eventcard_attendants);
             vCardView = (CardView) itemView.findViewById(R.id.eventcard_cardview);
+        }
+    }
+
+    public static class FacebookHolder extends ParentCardHolder {
+
+        TextView vName, vContent, vTime;
+
+        public FacebookHolder(View itemView) {
+            super(itemView);
+
+            vContent = (TextView) itemView.findViewById(R.id.facebook_content);
+            vName = (TextView) itemView.findViewById(R.id.facebook_name);
+            vTime = (TextView) itemView.findViewById(R.id.facebook_time);
         }
     }
 
