@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.MainActivity"
+    tools:showIn="@layout/activity_main">
+    <LinearLayout
+        android:id="@+id/tempLinearLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/Tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tabs"/>
+
+        <Button
+            android:id="@+id/updateNYTIMES"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPDATE"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:id="@+id/button_for_notifications" />
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
+
+        <com.facebook.share.widget.ShareButton
+        android:id="@+id/fb_share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+        <Button
+            android:text="FACEBOOK FEED"
+            android:id="@+id/attemptNewsFeedPull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           />
+
+
+    </LinearLayout>
+    <!--<HorizontalScrollView-->
+        <!--android:id="@+id/section_scroll"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:scrollbars="none"-->
+        <!--android:layout_below="@id/tempLinearLayout">-->
+        <!--<LinearLayout-->
+
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation='horizontal'>-->
+
+            <!--<TextView-->
+                <!--android:text="HOME |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="WORLD |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="US |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="POLITICS |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="NY |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="TECH |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="SCIENCE |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="BUSINESS |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="OPINION |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="HEALTH |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+            <!--<TextView-->
+                <!--android:text="SPORTS |"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20sp"/>-->
+        <!--</LinearLayout>-->
+
+    <!--</HorizontalScrollView>-->
+    <!--<LinearLayout-->
+        <!--android:id="@+id/theTopLinearLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+    <!--<TextView-->
+        <!--android:id="@+id/tempTempView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hello World!"/>-->
+
+    <!--</LinearLayout>-->
+
+</RelativeLayout>
