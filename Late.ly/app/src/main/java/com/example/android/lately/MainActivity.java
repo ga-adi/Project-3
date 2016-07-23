@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 // if ("Sports".equals(tab.getTag());
+
                 switch (tab.getTag().toString()) {
                     case "Main":
                         mMainToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
