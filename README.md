@@ -33,10 +33,7 @@ Cardviews in the app displays pertinent information that caters to the user's pr
 
 In addition to the customized user experience, the application also has built-in support for weather and the status of wi-fi on the device wrapped into a minimalist theme without sacrificing functionality.  Late.ly aims to be the hub of the phone device!
 
-<i class="icon-folder-open"></i>Prototype
-----------------------------------------------
-Initial prototype of project:
-https://github.com/chris-shum/Project-3/tree/master/Non-Code%20Stuff/Prototyping
 
 <i class="icon-folder-open"></i>User Interface
 ----------------------------------------------
+<img src = "https://github.com/chris-shum/chris-shum.github.io/blob/master/img/portfolio/lately.jpg">
