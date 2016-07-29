@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDarker">#283593</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="colorPrimaryAnimals">#FFC107</color>
+    <color name="colorPrimaryDarkAnimals">#FFA000</color>
+    <color name="colorPrimaryDarkerAnimals">#FF8F00</color>
+    <color name="colorAccentAnimals">#FF4081</color>
+
+
+    <color name="colorPrimaryCareer">#03A9F4</color>
+    <color name="colorPrimaryDarkCareer">#0288D1</color>
+    <color name="colorPrimaryDarkerCareer">#0277BD</color>
+    <color name="colorAccentCareer">#FF4081</color>
+
+
+    <color name="colorPrimaryDancing">#9C27B0</color>
+    <color name="colorPrimaryDarkDancing">#7B1FA2</color>
+    <color name="colorPrimaryDarkerDancing">#6A1B9A</color>
+    <color name="colorAccentDancing">#FF4081</color>
+
+
+    <color name="colorPrimaryDating">#F44336</color>
+    <color name="colorPrimaryDarkDating">#D32F2F</color>
+    <color name="colorPrimaryDarkerDating">#C62828</color>
+    <color name="colorAccentDating">#FF4081</color>
+
+
+    <color name="colorPrimaryFood">#4CAF50</color>
+    <color name="colorPrimaryDarkFood">#388E3C</color>
+    <color name="colorPrimaryDarkerFood">#1B5E20</color>
+    <color name="colorAccentFood">#FF4081</color>
+
+
+    <color name="colorPrimaryLanguage">#9E9E9E</color>
+    <color name="colorPrimaryDarkLanguage">#616161</color>
+    <color name="colorPrimaryDarkerLanguage">#424242</color>
+    <color name="colorAccentLanguage">#FF4081</color>
+
+
+    <color name="colorPrimaryNature">#CDDC39</color>
+    <color name="colorPrimaryDarkNature">#AFB42B</color>
+    <color name="colorPrimaryDarkerNature">#9E9D24</color>
+    <color name="colorAccentNature">#FF4081</color>
+
+
+    <color name="colorPrimaryPolitics">#2196F3</color>
+    <color name="colorPrimaryDarkPolitics">#1976D2</color>
+    <color name="colorPrimaryDarkerPolitics">#1565C0</color>
+    <color name="colorAccentPolitics">#FF4081</color>
+
+
+    <color name="colorPrimarySports">#009688</color>
+    <color name="colorPrimaryDarkSports">#00796B</color>
+    <color name="colorPrimaryDarkerSports">#00695C</color>
+    <color name="colorAccentSports">#FF4081</color>
+
+    <color name="colorPrimaryTech">#8BC34A</color>
+    <color name="colorPrimaryDarkTech">#689F38</color>
+    <color name="colorPrimaryDarkerTech">#558B2F</color>
+    <color name="colorAccentTech">#FF4081</color>
+
+
+    <color name="colorSelection">#ffee00</color>
+
+</resources>

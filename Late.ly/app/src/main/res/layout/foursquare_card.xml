@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="8dp"
+    android:id="@+id/foursquarecard_cardView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:id="@+id/foursquarecard_image"
+            android:src="@color/colorPrimary"
+            android:layout_marginLeft="12dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="General Assembly"
+            android:id="@+id/foursquarecard_venueName"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/foursquarecard_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 E 21st Street New York, NY "
+            android:id="@+id/foursquarecard_address"
+            android:layout_below="@id/foursquarecard_venueName"
+            android:layout_toRightOf="@+id/foursquarecard_image"
+            android:layout_marginTop="8dp"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:id="@+id/foursquarecard_foursquareLogo"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/foursquare" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
